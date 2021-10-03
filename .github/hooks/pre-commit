@@ -1,0 +1,16 @@
+#!/bin/bash
+
+printf "\033[0;34mVerifying code formatting and style compliance...\n\033[0m"
+if ./gradlew ktlintCheck; then
+    printf "\n\033[0;32mThere are no formatting violations.\n\033[0m\n"
+    exit 0
+fi
+
+printf "\033[0;33mFormatting violation(s) found. Trying to auto-correct...\n\033[0m"
+if ./gradlew ktlintFormat; then
+    printf "\n\033[0;32mFormatting violations have been fixed.\n\033[0m\n"
+    exit 0
+fi
+
+printf "\n\033[0;31mCode contains formatting violations that must be fixed manually.\n\033[0m\n" 1>&2
+exit 1

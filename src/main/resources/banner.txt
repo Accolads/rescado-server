@@ -1,0 +1,14 @@
+
+   ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}··························${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}······························${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}···········${AnsiColor.BLACK}d8&${AnsiColor.YELLOW}···${AnsiColor.BLACK}&8b${AnsiColor.YELLOW}··········${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   8888888b.                                          888
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}·········${AnsiColor.BLACK}888888${AnsiColor.YELLOW}·${AnsiColor.BLACK}888888${AnsiColor.YELLOW}········${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888   Y88b                                         888
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}······${AnsiColor.BLACK}db${AnsiColor.YELLOW}··${AnsiColor.BLACK}Y888P${AnsiColor.YELLOW}·${AnsiColor.BLACK}Y888P${AnsiColor.YELLOW}··${AnsiColor.BLACK}db${AnsiColor.YELLOW}·····${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888    888                                         888
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}·····${AnsiColor.BLACK}88888${AnsiColor.YELLOW}···········${AnsiColor.BLACK}88888${AnsiColor.YELLOW}····${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888   d88P .d88b.  .d8888b   .d8888b  8888b.   .d88888  .d88b.
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}·····${AnsiColor.BLACK}Y88Y${AnsiColor.YELLOW}·${AnsiColor.BLACK}d888b${AnsiColor.YELLOW}·${AnsiColor.BLACK}d888b${AnsiColor.YELLOW}·${AnsiColor.BLACK}Y88Y${AnsiColor.YELLOW}····${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   8888888P" d8P  Y8b 88K      d88P"        "88b d88" 888 d88""88b
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}·········${AnsiColor.BLACK}d88888888888b${AnsiColor.YELLOW}········${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888 T88b  88888888 "Y8888b. 888      .d888888 888  888 888  888
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}·········${AnsiColor.BLACK}Y88888888888P${AnsiColor.YELLOW}········${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888  T88b Y8b.          X88 Y88b.    888  888 Y88b 888 Y88..88P
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}············${AnsiColor.BLACK}"88888"${AnsiColor.YELLOW}···········${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}   888   T88b "Y8888   88888P'  "Y8888P "Y888888  "Y88888  "Y88P"
+ ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}···············${AnsiColor.BLACK}"${AnsiColor.YELLOW}··············${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}
+   ${AnsiBackground.YELLOW}${AnsiColor.YELLOW}··························${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}
+
