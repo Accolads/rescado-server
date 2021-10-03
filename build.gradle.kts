@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val revision = System.getenv("GITHUB_RUN_NUMBER")
+val revision: String? = System.getenv("GITHUB_RUN_NUMBER")
 
 group = "org.rescado"
 version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "r$revision"}"
@@ -35,6 +35,8 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
     implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")
     runtimeOnly("org.postgresql:postgresql")
+    // Liquibase
+    implementation("org.liquibase:liquibase-core:4.5.0")
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
@@ -61,13 +63,17 @@ tasks.register<Copy>("installGitHooks") {
     into(".git/hooks")
 }
 
-// Alternative command to run app with "dev" as active Spring profile
-tasks.register("bootRunDev") {
+// Alternative command to run app with "prod" as active Spring profile
+tasks.register("bootRunProd") {
     group = "application"
-    description = "Runs this project as a Spring Boot application with the dev profile"
+    description = "Runs this project as a Spring Boot application with the prod profile"
+    // Running this via IntelliJ is bugged:
+    // - You cannot debug this: breakpoints are ignored (maybe related https://youtrack.jetbrains.com/issue/IDEA-119494)
+    // - Stopping process outputs process stopped but that's a lie: process just keeps running and you'll need to kill it
+    // TODO find another way to define a "bootRunDev" task, so "bootRun" can be used for prod config.
     doFirst {
         tasks.bootRun.configure {
-            systemProperty("spring.profiles.active", "dev")
+            systemProperty("spring.profiles.active", "prod")
         }
     }
     finalizedBy("bootRun")
