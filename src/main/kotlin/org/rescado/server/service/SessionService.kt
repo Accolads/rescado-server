@@ -19,7 +19,7 @@ class SessionService(
 ) {
 
     fun getByToken(token: String): Session? {
-        return sessionRepository.findByToken(token)
+        return sessionRepository.findByRefreshToken(token)
     }
 
     fun getInitializedByToken(token: String): Session? {

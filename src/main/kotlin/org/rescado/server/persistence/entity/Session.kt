@@ -17,7 +17,7 @@ open class Session(
     @JoinColumn(name = "account_id")
     open var account: Account,
 
-    @Column(name = "refreshToken")
+    @Column(name = "refresh_token")
     open var refreshToken: String,
 
     @Column(name = "description")

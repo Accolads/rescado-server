@@ -11,7 +11,7 @@ interface SessionRepository : JpaRepository<Session, Long> {
 
     fun findByAccount(account: Account): List<Session>
 
-    fun findByToken(token: String): Session?
+    fun findByRefreshToken(refreshToken: String): Session?
 
     fun findAllByLastLoginBefore(lastLogin: ZonedDateTime): List<Session>
 

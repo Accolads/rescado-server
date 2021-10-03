@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val revision = System.getenv("GITHUB_RUN_NUMBER")
 
-group = "dev.qrivi.nuntium"
+group = "org.rescado"
 version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "r$revision"}"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
