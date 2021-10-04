@@ -33,11 +33,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:2.5.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.5")
     implementation("org.springframework.boot:spring-boot-starter-security:2.5.5")
-    // Hibernate
+    // Hibernate and PostgreSQL driver
     implementation("org.hibernate:hibernate-core:5.5.7.Final")
-    implementation("org.hibernate.validator:hibernate-validator:7.0.1.Final")
-    implementation("org.hibernate.validator:hibernate-validator-annotation-processor:7.0.1.Final")
     runtimeOnly("org.postgresql:postgresql:42.2.24.jre7")
+    // Hibernate Validator
+    implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
+    implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")
     // Liquibase
     implementation("org.liquibase:liquibase-core:4.5.0")
     // JWT
