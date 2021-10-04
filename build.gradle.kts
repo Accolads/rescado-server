@@ -16,6 +16,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
     id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.google.cloud.tools.jib") version "3.1.4"
     kotlin("jvm") version "1.5.31"
     kotlin("plugin.spring") version "1.5.31"
     kotlin("plugin.jpa") version "1.5.31"
@@ -55,6 +56,22 @@ dependencies {
 // Spring Boot config
 springBoot {
     buildInfo() // make available at runtime
+}
+
+// Google Jib config
+jib {
+    from {
+        image = "openjdk:11"
+    }
+    to {
+        image = "rescado/rescado-server"
+        tags = setOf(version.toString(), "latest")
+    }
+    container {
+        jvmFlags = listOf("-Dspring.profiles.active=prod")
+        creationTime = "USE_CURRENT_TIMESTAMP"
+        ports = listOf("8282")
+    }
 }
 
 // Simple task that will copy project Git hooks to the .git directory

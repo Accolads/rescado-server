@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  rescado-store:
+    container_name: rescado-store
+    image: 'postgres:13'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: 'rescado_loc'
+      POSTGRES_USER: 'rescado_user'
+      POSTGRES_PASSWORD: 'rescado_password'
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+
+  rescado-server:
+    container_name: rescado-server
+    image: 'rescado/rescado-server:latest'
+    ports:
+      - '8282:8282'
+    depends_on:
+      - rescado-store
+    restart: always
