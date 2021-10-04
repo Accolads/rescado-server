@@ -65,7 +65,7 @@ jib {
     }
     to {
         image = "rescado/rescado-server"
-        tags = setOf(version.toString(), "latest")
+        tags = mutableSetOf("latest", version.toString())
     }
     container {
         jvmFlags = listOf("-Dspring.profiles.active=prod")
