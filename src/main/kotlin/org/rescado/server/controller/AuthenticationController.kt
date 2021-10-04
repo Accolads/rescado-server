@@ -36,11 +36,10 @@ class AuthenticationController(
     @PostMapping("/register")
     fun register(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
-        @RequestBody dto: RegisterAccountDTO,
         req: HttpServletRequest
     ): ResponseEntity<Response> {
         val account = accountService.create()
-        val session = sessionService.create(account, dto.client ?: clientAnalyzer.getFromUserAgent(userAgent))
+        val session = sessionService.create(account, clientAnalyzer.getFromUserAgent(userAgent))
         return generateResponse(account.toNewAccountResponse(generateAccessToken(account, session, req.serverName)))
     }
 

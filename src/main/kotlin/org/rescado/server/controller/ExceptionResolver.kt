@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.NoHandlerFoundException
@@ -28,6 +29,11 @@ class ExceptionResolver(private val messages: MessageService) {
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<Response> {
         return generateResponse(BadRequest(error = messages["rescado.exception.HttpMessageNotReadableException.message"]))
+    }
+
+    @ExceptionHandler
+    fun handleMissingRequestHeaderException(e: MissingRequestHeaderException): ResponseEntity<Response> {
+        return generateResponse(BadRequest(error = messages["rescado.exception.MissingRequestHeaderException.message", e.headerName]))
     }
 
     @ExceptionHandler
