@@ -6,6 +6,8 @@ group = "org.rescado"
 version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "r$revision"}"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+print("Current build version: $version")
+
 // Sources
 repositories {
     mavenCentral()
@@ -65,7 +67,7 @@ jib {
     }
     to {
         image = "rescado/rescado-server"
-        tags = mutableSetOf("latest", version.toString())
+        tags = setOf("$version", "latest")
     }
     container {
         jvmFlags = listOf("-Dspring.profiles.active=prod")

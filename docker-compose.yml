@@ -7,7 +7,7 @@ services:
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_DB: 'rescado_loc'
+      POSTGRES_DB: 'rescado'
       POSTGRES_USER: 'rescado_user'
       POSTGRES_PASSWORD: 'rescado_password'
     volumes:
