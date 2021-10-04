@@ -20,13 +20,19 @@ open class Session(
     @Column(name = "refresh_token")
     open var refreshToken: String,
 
-    @Column(name = "description")
-    open var description: String,
+    @Column(name = "agent")
+    open var agent: String,
 
     @Column(name = "first_login")
     open var firstLogin: ZonedDateTime,
 
     @Column(name = "last_login")
-    open var lastLogin: ZonedDateTime
+    open var lastLogin: ZonedDateTime,
+
+    @Column(name = "ip_address")
+    open var ipAddress: String,
+
+    @Column(name = "coordinates")
+    open var coordinates: String?,
 
 ) : Identifiable()

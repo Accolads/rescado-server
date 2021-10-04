@@ -56,7 +56,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: description
+                  name: agent
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
@@ -70,6 +70,14 @@ databaseChangeLog:
                   type: TIMESTAMP WITHOUT TIME ZONE
                   constraints:
                     nullable: false
+              - column:
+                  name: ip_address
+                  type: VARCHAR(46)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: coordinates
+                  type: VARCHAR(22)
 
         - addForeignKeyConstraint:
             constraintName: session_account_id

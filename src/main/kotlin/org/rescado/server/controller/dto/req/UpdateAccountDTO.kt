@@ -5,6 +5,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
 data class UpdateAccountDTO(
+
     @get:Email(message = "{Email.UpdateAccountEmailDTO.email}")
     val email: String?,
 

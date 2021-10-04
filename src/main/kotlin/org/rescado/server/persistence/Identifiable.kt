@@ -8,7 +8,7 @@ import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class Identifiable {
+abstract class Identifiable {
 
     @GenericGenerator(
         name = "id_generator",

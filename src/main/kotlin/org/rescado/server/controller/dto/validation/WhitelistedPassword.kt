@@ -12,12 +12,12 @@ import kotlin.reflect.KClass
 annotation class WhitelistedPassword(
     val message: String = "{nuntium.validation.WhitelistedPassword.message}",
     val groups: Array<KClass<out Any>> = [],
-    val payload: Array<KClass<out Any>> = []
+    val payload: Array<KClass<out Any>> = [],
 )
 
 class WhitelistedPasswordValidator : ConstraintValidator<WhitelistedPassword, String> {
 
-    override fun initialize(constraintAnnotation: WhitelistedPassword?) {}
+    override fun initialize(constraintAnnotation: WhitelistedPassword) {}
 
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
         SecurityConstants.PASSWORD_BLACKLIST.find { it.equals(value, ignoreCase = true) }?.let {

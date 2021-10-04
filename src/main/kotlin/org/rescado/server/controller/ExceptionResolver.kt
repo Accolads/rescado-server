@@ -28,17 +28,17 @@ class ExceptionResolver(private val messages: MessageService) {
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<Response> {
-        return generateResponse(BadRequest(error = messages["rescado.exception.HttpMessageNotReadableException.message"]))
+        return generateResponse(BadRequest(error = messages["exception.HttpMessageNotReadableException.message"]))
     }
 
     @ExceptionHandler
     fun handleMissingRequestHeaderException(e: MissingRequestHeaderException): ResponseEntity<Response> {
-        return generateResponse(BadRequest(error = messages["rescado.exception.MissingRequestHeaderException.message", e.headerName]))
+        return generateResponse(BadRequest(error = messages["exception.MissingRequestHeaderException.message", e.headerName]))
     }
 
     @ExceptionHandler
     fun handleNoHandlerFoundException(e: NoHandlerFoundException): ResponseEntity<Response> {
-        return generateResponse(NotFound(error = messages["rescado.exception.NoHandlerFoundException.message"]))
+        return generateResponse(NotFound(error = messages["exception.NoHandlerFoundException.message"]))
     }
 
     @ExceptionHandler
@@ -78,7 +78,7 @@ class ExceptionResolver(private val messages: MessageService) {
 
     @ExceptionHandler
     fun handleException(e: Exception): ResponseEntity<Response> {
-        val oopsies = mutableListOf(messages["rescado.exception.Exception.message"], e.message ?: e.javaClass.simpleName)
+        val oopsies = mutableListOf(messages["exception.Exception.message"], e.message ?: e.javaClass.simpleName)
         var cause = e.cause
         var limit = 10
         while (cause != null && limit != 0) {
