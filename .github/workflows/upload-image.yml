@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew clean build jibDockerBuild
       - name: Push Docker image
         id: push-image
-        run: docker push rescado/rescado-server
+        run: docker push rescado/rescado-server --all-tags
       - name: Send status to Slack
         uses: act10ns/slack@v1.2.2
         with:
