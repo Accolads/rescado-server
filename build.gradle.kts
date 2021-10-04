@@ -27,14 +27,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     // Spring
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.5.5")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.5")
+    implementation("org.springframework.boot:spring-boot-starter-security:2.5.5")
     // Hibernate
     implementation("org.hibernate:hibernate-core:5.5.7.Final")
-    implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
-    implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.hibernate.validator:hibernate-validator:7.0.1.Final")
+    implementation("org.hibernate.validator:hibernate-validator-annotation-processor:7.0.1.Final")
+    runtimeOnly("org.postgresql:postgresql:42.2.24.jre7")
     // Liquibase
     implementation("org.liquibase:liquibase-core:4.5.0")
     // JWT
@@ -42,14 +42,14 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
     // YAUAA
-    implementation("nl.basjes.parse.useragent:yauaa:5.19")
+    implementation("nl.basjes.parse.useragent:yauaa:6.0")
     // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.security:spring-security-test:5.5.1")
 }
 
 // Spring Boot config
