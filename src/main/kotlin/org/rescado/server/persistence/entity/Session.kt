@@ -1,5 +1,6 @@
 package org.rescado.server.persistence.entity
 
+import org.locationtech.jts.geom.Point
 import org.rescado.server.persistence.Identifiable
 import java.time.ZonedDateTime
 import javax.persistence.Column
@@ -32,7 +33,7 @@ open class Session(
     @Column(name = "ip_address")
     open var ipAddress: String,
 
-    @Column(name = "coordinates")
-    open var coordinates: String?,
+    @Column(name = "geometry")
+    open var geometry: Point?,
 
 ) : Identifiable()

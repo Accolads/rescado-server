@@ -13,9 +13,9 @@ data class AuthWithPasswordDTO(
     @get:NotEmpty(message = "{NotEmpty.AuthWithPasswordDTO.password}")
     val password: String,
 
-    @get:InRange(min = -90f, max = 90f, message = "{InRange.AuthWithPasswordDTO.latitude}")
-    override val latitude: Float?,
-    @get:InRange(min = -180f, max = 180f, message = "{InRange.AuthWithPasswordDTO.longitude}")
-    override val longitude: Float?,
+    @get:InRange(min = -90.0, max = 90.0, message = "{InRange.AuthWithPasswordDTO.latitude}")
+    override val latitude: Double?,
+    @get:InRange(min = -180.0, max = 180.0, message = "{InRange.AuthWithPasswordDTO.longitude}")
+    override val longitude: Double?,
 
 ) : AuthDTO(latitude, longitude)

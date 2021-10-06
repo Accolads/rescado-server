@@ -11,6 +11,7 @@ import org.rescado.server.service.AccountService
 import org.rescado.server.service.MessageService
 import org.rescado.server.service.SessionService
 import org.rescado.server.util.ClientAnalyzer
+import org.rescado.server.util.PointGenerator
 import org.rescado.server.util.generateAccessToken
 import org.rescado.server.util.generateResponse
 import org.rescado.server.util.toAuthenticationResponse
@@ -33,6 +34,7 @@ class AuthenticationController(
     private val sessionService: SessionService,
     private val messageService: MessageService,
     private val clientAnalyzer: ClientAnalyzer,
+    private val pointGenerator: PointGenerator,
 ) {
 
     @PostMapping("/register")
@@ -49,10 +51,10 @@ class AuthenticationController(
 
         val account = accountService.create()
         val session = sessionService.create(
-            account,
-            clientAnalyzer.getFromUserAgent(userAgent),
-            req.remoteAddr,
-            if (dto?.hasCoordinates() == true) "${dto.latitude},${dto.longitude}" else null,
+            account = account,
+            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            ipAddress = req.remoteAddr,
+            geometry = pointGenerator.make(dto?.latitude, dto?.longitude),
         )
         return generateResponse(account.toNewAccountResponse(generateAccessToken(account, session, req.serverName)))
     }
@@ -74,7 +76,7 @@ class AuthenticationController(
             account = account,
             agent = clientAnalyzer.getFromUserAgent(userAgent),
             ipAddress = req.remoteAddr,
-            coordinates = if (dto.hasCoordinates()) "${dto.latitude},${dto.longitude}" else null,
+            geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
         return generateResponse(account.toAuthenticationResponse(generateAccessToken(account, session, req.serverName)))
     }
@@ -100,7 +102,7 @@ class AuthenticationController(
             session = session,
             agent = clientAnalyzer.getFromUserAgent(userAgent),
             ipAddress = req.remoteAddr,
-            coordinates = if (dto.hasCoordinates()) "${dto.latitude},${dto.longitude}" else null,
+            geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
             ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
 

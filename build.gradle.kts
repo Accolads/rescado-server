@@ -33,9 +33,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:2.5.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.5")
     implementation("org.springframework.boot:spring-boot-starter-security:2.5.5")
-    // Hibernate and PostgreSQL driver
-    implementation("org.hibernate:hibernate-core:5.5.7.Final")
+    // Hibernate Spatial and PostgreSQL+PostGIS driver
+    implementation("org.hibernate:hibernate-spatial:5.5.7.Final")
     runtimeOnly("org.postgresql:postgresql:42.2.24.jre7")
+    runtimeOnly("net.postgis:postgis-jdbc:2.5.1")
     // Hibernate Validator
     implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
     implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")

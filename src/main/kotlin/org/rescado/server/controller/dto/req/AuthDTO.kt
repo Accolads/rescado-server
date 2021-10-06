@@ -1,8 +1,8 @@
 package org.rescado.server.controller.dto.req
 
 abstract class AuthDTO(
-    open val latitude: Float?,
-    open val longitude: Float?,
+    open val latitude: Double?,
+    open val longitude: Double?,
 ) {
     fun hasCoordinates(): Boolean {
         return this.latitude != null && this.longitude != null

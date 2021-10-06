@@ -38,7 +38,6 @@ open class Account(
 ) : Identifiable()
 
 enum class AccountStatus {
-    JOINED, // Signed up and took no further action
-    CONFIRMED, // Did confirm his e-mail address
-    BLOCKED // Has been very naughty
+    ENABLED,
+    DISABLED,
 }

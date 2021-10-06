@@ -37,7 +37,7 @@ class AccountService(private val accountRepository: AccountRepository) {
             email = email,
             name = name,
             password = password?.let { this.hashPassword(it) },
-            status = AccountStatus.JOINED,
+            status = AccountStatus.ENABLED,
         )
         return accountRepository.save(account)
     }

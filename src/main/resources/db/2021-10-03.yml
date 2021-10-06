@@ -4,38 +4,6 @@ databaseChangeLog:
       author: Kristof Dewilde
       changes:
         - createTable:
-            tableName: account
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: account_pkey
-                    nullable: false
-              - column:
-                  name: uuid
-                  type: VARCHAR(36)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: email
-                  type: VARCHAR(255)
-                  constraints:
-                    unique: true
-              - column:
-                  name: password
-                  type: VARCHAR(60)
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-              - column:
-                  name: status
-                  type: VARCHAR(25)
-                  constraints:
-                    nullable: false
-        - createTable:
             tableName: session
             columns:
               - column:
@@ -57,7 +25,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: agent
-                  type: VARCHAR(255)
+                  type: VARCHAR(45)
                   constraints:
                     nullable: false
               - column:
@@ -76,8 +44,40 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: coordinates
-                  type: VARCHAR(22)
+                  name: geometry
+                  type: GEOMETRY(Point, 4326)
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: account_pkey
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: VARCHAR(45)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(60)
+              - column:
+                  name: name
+                  type: VARCHAR(45)
+              - column:
+                  name: status
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             constraintName: session_account_id
