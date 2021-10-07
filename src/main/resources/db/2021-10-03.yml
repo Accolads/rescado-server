@@ -3,6 +3,16 @@ databaseChangeLog:
       id: 2021-10-03
       author: Kristof Dewilde
       changes:
+        - createSequence:
+            sequenceName: id_sequence
+            dataType: bigint
+            minValue: 1
+            maxValue: 9223372036854775807
+            startValue: 1000
+            incrementBy: 1
+            cacheSize: 1
+            cycle: false
+
         - createTable:
             tableName: session
             columns:
@@ -63,6 +73,9 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
+                  name: name
+                  type: VARCHAR(45)
+              - column:
                   name: email
                   type: VARCHAR(45)
                   constraints:
@@ -71,12 +84,253 @@ databaseChangeLog:
                   name: password
                   type: VARCHAR(60)
               - column:
-                  name: name
-                  type: VARCHAR(45)
-              - column:
                   name: status
                   type: VARCHAR(10)
                   constraints:
+                    nullable: false
+              - column:
+                  name: avatar_image_id
+                  type: BIGINT
+                  constraints:
+                    unique: true
+              - column:
+                  name: shelter_id
+                  type: BIGINT
+        - createTable:
+            tableName: shelter
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: shelter_pkey
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: website
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: newsfeed
+                  type: VARCHAR(45)
+                  constraints:
+                    unique: true
+              - column:
+                  name: address
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: postal_code
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: geometry
+                  type: GEOMETRY(Point, 4326)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: logo_image_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: banner_image_id
+                  type: BIGINT
+        - createTable:
+            tableName: animal
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: animal_pkey
+                    nullable: false
+              - column:
+                  name: shelter_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kind
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: breed
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sex
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weight
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vaccinated
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sterilized
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: image_pkey
+                    nullable: false
+              - column:
+                  name: source
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: type
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: news
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: news_pkey
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: likes
+            columns:
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: likes_pkey
+                    nullable: false
+              - column:
+                  name: animal_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: likes_pkey
+                    nullable: false
+              - column:
+                  name: chat_ref
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: unread_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: swipes
+            columns:
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: swipes_pkey
+                    nullable: false
+              - column:
+                  name: animal_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: swipes_pkey
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: favorites
+            columns:
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: favorites_pkey
+                    nullable: false
+              - column:
+                  name: shelter_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: favorites_pkey
                     nullable: false
 
         - addForeignKeyConstraint:
@@ -88,13 +342,102 @@ databaseChangeLog:
             onUpdate: CASCADE
             onDelete: NO ACTION
             validate: true
-
-        - createSequence:
-            sequenceName: id_sequence
-            dataType: bigint
-            minValue: 1
-            maxValue: 9223372036854775807
-            startValue: 1000
-            incrementBy: 1
-            cacheSize: 1
-            cycle: false
+        - addForeignKeyConstraint:
+            constraintName: account_shelter_id
+            baseTableName: account
+            baseColumnNames: shelter_id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: shelter
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: account_avatar_image_id
+            baseTableName: account
+            baseColumnNames: avatar_image_id
+            referencedTableName: image
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: shelter_logo_image_id
+            baseTableName: shelter
+            baseColumnNames: logo_image_id
+            referencedTableName: image
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: shelter_banner_image_id
+            baseTableName: shelter
+            baseColumnNames: banner_image_id
+            referencedTableName: image
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: animal_shelter_id
+            baseTableName: animal
+            baseColumnNames: shelter_id
+            referencedTableName: shelter
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: likes_account_id
+            baseTableName: likes
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: likes_animal_id
+            baseTableName: likes
+            baseColumnNames: animal_id
+            referencedTableName: animal
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: swipes_account_id
+            baseTableName: swipes
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: swipes_animal_id
+            baseTableName: swipes
+            baseColumnNames: animal_id
+            referencedTableName: animal
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: favorites_account_id
+            baseTableName: favorites
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: favorites_shelter_id
+            baseTableName: favorites
+            baseColumnNames: shelter_id
+            referencedColumnNames: id
+            referencedTableName: shelter
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true

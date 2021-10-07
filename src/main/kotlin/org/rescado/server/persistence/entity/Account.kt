@@ -20,14 +20,14 @@ open class Account(
     @Column(name = "uuid")
     open var uuid: String,
 
+    @Column(name = "name")
+    open var name: String?,
+
     @Column(name = "email")
     open var email: String?,
 
     @Column(name = "password")
     open var password: String?,
-
-    @Column(name = "name")
-    open var name: String?,
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

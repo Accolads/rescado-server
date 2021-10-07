@@ -2,6 +2,7 @@ package org.rescado.server.persistence
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
+import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -34,5 +35,27 @@ abstract class Identifiable {
 
     override fun hashCode(): Int {
         return id.hashCode()
+    }
+}
+
+open class CompositeAccountAnimalId(
+    open var account: Long,
+    open var animal: Long,
+) : Serializable {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CompositeAccountAnimalId) return false
+
+        if (account != other.account) return false
+        if (animal != other.animal) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = account.hashCode()
+        result = 31 * result + animal.hashCode()
+        return result
     }
 }
