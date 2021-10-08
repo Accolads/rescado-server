@@ -1,23 +1,42 @@
-version: '3'
+version: '3.9'
+
+networks:
+  rescado-network:
+    driver: bridge
 
 services:
   rescado-store:
     container_name: rescado-store
     image: 'postgis/postgis:13-3.1'
+    environment:
+      POSTGRES_DB: ${RESCADO_DATASOURCE_DB:-rescado}
+      POSTGRES_USER: ${RESCADO_DATASOURCE_USERNAME:-rescado_user}
+      POSTGRES_PASSWORD: ${RESCADO_DATASOURCE_PASSWORD:-rescado_password}
+    networks:
+      - rescado-network
     ports:
       - '5432:5432'
-    environment:
-      POSTGRES_DB: 'rescado'
-      POSTGRES_USER: 'rescado_user'
-      POSTGRES_PASSWORD: 'rescado_password'
     volumes:
-      - ./db/data:/var/lib/postgresql/data
+      - './db/data:/var/lib/postgresql/data'
 
   rescado-server:
     container_name: rescado-server
     image: 'rescado/rescado-server:latest'
-    ports:
-      - '8282:8282'
     depends_on:
       - rescado-store
-    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: ${RESCADO_DATASOURCE_URL:-jdbc:postgresql://rescado-store:5432/rescado}
+      SPRING_DATASOURCE_USERNAME: ${RESCADO_DATASOURCE_USERNAME:-rescado_user}
+      SPRING_DATASOURCE_PASSWORD: ${RESCADO_DATASOURCE_PASSWORD:-rescado_password}
+    networks:
+      - rescado-network
+    ports:
+      - '8282:8282'
+    volumes:
+      - './log:/log'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 60s
+        max_attempts: 3
+        window: 120s

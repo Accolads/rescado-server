@@ -72,9 +72,9 @@ jib {
         tags = setOf("$version", "latest")
     }
     container {
-        jvmFlags = listOf("-Dspring.profiles.active=prod")
         creationTime = "USE_CURRENT_TIMESTAMP"
         ports = listOf("8282")
+        jvmFlags = listOf("-Dspring.profiles.active=prod")
     }
 }
 

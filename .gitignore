@@ -1,6 +1,10 @@
-### Application secrets ###
+# Application data
+/db/data/
+/log/
 /secret/
+.env
 
+# Local build stuff
 HELP.md
 .gradle
 build/
@@ -8,10 +12,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 
-## Docker ###
-/db/data/
-
-### STS ###
+# STS
 .apt_generated
 .classpath
 .factorypath
@@ -20,24 +21,21 @@ build/
 .springBeans
 .sts4-cache
 
-### Log Files ###
-logs/
-
-### IntelliJ IDEA ###
+# IntelliJ IDEA
 .idea
 *.iws
 *.iml
 *.ipr
 out/
 
-### NetBeans 🤮 ###
+# NetBeans 🤮
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
 
 # Windows image file caches
