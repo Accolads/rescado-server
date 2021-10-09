@@ -32,7 +32,7 @@ fun generateAccessToken(account: Account, session: Session, serverName: String):
         .setIssuedAt(Date.from(now))
         .setNotBefore(Date.from(now))
         .claim("account", account.email)
-        .claim("session_description", session.description)
+        .claim("agent", session.agent)
         .claim("refresh_token", session.refreshToken)
         .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
         .compact()
@@ -65,7 +65,7 @@ fun List<Session>.toSessionResponse() = SessionDTO(
     sessions = this.map {
         SessionDTOsession(
             it.refreshToken,
-            it.description,
+            it.agent,
             it.firstLogin,
             it.lastLogin,
         )

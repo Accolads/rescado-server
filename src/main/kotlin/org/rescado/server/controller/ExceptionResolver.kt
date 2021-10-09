@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.NoHandlerFoundException
@@ -27,12 +28,17 @@ class ExceptionResolver(private val messages: MessageService) {
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<Response> {
-        return generateResponse(BadRequest(error = messages["rescado.exception.HttpMessageNotReadableException.message"]))
+        return generateResponse(BadRequest(error = messages["exception.HttpMessageNotReadableException.message"]))
+    }
+
+    @ExceptionHandler
+    fun handleMissingRequestHeaderException(e: MissingRequestHeaderException): ResponseEntity<Response> {
+        return generateResponse(BadRequest(error = messages["exception.MissingRequestHeaderException.message", e.headerName]))
     }
 
     @ExceptionHandler
     fun handleNoHandlerFoundException(e: NoHandlerFoundException): ResponseEntity<Response> {
-        return generateResponse(NotFound(error = messages["rescado.exception.NoHandlerFoundException.message"]))
+        return generateResponse(NotFound(error = messages["exception.NoHandlerFoundException.message"]))
     }
 
     @ExceptionHandler
@@ -72,7 +78,7 @@ class ExceptionResolver(private val messages: MessageService) {
 
     @ExceptionHandler
     fun handleException(e: Exception): ResponseEntity<Response> {
-        val oopsies = mutableListOf(messages["rescado.exception.Exception.message"], e.message ?: e.javaClass.simpleName)
+        val oopsies = mutableListOf(messages["exception.Exception.message"], e.message ?: e.javaClass.simpleName)
         var cause = e.cause
         var limit = 10
         while (cause != null && limit != 0) {

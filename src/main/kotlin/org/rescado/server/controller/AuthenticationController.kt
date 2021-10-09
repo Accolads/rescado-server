@@ -8,8 +8,10 @@ import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Unauthorized
 import org.rescado.server.service.AccountService
+import org.rescado.server.service.MessageService
 import org.rescado.server.service.SessionService
 import org.rescado.server.util.ClientAnalyzer
+import org.rescado.server.util.PointGenerator
 import org.rescado.server.util.generateAccessToken
 import org.rescado.server.util.generateResponse
 import org.rescado.server.util.toAuthenticationResponse
@@ -30,17 +32,30 @@ import javax.validation.Valid
 class AuthenticationController(
     private val accountService: AccountService,
     private val sessionService: SessionService,
+    private val messageService: MessageService,
     private val clientAnalyzer: ClientAnalyzer,
+    private val pointGenerator: PointGenerator,
 ) {
 
     @PostMapping("/register")
     fun register(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
-        @RequestBody dto: RegisterAccountDTO,
+        @Valid @RequestBody dto: RegisterAccountDTO?,
+        res: BindingResult,
         req: HttpServletRequest
     ): ResponseEntity<Response> {
+        if (dto != null && dto.hasPartialCoordinates())
+            return generateResponse(BadRequest(error = messageService["error.PartialCoordinates.message"]))
+        if (res.hasErrors())
+            return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
+
         val account = accountService.create()
-        val session = sessionService.create(account, dto.client ?: clientAnalyzer.getFromUserAgent(userAgent))
+        val session = sessionService.create(
+            account = account,
+            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            ipAddress = req.remoteAddr,
+            geometry = pointGenerator.make(dto?.latitude, dto?.longitude),
+        )
         return generateResponse(account.toNewAccountResponse(generateAccessToken(account, session, req.serverName)))
     }
 
@@ -55,9 +70,14 @@ class AuthenticationController(
             return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
 
         val account = accountService.getByEmailAndPassword(dto.email, dto.password)
-            ?: return generateResponse(BadRequest(error = "Unregistered account or invalid password"))
+            ?: return generateResponse(BadRequest(error = messageService["error.IncorrectCredentials.message"]))
 
-        val session = sessionService.create(account, dto.client ?: clientAnalyzer.getFromUserAgent(userAgent))
+        val session = sessionService.create(
+            account = account,
+            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            ipAddress = req.remoteAddr,
+            geometry = pointGenerator.make(dto.latitude, dto.longitude),
+        )
         return generateResponse(account.toAuthenticationResponse(generateAccessToken(account, session, req.serverName)))
     }
 
@@ -72,13 +92,18 @@ class AuthenticationController(
             return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
 
         val account = accountService.getByUuid(dto.uuid)
-            ?: return generateResponse(BadRequest(error = "Mismatch between UUID and refresh token")) // don't tell account is registered
+            ?: return generateResponse(BadRequest(error = messageService["error.TokenMismatch.message"])) // don't tell account is registered
 
         var session = sessionService.getInitializedByToken(dto.token)
         if (session?.account != account) // token is null or token account does not match the requested account
-            return generateResponse(BadRequest(error = "Mismatch between UUID and refresh token"))
+            return generateResponse(BadRequest(error = messageService["error.TokenMismatch.message"]))
 
-        session = sessionService.refresh(session, dto.client)
+        session = sessionService.refresh(
+            session = session,
+            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            ipAddress = req.remoteAddr,
+            geometry = pointGenerator.make(dto.latitude, dto.longitude),
+        )
             ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
 
         return generateResponse(account.toAuthenticationResponse(generateAccessToken(account, session, req.serverName)))

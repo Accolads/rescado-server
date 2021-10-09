@@ -7,13 +7,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class MessageService(private val messageSource: MessageSource) {
-    operator fun get(id: String): String {
-        return try {
-            messageSource.getMessage(id, null, LocaleContextHolder.getLocale())
-        } catch (e: NoSuchMessageException) {
-            id
-        }
-    }
+
+    operator fun get(id: String): String = get(id, null)
 
     operator fun get(id: String, vararg args: Any?): String {
         return try {

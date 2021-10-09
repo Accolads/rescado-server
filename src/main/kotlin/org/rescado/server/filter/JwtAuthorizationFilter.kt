@@ -1,4 +1,4 @@
-package org.rescado.server
+package org.rescado.server.filter
 
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException

@@ -1,6 +1,7 @@
 package org.rescado.server.service
 
 import org.hibernate.Hibernate
+import org.locationtech.jts.geom.Point
 import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Session
@@ -38,19 +39,21 @@ class SessionService(
         return sessionRepository.findAllByLastLoginAfter(oldestPossibleRefreshDate).size
     }
 
-    fun create(account: Account, description: String): Session {
+    fun create(account: Account, agent: String, ipAddress: String, geometry: Point?): Session {
         val now = ZonedDateTime.now(ZoneId.systemDefault())
         val session = Session(
             account = account,
             refreshToken = UUID.randomUUID().toString(),
-            description = description,
+            agent = agent,
             firstLogin = now,
-            lastLogin = now
+            lastLogin = now,
+            ipAddress = ipAddress,
+            geometry = geometry,
         )
         return sessionRepository.save(session)
     }
 
-    fun refresh(session: Session, description: String?): Session? {
+    fun refresh(session: Session, agent: String, ipAddress: String, geometry: Point?): Session? {
         val now = ZonedDateTime.now(ZoneId.systemDefault())
         if (session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).isBefore(now)) {
             // token too old -- not safe.
@@ -58,9 +61,10 @@ class SessionService(
             return null
         }
 
-        description?.let { session.description = description }
-        session.refreshToken
+        session.agent = agent
         session.lastLogin = now
+        session.ipAddress = ipAddress
+        session.geometry = geometry
         return sessionRepository.save(session)
     }
 

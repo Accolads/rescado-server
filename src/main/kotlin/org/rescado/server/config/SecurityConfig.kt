@@ -1,6 +1,6 @@
 package org.rescado.server.config
 
-import org.rescado.server.JwtAuthorizationFilter
+import org.rescado.server.filter.JwtAuthorizationFilter
 import org.rescado.server.service.AccountService
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity

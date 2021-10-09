@@ -35,9 +35,14 @@ class AccountService(private val accountRepository: AccountRepository) {
         val account = Account(
             uuid = UUID.randomUUID().toString(),
             email = email,
-            name = name,
             password = password?.let { this.hashPassword(it) },
-            status = AccountStatus.JOINED,
+            name = name,
+            status = AccountStatus.ENABLED,
+            shelter = null,
+            avatar = null,
+            favorites = mutableSetOf(),
+            likes = mutableSetOf(),
+            swipes = mutableSetOf(),
         )
         return accountRepository.save(account)
     }
