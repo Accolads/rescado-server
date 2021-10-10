@@ -40,7 +40,7 @@ open class Shelter(
 
     // TODO add @Type so IDE doesn't complain tho without seems to be working just fine
     @Column(name = "geometry")
-    open var geometry: Point?,
+    open var geometry: Point,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "logo_image_id", referencedColumnName = "id")

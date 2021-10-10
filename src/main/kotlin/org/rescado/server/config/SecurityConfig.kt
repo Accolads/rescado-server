@@ -25,7 +25,7 @@ class SecurityConfig(
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests().anyRequest().permitAll().and()
-            .regexMatcher("^(?!\\/info|\\/auth).*").addFilter(JwtAuthorizationFilter(authenticationManager(), accountService, handlerExceptionResolver))
+            .regexMatcher("^(?!\\/animal|\\/info|\\/auth).*").addFilter(JwtAuthorizationFilter(authenticationManager(), accountService, handlerExceptionResolver))
     }
 
     @Bean

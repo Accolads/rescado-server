@@ -191,13 +191,16 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: description
+                  type: TEXT
+              - column:
                   name: sex
                   type: VARCHAR(10)
                   constraints:
                     nullable: false
               - column:
-                  name: age
-                  type: INTEGER
+                  name: birthday
+                  type: TIMESTAMP WITHOUT TIME ZONE
                   constraints:
                     nullable: false
               - column:
@@ -226,18 +229,18 @@ databaseChangeLog:
                     primaryKeyName: image_pkey
                     nullable: false
               - column:
-                  name: source
-                  type: VARCHAR(10)
+                  name: url
+                  type: VARCHAR(255)
                   constraints:
-                    nullable: false
                     unique: true
+                    nullable: false
               - column:
                   name: type
                   type: VARCHAR(10)
                   constraints:
                     nullable: false
               - column:
-                  name: url
+                  name: source
                   type: VARCHAR(10)
                   constraints:
                     nullable: false
@@ -258,7 +261,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: body
-                  type: VARCHAR(255)
+                  type: TEXT
                   constraints:
                     nullable: false
               - column:
@@ -331,6 +334,23 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     primaryKeyName: favorites_pkey
+                    nullable: false
+        - createTable:
+            tableName: photos
+            columns:
+              - column:
+                  name: animal_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: photos_pkey
+                    nullable: false
+              - column:
+                  name: image_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: photos_pkey
                     nullable: false
 
         - addForeignKeyConstraint:
@@ -436,8 +456,26 @@ databaseChangeLog:
             constraintName: favorites_shelter_id
             baseTableName: favorites
             baseColumnNames: shelter_id
-            referencedColumnNames: id
             referencedTableName: shelter
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: photos_animal_id
+            baseTableName: photos
+            baseColumnNames: animal_id
+            referencedTableName: animal
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: photos_image_id
+            baseTableName: photos
+            baseColumnNames: image_id
+            referencedTableName: image
+            referencedColumnNames: id
             onUpdate: NO ACTION
             onDelete: NO ACTION
             validate: true

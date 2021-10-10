@@ -1,12 +1,14 @@
 package org.rescado.server.persistence.entity
 
 import org.rescado.server.persistence.Identifiable
+import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -29,12 +31,15 @@ open class Animal(
     @Column(name = "name")
     open var name: String,
 
+    @Column(name = "description")
+    open var description: String,
+
     @Column(name = "sex")
     @Enumerated(EnumType.STRING)
     open var sex: AnimalSex,
 
-    @Column(name = "age")
-    open var age: Int,
+    @Column(name = "birthday")
+    open var birthday: ZonedDateTime,
 
     @Column(name = "weight")
     open var weight: Int,
@@ -44,6 +49,14 @@ open class Animal(
 
     @Column(name = "sterilized")
     open var sterilized: Boolean,
+
+    @OneToMany
+    @JoinTable(
+        name = "photos",
+        joinColumns = [JoinColumn(name = "animal_id", referencedColumnName = "id") ],
+        inverseJoinColumns = [JoinColumn(name = "image_id", referencedColumnName = "id") ]
+    )
+    open var photos: MutableSet<Image>,
 
     @OneToMany(mappedBy = "animal")
     open var likes: MutableSet<Like>,

@@ -14,8 +14,8 @@ import org.rescado.server.util.ClientAnalyzer
 import org.rescado.server.util.PointGenerator
 import org.rescado.server.util.generateAccessToken
 import org.rescado.server.util.generateResponse
-import org.rescado.server.util.toAuthenticationResponse
-import org.rescado.server.util.toNewAccountResponse
+import org.rescado.server.util.toAuthenticationDTO
+import org.rescado.server.util.toNewAccountDTO
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -56,7 +56,7 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto?.latitude, dto?.longitude),
         )
-        return generateResponse(account.toNewAccountResponse(generateAccessToken(account, session, req.serverName)))
+        return generateResponse(account.toNewAccountDTO(generateAccessToken(account, session, req.serverName)))
     }
 
     @PostMapping("/login")
@@ -78,7 +78,7 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
-        return generateResponse(account.toAuthenticationResponse(generateAccessToken(account, session, req.serverName)))
+        return generateResponse(account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)))
     }
 
     @PostMapping("/refresh")
@@ -106,6 +106,6 @@ class AuthenticationController(
         )
             ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
 
-        return generateResponse(account.toAuthenticationResponse(generateAccessToken(account, session, req.serverName)))
+        return generateResponse(account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)))
     }
 }
