@@ -3,7 +3,7 @@ name: upload image
 on:
   push:
     branches:
-      - main
+      - develop # TODO switch back to main when stable
 
 jobs:
   build:

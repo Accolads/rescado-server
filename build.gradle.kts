@@ -1,9 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val revision: String? = System.getenv("GITHUB_RUN_NUMBER")
+val branch: String? = System.getenv("GITHUB_REF")?.substringAfter("refs/heads/")?.toUpperCase()
 
 group = "org.rescado"
-version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "r$revision"}"
+version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "$branch-$revision"}"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 print("Current build version: $version")
