@@ -6,30 +6,30 @@ networks:
 
 services:
   rescado-store:
-    container_name: rescado-store
+    container_name: 'rescado-store'
     image: 'postgis/postgis:13-3.1'
     environment:
-      POSTGRES_DB: ${RESCADO_DATASOURCE_DB:-rescado}
-      POSTGRES_USER: ${RESCADO_DATASOURCE_USERNAME:-rescado_user}
-      POSTGRES_PASSWORD: ${RESCADO_DATASOURCE_PASSWORD:-rescado_password}
+      POSTGRES_DB: '${RESCADO_DATASOURCE_NAME:-rescado}'
+      POSTGRES_USER: '${RESCADO_DATASOURCE_USERNAME:-rescado_user}'
+      POSTGRES_PASSWORD: '${RESCADO_DATASOURCE_PASSWORD:-rescado_password}'
     networks:
-      - rescado-network
+      - 'rescado-network'
     ports:
-      - '5432:5432'
+      - '5454:5432' # allow access on host on port 5454 even tho rescado-server will connect on port 5432 over rescado-bridge
     volumes:
       - './db/data:/var/lib/postgresql/data'
 
   rescado-server:
-    container_name: rescado-server
+    container_name: 'rescado-server'
     image: 'rescado/rescado-server:latest'
-    depends_on:
-      - rescado-store
     environment:
-      SPRING_DATASOURCE_URL: ${RESCADO_DATASOURCE_URL:-jdbc:postgresql://rescado-store:5432/rescado}
-      SPRING_DATASOURCE_USERNAME: ${RESCADO_DATASOURCE_USERNAME:-rescado_user}
-      SPRING_DATASOURCE_PASSWORD: ${RESCADO_DATASOURCE_PASSWORD:-rescado_password}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://${RESCADO_DATASOURCE_HOST:-rescado-store}:5432/${RESCADO_DATASOURCE_NAME:-rescado}'
+      SPRING_DATASOURCE_USERNAME: '${RESCADO_DATASOURCE_USERNAME:-rescado_user}'
+      SPRING_DATASOURCE_PASSWORD: '${RESCADO_DATASOURCE_PASSWORD:-rescado_password}'
+    depends_on:
+      - 'rescado-store'
     networks:
-      - rescado-network
+      - 'rescado-network'
     ports:
       - '8282:8282'
     volumes:
@@ -37,6 +37,4 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 60s
-        max_attempts: 3
-        window: 120s
+        max_attempts: 5
