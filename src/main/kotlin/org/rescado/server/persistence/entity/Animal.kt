@@ -23,7 +23,7 @@ open class Animal(
 
     @Column(name = "kind")
     @Enumerated(EnumType.STRING)
-    open var kind: AnimalKind,
+    open var kind: Kind,
 
     @Column(name = "breed")
     open var breed: String,
@@ -36,7 +36,7 @@ open class Animal(
 
     @Column(name = "sex")
     @Enumerated(EnumType.STRING)
-    open var sex: AnimalSex,
+    open var sex: Sex,
 
     @Column(name = "birthday")
     open var birthday: ZonedDateTime,
@@ -61,14 +61,15 @@ open class Animal(
     @OneToMany(mappedBy = "animal")
     open var likes: MutableSet<Like>,
 
-) : Identifiable()
+) : Identifiable() {
 
-enum class AnimalKind {
-    CAT,
-    DOG,
-}
+    enum class Kind {
+        CAT,
+        DOG,
+    }
 
-enum class AnimalSex {
-    FEMALE,
-    MALE,
+    enum class Sex {
+        FEMALE,
+        MALE,
+    }
 }

@@ -16,10 +16,10 @@ class ClientAnalyzer {
         .build()
 
     fun getFromUserAgent(userAgent: String): String {
-        return when {
-            userAgent.contains("rescado", true) -> userAgent
-            userAgent.contains("postman", true) -> userAgent
-            userAgent.contains("insomnia", true) -> userAgent
+        when {
+            userAgent.contains("rescado", true) -> return userAgent
+            userAgent.contains("postman", true) -> return userAgent
+            userAgent.contains("insomnia", true) -> return userAgent
             else -> {
                 val analyzer = userAgentAnalyzer.parse(userAgent)
 

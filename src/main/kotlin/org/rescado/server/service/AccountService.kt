@@ -1,9 +1,9 @@
 package org.rescado.server.service
 
 import org.rescado.server.persistence.entity.Account
-import org.rescado.server.persistence.entity.AccountStatus
 import org.rescado.server.persistence.repository.AccountRepository
-import org.springframework.security.crypto.bcrypt.BCrypt
+import org.rescado.server.util.checkPassword
+import org.rescado.server.util.hashPassword
 import org.springframework.stereotype.Service
 import java.util.UUID
 import javax.transaction.Transactional
@@ -12,19 +12,13 @@ import javax.transaction.Transactional
 @Transactional
 class AccountService(private val accountRepository: AccountRepository) {
 
-    fun getByUuid(uuid: String): Account? {
-        return accountRepository.findByUuid(uuid)
-    }
+    fun getByUuid(uuid: String): Account? = accountRepository.findByUuid(uuid)
 
-    fun getByEmail(email: String): Account? {
-        return accountRepository.findByEmail(email)
-    }
+    fun getByEmail(email: String): Account? = accountRepository.findByEmail(email)
 
     fun getByEmailAndPassword(email: String, password: String): Account? {
-        val account = this.getByEmail(email)
-        if (account != null && BCrypt.checkpw(password, account.password))
-            return account
-        return null
+        val account = this.getByEmail(email) ?: return null
+        return if (!account.password.isNullOrBlank() && checkPassword(password, account.password!!)) account else null
     }
 
     fun create(): Account {
@@ -35,9 +29,9 @@ class AccountService(private val accountRepository: AccountRepository) {
         val account = Account(
             uuid = UUID.randomUUID().toString(),
             email = email,
-            password = password?.let { this.hashPassword(it) },
+            password = password?.let { hashPassword(it) },
             name = name,
-            status = AccountStatus.ENABLED,
+            status = Account.Status.ENABLED,
             shelter = null,
             avatar = null,
             favorites = mutableSetOf(),
@@ -53,10 +47,5 @@ class AccountService(private val accountRepository: AccountRepository) {
         name?.let { account.name = it }
 
         return accountRepository.save(account)
-    }
-
-    private fun hashPassword(password: String): String {
-        val salt: String = BCrypt.gensalt(12)
-        return BCrypt.hashpw(password, salt)
     }
 }

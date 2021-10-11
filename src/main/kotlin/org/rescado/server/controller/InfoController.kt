@@ -1,13 +1,10 @@
 package org.rescado.server.controller
 
+import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.res.InfoDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.persistence.entity.Animal
-import org.rescado.server.persistence.entity.AnimalKind
-import org.rescado.server.persistence.entity.AnimalSex
 import org.rescado.server.persistence.entity.Image
-import org.rescado.server.persistence.entity.ImageSource
-import org.rescado.server.persistence.entity.ImageType
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
 import org.rescado.server.persistence.repository.ImageRepository
@@ -53,8 +50,8 @@ class InfoController(
 
         val logo = Image(
             url = "https://dierenasielgenk.be/wp-content/uploads/2019/02/DierenasielGenkLogoSquare150.jpg",
-            type = ImageType.LOGO,
-            source = ImageSource.EXTERNAL,
+            type = Image.Type.LOGO,
+            source = Image.Source.EXTERNAL,
         )
         imageRepository.save(logo)
 
@@ -76,21 +73,21 @@ class InfoController(
 
         val milo1 = Image(
             url = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7404-scaled.jpg",
-            type = ImageType.PHOTO,
-            source = ImageSource.EXTERNAL,
+            type = Image.Type.PHOTO,
+            source = Image.Source.EXTERNAL,
         )
         imageRepository.save(milo1)
 
         val milo2 = Image(
             url = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7385-1200x800.jpg",
-            type = ImageType.PHOTO,
-            source = ImageSource.EXTERNAL,
+            type = Image.Type.PHOTO,
+            source = Image.Source.EXTERNAL,
         )
         imageRepository.save(milo2)
 
         val milo = Animal(
             shelter = genk,
-            kind = AnimalKind.DOG,
+            kind = Animal.Kind.DOG,
             breed = "X Border Collie",
             name = "Milo",
             description = "Deze grappige Border Collie kruising heet Milo en samen met Mirko is hij bij ons afgestaan.\n" +
@@ -100,7 +97,7 @@ class InfoController(
                 "Het vinden van rust gaat een werkpunt zijn voor Milo. Met rust, structuur en de juiste sturing hopen we dat Milo dit kan gaan vinden.\n" +
                 "Milo is wel een actieve hond en lekker met hem gaan speuren of wandelingen maken in een rustige omgeving zullen leuke, gezamenlijke bezigheden zijn.\n" +
                 "We zoeken voor Milo een huis met een tuin en een rustig gezin. Milo heeft in zijn vorige thuis met een kat geleefd en dit is dan ook een optie.",
-            sex = AnimalSex.MALE,
+            sex = Animal.Sex.MALE,
             birthday = ZonedDateTime.of(2018, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC),
             weight = 27,
             vaccinated = true,
