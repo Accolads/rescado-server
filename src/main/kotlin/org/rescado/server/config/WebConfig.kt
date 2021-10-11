@@ -12,6 +12,14 @@ import java.util.Locale
 @Configuration
 class WebConfig : WebMvcConfigurer {
 
+    // TODO is the bean below even necessary with the current SecurityConfig?
+    // @Bean
+    // fun corsConfigurationSource(): CorsConfigurationSource? {
+    //     val source = UrlBasedCorsConfigurationSource()
+    //     source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+    //     return source
+    // }
+
     @Bean
     fun messageSource(): MessageSource {
         Locale.setDefault(Locale.ENGLISH)
