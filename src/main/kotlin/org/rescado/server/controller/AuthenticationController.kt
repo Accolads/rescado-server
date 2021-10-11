@@ -104,7 +104,7 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
-            ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
+            ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_REFRESH_TOKEN, realm = req.serverName))
 
         return generateResponse(account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)))
     }

@@ -36,16 +36,16 @@ class JwtAuthorizationFilter(
 
     // Throws exceptions if authentication fails
     @Throws(
-        ExpiredJwtException::class, // when the JWT is expired
-        UnsupportedJwtException::class, // when the JWT is signed with a different key/algorithm
-        MalformedJwtException::class, // when the JWT is looking weird
-        SignatureException::class, // when the JWT signature is invalid
         JwtException::class, // when authorization header is missing (wrapped IllegalArgumentException)
-        AuthenticationCredentialsNotFoundException::class // when the JWT's associated account (no longer) exists
+        UnsupportedJwtException::class, // when the authorization header is not a bearer token
+        MalformedJwtException::class, // when the authorization header's value is not a valid JWT token
+        SignatureException::class, // when the JWT signature is invalid
+        ExpiredJwtException::class, // when the JWT is expired
+        AuthenticationCredentialsNotFoundException::class, // when the JWT's associated account does not exist or credentials mismatch
     )
     private fun authenticate(req: HttpServletRequest): UsernamePasswordAuthenticationToken {
-        val authHeader = req.getHeader(SecurityConstants.TOKEN_HEADER) ?: throw JwtException("Authorization header is missing")
-        if (!authHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) throw UnsupportedJwtException("Authorization header is not a JWT")
+        val authHeader = req.getHeader(SecurityConstants.AUTHORIZATION_HEADER) ?: throw JwtException("Authorization header is missing")
+        if (!authHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) throw UnsupportedJwtException("Authorization header is not a bearer token")
 
         val jwt = Jwts.parserBuilder()
             .setSigningKey(SecurityConstants.JWT_SECRET.toByteArray())

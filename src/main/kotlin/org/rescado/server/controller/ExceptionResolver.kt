@@ -11,6 +11,9 @@ import org.rescado.server.controller.dto.res.error.InternalServerError
 import org.rescado.server.controller.dto.res.error.MethodNotAllowed
 import org.rescado.server.controller.dto.res.error.NotFound
 import org.rescado.server.controller.dto.res.error.Unauthorized
+import org.rescado.server.filter.BasicAuthorizationException
+import org.rescado.server.filter.MalformedBasicAuthorizationException
+import org.rescado.server.filter.UnsupportedBasicAuthorizationException
 import org.rescado.server.service.MessageService
 import org.rescado.server.util.generateResponse
 import org.springframework.http.ResponseEntity
@@ -47,18 +50,33 @@ class ExceptionResolver(private val messages: MessageService) {
     }
 
     @ExceptionHandler
-    fun handleExpiredJwtException(e: ExpiredJwtException, req: HttpServletRequest): ResponseEntity<Response> {
-        return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
+    fun handleJwtException(e: JwtException, req: HttpServletRequest): ResponseEntity<Response> {
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName))
+    }
+
+    @ExceptionHandler
+    fun handleBasicAuthorizationException(e: BasicAuthorizationException, req: HttpServletRequest): ResponseEntity<Response> {
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName))
     }
 
     @ExceptionHandler
     fun handleUnsupportedJwtException(e: UnsupportedJwtException, req: HttpServletRequest): ResponseEntity<Response> {
-        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_ACCESS_TOKEN, realm = req.serverName))
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName))
+    }
+
+    @ExceptionHandler
+    fun handleUnsupportedBasicAuthorizationException(e: UnsupportedBasicAuthorizationException, req: HttpServletRequest): ResponseEntity<Response> {
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName))
     }
 
     @ExceptionHandler
     fun handleMalformedJwtException(e: MalformedJwtException, req: HttpServletRequest): ResponseEntity<Response> {
-        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_ACCESS_TOKEN, realm = req.serverName))
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName))
+    }
+
+    @ExceptionHandler
+    fun handleMalformedBasicAuthorizationException(e: MalformedBasicAuthorizationException, req: HttpServletRequest): ResponseEntity<Response> {
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName))
     }
 
     @ExceptionHandler
@@ -67,13 +85,13 @@ class ExceptionResolver(private val messages: MessageService) {
     }
 
     @ExceptionHandler
-    fun handleJwtException(e: JwtException, req: HttpServletRequest): ResponseEntity<Response> {
-        return generateResponse(Unauthorized(reason = Unauthorized.Reason.NO_TOKEN_PROVIDED, realm = req.serverName))
+    fun handleExpiredJwtException(e: ExpiredJwtException, req: HttpServletRequest): ResponseEntity<Response> {
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName))
     }
 
     @ExceptionHandler
     fun handleAuthenticationCredentialsNotFoundException(e: AuthenticationCredentialsNotFoundException, req: HttpServletRequest): ResponseEntity<Response> {
-        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_TOKEN_ACCOUNT, realm = req.serverName))
+        return generateResponse(Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName))
     }
 
     @ExceptionHandler

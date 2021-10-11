@@ -16,6 +16,6 @@ data class AuthenticationDTO(
     val name: String?,
 ) : Response() {
     init {
-        httpHeaders.add(SecurityConstants.TOKEN_HEADER, this.authorization)
+        httpHeaders.add(SecurityConstants.AUTHORIZATION_HEADER, this.authorization)
     }
 }

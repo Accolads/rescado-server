@@ -21,7 +21,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 @RestController
-@RequestMapping("/info")
+@RequestMapping(SecurityConstants.INFO_ROUTE)
 class InfoController(
     private val sessionService: SessionService,
     private val buildProperties: BuildProperties,

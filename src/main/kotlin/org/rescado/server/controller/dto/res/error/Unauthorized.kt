@@ -15,12 +15,13 @@ data class Unauthorized(
 ) {
     init {
         val description = when (reason) {
-            Reason.INVALID_ACCESS_TOKEN -> "The provided access token is invalid"
-            Reason.INVALID_TOKEN_ACCOUNT -> "The provided access token's account does not exist"
-            Reason.INVALID_REFRESH_TOKEN -> "The provided refresh token is invalid"
-            Reason.EXPIRED_ACCESS_TOKEN -> "The provided access token has expired"
-            Reason.EXPIRED_REFRESH_TOKEN -> "The provided refresh token has expired"
-            else -> "This resource requires valid authentication credentials"
+            Reason.INVALID_CREDENTIALS -> "The provided authentication string is of the wrong type"
+            Reason.MALFORMED_CREDENTIALS -> "The provided authentication string is invalid"
+
+            Reason.INVALID_ACCESS_TOKEN -> "The access token's signature is invalid"
+            Reason.EXPIRED_ACCESS_TOKEN -> "The access token has expired"
+            Reason.EXPIRED_REFRESH_TOKEN -> "The refresh token has expired"
+            else -> "No authentication credentials were provided"
         }
 
         httpHeaders.add(
@@ -30,12 +31,11 @@ data class Unauthorized(
     }
 
     enum class Reason {
-        NO_TOKEN_PROVIDED,
-        NO_CREDENTIALS_PROVIDED,
+        NO_CREDENTIALS,
+        INVALID_CREDENTIALS,
+        MALFORMED_CREDENTIALS,
 
         INVALID_ACCESS_TOKEN,
-        INVALID_TOKEN_ACCOUNT,
-        INVALID_REFRESH_TOKEN,
         EXPIRED_ACCESS_TOKEN,
         EXPIRED_REFRESH_TOKEN,
     }
