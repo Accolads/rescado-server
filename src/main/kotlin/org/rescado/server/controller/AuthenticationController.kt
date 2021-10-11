@@ -1,21 +1,21 @@
 package org.rescado.server.controller
 
 import org.rescado.server.constant.SecurityConstants
+import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AuthWithPasswordDTO
 import org.rescado.server.controller.dto.req.AuthWithTokenDTO
 import org.rescado.server.controller.dto.req.RegisterAccountDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Unauthorized
+import org.rescado.server.controller.dto.toAuthenticationDTO
+import org.rescado.server.controller.dto.toNewAccountDTO
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.MessageService
 import org.rescado.server.service.SessionService
 import org.rescado.server.util.ClientAnalyzer
 import org.rescado.server.util.PointGenerator
 import org.rescado.server.util.generateAccessToken
-import org.rescado.server.util.generateResponse
-import org.rescado.server.util.toAuthenticationDTO
-import org.rescado.server.util.toNewAccountDTO
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -45,9 +45,9 @@ class AuthenticationController(
         req: HttpServletRequest
     ): ResponseEntity<Response> {
         if (dto != null && dto.hasPartialCoordinates())
-            return generateResponse(BadRequest(error = messageService["error.PartialCoordinates.message"]))
+            return BadRequest(error = messageService["error.PartialCoordinates.message"]).build()
         if (res.hasErrors())
-            return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         val account = accountService.create()
         val session = sessionService.create(
@@ -56,7 +56,7 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto?.latitude, dto?.longitude),
         )
-        return generateResponse(account.toNewAccountDTO(generateAccessToken(account, session, req.serverName)))
+        return account.toNewAccountDTO(generateAccessToken(account, session, req.serverName)).build()
     }
 
     @PostMapping("/login")
@@ -67,10 +67,10 @@ class AuthenticationController(
         req: HttpServletRequest
     ): ResponseEntity<Response> {
         if (res.hasErrors())
-            return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         val account = accountService.getByEmailAndPassword(dto.email, dto.password)
-            ?: return generateResponse(BadRequest(error = messageService["error.IncorrectCredentials.message"]))
+            ?: return BadRequest(error = messageService["error.IncorrectCredentials.message"]).build()
 
         val session = sessionService.create(
             account = account,
@@ -78,7 +78,7 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
-        return generateResponse(account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)))
+        return account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)).build()
     }
 
     @PostMapping("/refresh")
@@ -89,14 +89,14 @@ class AuthenticationController(
         req: HttpServletRequest
     ): ResponseEntity<Response> {
         if (res.hasErrors())
-            return generateResponse(BadRequest(errors = res.allErrors.map { it.defaultMessage as String }))
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         val account = accountService.getByUuid(dto.uuid)
-            ?: return generateResponse(BadRequest(error = messageService["error.TokenMismatch.message"])) // don't tell account is registered
+            ?: return BadRequest(error = messageService["error.TokenMismatch.message"]).build() // don't tell account is registered
 
         var session = sessionService.getInitializedByToken(dto.token)
         if (session?.account != account) // token is null or token account does not match the requested account
-            return generateResponse(BadRequest(error = messageService["error.TokenMismatch.message"]))
+            return BadRequest(error = messageService["error.TokenMismatch.message"]).build()
 
         session = sessionService.refresh(
             session = session,
@@ -104,8 +104,8 @@ class AuthenticationController(
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
-            ?: return generateResponse(Unauthorized(reason = Unauthorized.Reason.EXPIRED_REFRESH_TOKEN, realm = req.serverName))
+            ?: return Unauthorized(reason = Unauthorized.Reason.EXPIRED_REFRESH_TOKEN, realm = req.serverName).build()
 
-        return generateResponse(account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)))
+        return account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)).build()
     }
 }

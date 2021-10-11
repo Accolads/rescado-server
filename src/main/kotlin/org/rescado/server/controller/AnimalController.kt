@@ -1,9 +1,9 @@
 package org.rescado.server.controller
 
+import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.res.Response
+import org.rescado.server.controller.dto.toAnimalArrayDTO
 import org.rescado.server.service.AnimalService
-import org.rescado.server.util.generateResponse
-import org.rescado.server.util.toAnimalArrayDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,5 +18,5 @@ class AnimalController(
 
     // TODO remove this endpoint once we have better ones
     @GetMapping
-    fun getAll(): ResponseEntity<List<Response>> = generateResponse(animalService.getAll().toAnimalArrayDTO(ZonedDateTime.now()))
+    fun getAll(): ResponseEntity<List<Response>> = animalService.getAll().toAnimalArrayDTO(ZonedDateTime.now()).build()
 }

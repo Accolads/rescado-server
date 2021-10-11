@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.web.servlet.HandlerExceptionResolver
-import java.lang.IllegalArgumentException
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -51,12 +50,6 @@ class BasicAuthorizationFilter(
 
         admin ?: throw AuthenticationCredentialsNotFoundException("Admin does not exist")
 
-        return UsernamePasswordAuthenticationToken(admin, null, null)
+        return UsernamePasswordAuthenticationToken(admin, null)
     }
 }
-
-open class BasicAuthorizationException(message: String) : IllegalArgumentException(message)
-
-class UnsupportedBasicAuthorizationException(message: String) : BasicAuthorizationException(message)
-
-class MalformedBasicAuthorizationException(message: String) : BasicAuthorizationException(message)

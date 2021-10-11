@@ -55,6 +55,6 @@ class JwtAuthorizationFilter(
         val account = accountService.getByUuid(jwt.body.subject)
             ?: throw AuthenticationCredentialsNotFoundException("Account does not exist")
 
-        return UsernamePasswordAuthenticationToken(account, null, null)
+        return UsernamePasswordAuthenticationToken(account, null)
     }
 }

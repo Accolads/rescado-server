@@ -1,6 +1,7 @@
 package org.rescado.server.controller
 
 import org.rescado.server.constant.SecurityConstants
+import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.res.InfoDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.persistence.entity.Animal
@@ -11,7 +12,6 @@ import org.rescado.server.persistence.repository.ImageRepository
 import org.rescado.server.persistence.repository.ShelterRepository
 import org.rescado.server.service.SessionService
 import org.rescado.server.util.PointGenerator
-import org.rescado.server.util.generateResponse
 import org.springframework.boot.info.BuildProperties
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,15 +34,13 @@ class InfoController(
 
     @GetMapping
     fun getInfo(): ResponseEntity<Response> {
-        return generateResponse(
-            InfoDTO(
-                name = "rescado-${buildProperties.name}",
-                version = buildProperties.version,
-                build = buildProperties.time,
-                clock = ZonedDateTime.now(),
-                sessions = sessionService.getNumberOfActiveSessions(),
-            )
-        )
+        return InfoDTO(
+            name = "rescado-${buildProperties.name}",
+            version = buildProperties.version,
+            build = buildProperties.time,
+            clock = ZonedDateTime.now(),
+            sessions = sessionService.getNumberOfActiveSessions(),
+        ).build()
     }
 
     @GetMapping("/setup")

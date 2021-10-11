@@ -1,9 +1,6 @@
-package org.rescado.server.util
+package org.rescado.server.controller.dto
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.locationtech.jts.geom.Point
-import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.res.AccountDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
@@ -18,33 +15,11 @@ import org.rescado.server.persistence.entity.Shelter
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.Duration
-import java.time.Instant
 import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
-import java.util.Date
 
-fun generateResponse(response: Response): ResponseEntity<Response> = ResponseEntity(response, response.httpHeaders, response.httpStatus)
+fun Response.build() = ResponseEntity(this, httpHeaders, httpStatus)
 
-fun generateResponse(response: List<Response>): ResponseEntity<List<Response>> = if (response.isEmpty()) ResponseEntity(response, HttpStatus.OK) else ResponseEntity(response, response.first().httpHeaders, response.first().httpStatus)
-
-fun generateAccessToken(account: Account, session: Session, serverName: String): String {
-    val now = Instant.now()
-    val jwt = Jwts.builder()
-        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
-        .setHeaderParam("typ", SecurityConstants.TOKEN_TYPE)
-        .setIssuer("$serverName${SecurityConstants.AUTH_ROUTE}")
-        .setAudience(serverName)
-        .setSubject(account.uuid)
-        .setExpiration(Date.from(now.plus(SecurityConstants.TOKEN_TTL, ChronoUnit.HOURS)))
-        .setIssuedAt(Date.from(now))
-        .setNotBefore(Date.from(now))
-        .claim("account", account.email)
-        .claim("agent", session.agent)
-        .claim("refresh_token", session.refreshToken)
-        .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
-        .compact()
-    return "${SecurityConstants.TOKEN_PREFIX}$jwt"
-}
+fun List<Response>.build() = if (this.isEmpty()) ResponseEntity(this, HttpStatus.OK) else ResponseEntity(this, this.first().httpHeaders, this.first().httpStatus)
 
 // region Point mappers
 
@@ -92,7 +67,7 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 // endregion
 // region Shelter mappers
 
-fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
+fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) ShelterDTO(
     id = id,
     name = name,
     email = null,
@@ -119,6 +94,8 @@ fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
     logo = logo.url,
     banner = banner?.url,
 )
+
+fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
