@@ -15,6 +15,7 @@ import org.rescado.server.controller.dto.res.error.Unauthorized
 import org.rescado.server.filter.BasicAuthorizationException
 import org.rescado.server.filter.MalformedBasicAuthorizationException
 import org.rescado.server.filter.UnsupportedBasicAuthorizationException
+import org.rescado.server.service.ImageSourceException
 import org.rescado.server.service.MessageService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -28,6 +29,10 @@ import javax.servlet.http.HttpServletRequest
 
 @ControllerAdvice
 class ExceptionResolver(private val messages: MessageService) {
+
+    @ExceptionHandler
+    fun handleImageSourceException(e: ImageSourceException) =
+        BadRequest(error = messages["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException) =

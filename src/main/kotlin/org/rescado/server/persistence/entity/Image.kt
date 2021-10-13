@@ -11,8 +11,8 @@ import javax.persistence.Table
 @Table(name = "image")
 open class Image(
 
-    @Column(name = "url")
-    open var url: String,
+    @Column(name = "reference")
+    open var reference: String,
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -33,6 +33,6 @@ open class Image(
 
     enum class Source {
         EXTERNAL, // hosted on external site
-        FIREBASE, // in our Firebase Cloud Storage
+        INTERNAL, // in our Firebase Cloud Storage
     }
 }

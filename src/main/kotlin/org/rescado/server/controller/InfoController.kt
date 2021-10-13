@@ -47,7 +47,7 @@ class InfoController(
     fun setup(): String {
 
         val logo = Image(
-            url = "https://dierenasielgenk.be/wp-content/uploads/2019/02/DierenasielGenkLogoSquare150.jpg",
+            reference = "https://dierenasielgenk.be/wp-content/uploads/2019/02/DierenasielGenkLogoSquare150.jpg",
             type = Image.Type.LOGO,
             source = Image.Source.EXTERNAL,
         )
@@ -70,14 +70,14 @@ class InfoController(
         shelterRepository.save(genk)
 
         val milo1 = Image(
-            url = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7404-scaled.jpg",
+            reference = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7404-scaled.jpg",
             type = Image.Type.PHOTO,
             source = Image.Source.EXTERNAL,
         )
         imageRepository.save(milo1)
 
         val milo2 = Image(
-            url = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7385-1200x800.jpg",
+            reference = "https://dierenasielgenk.be/wp-content/uploads/2021/10/IMG_7385-1200x800.jpg",
             type = Image.Type.PHOTO,
             source = Image.Source.EXTERNAL,
         )

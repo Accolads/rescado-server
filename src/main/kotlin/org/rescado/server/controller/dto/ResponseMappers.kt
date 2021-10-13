@@ -12,14 +12,23 @@ import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.Duration
 import java.time.ZonedDateTime
 
-fun Response.build() = ResponseEntity(this, httpHeaders, httpStatus)
+fun Response.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
+    this,
+    this.httpHeaders,
+    httpStatusOverride ?: this.httpStatus
+)
 
-fun List<Response>.build() = if (this.isEmpty()) ResponseEntity(this, HttpStatus.OK) else ResponseEntity(this, this.first().httpHeaders, this.first().httpStatus)
+fun List<Response>.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
+    this,
+    this.firstOrNull()?.httpHeaders ?: HttpHeaders.EMPTY,
+    httpStatusOverride ?: this.firstOrNull()?.httpStatus ?: HttpStatus.OK
+)
 
 // region Point mappers
 
@@ -78,7 +87,7 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) Shel
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.url,
+    logo = logo.reference,
     banner = null,
 ) else ShelterDTO(
     id = id,
@@ -91,8 +100,8 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) Shel
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.url,
-    banner = banner?.url,
+    logo = logo.reference,
+    banner = banner?.reference,
 )
 
 fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
@@ -110,7 +119,7 @@ fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
-    photos = photos.map { it.url },
+    photos = photos.map { it.reference },
     shelter = shelter.toShelterDTO(true),
 )
 

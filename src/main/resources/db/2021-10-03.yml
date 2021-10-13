@@ -152,12 +152,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: city
+                  name: postal_code
                   type: VARCHAR(45)
                   constraints:
                     nullable: false
               - column:
-                  name: postal_code
+                  name: city
                   type: VARCHAR(45)
                   constraints:
                     nullable: false
@@ -248,7 +248,7 @@ databaseChangeLog:
                     primaryKeyName: image_pkey
                     nullable: false
               - column:
-                  name: url
+                  name: reference
                   type: VARCHAR(255)
                   constraints:
                     unique: true

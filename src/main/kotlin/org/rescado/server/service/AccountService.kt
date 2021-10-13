@@ -12,20 +12,16 @@ import javax.transaction.Transactional
 @Transactional
 class AccountService(private val accountRepository: AccountRepository) {
 
-    fun getByUuid(uuid: String): Account? = accountRepository.findByUuid(uuid)
+    fun getByUuid(uuid: String) = accountRepository.findByUuid(uuid)
 
-    fun getByEmail(email: String): Account? = accountRepository.findByEmail(email)
+    fun getByEmail(email: String) = accountRepository.findByEmail(email)
 
     fun getByEmailAndPassword(email: String, password: String): Account? {
         val account = this.getByEmail(email) ?: return null
         return if (!account.password.isNullOrBlank() && checkPassword(password, account.password!!)) account else null
     }
 
-    fun create(): Account {
-        return this.create(null, null, null)
-    }
-
-    fun create(email: String?, password: String?, name: String?): Account {
+    fun create(email: String? = null, password: String? = null, name: String? = null): Account {
         val account = Account(
             uuid = UUID.randomUUID().toString(),
             email = email,
