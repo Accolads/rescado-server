@@ -5,6 +5,7 @@ import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddShelterDTO
 import org.rescado.server.controller.dto.req.PatchShelterDTO
 import org.rescado.server.controller.dto.res.Response
+import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
 import org.rescado.server.controller.dto.res.error.NotFound
 import org.rescado.server.controller.dto.toShelterArrayDTO
@@ -69,6 +70,9 @@ class ShelterController(
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account) return Forbidden().build()
 
+        if (res.hasErrors())
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
+
         val logo = imageService.create(Image.Type.LOGO, dto.logo)
         val banner = dto.banner?.let { imageService.create(Image.Type.BANNER, dto.banner) }
 
@@ -95,6 +99,9 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != id) return Forbidden().build()
+
+        if (res.hasErrors())
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         val shelter = shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
