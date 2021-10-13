@@ -110,6 +110,73 @@ class InfoController(
         )
         animalRepository.save(milo)
 
+        val yako1 = Image(
+            url = "http://static.ace-charity.org/onderhoud/pics/dogs/medium/Yakovlev_1_ref_nr_15262_2020-01-11-15-50-54.jpg",
+            type = ImageType.PHOTO,
+            source = ImageSource.EXTERNAL,
+        )
+        imageRepository.save(yako1)
+
+        val yako2 = Image(
+            url = "http://static.ace-charity.org/onderhoud/pics/dogs/medium/Yakovlev_2_ref_nr_15262_2018-09-28-16-34-45.jpg",
+            type = ImageType.PHOTO,
+            source = ImageSource.EXTERNAL,
+        )
+        imageRepository.save(yako2)
+
+        val yako = Animal(
+            shelter = genk,
+            kind = AnimalKind.DOG,
+            breed = "X German Shepherd",
+            name = "Yako",
+            description = "Deze knappe bink werd gered uit een dodingstation. Yakovlev heeft veel energie, staat graag vooraan in de rij en laat merken dat hij aanwezig is.\n" +
+                "Hij vertroeft heel graag bij mensen en tracht naar een actief baasje die met hem wil bezig zijn. \n " + "" +
+                "Yakovlev zal snel nieuwe zaken aanleren en voor zijn baasje willen werken want hij is intelligent en bereidwillig (Herder-eigenschappen). \n" +
+                "Hij is goed met andere honden, maar soms een beetje ontstuimig in het spel en dat wordt niet altijd door andere honden gewaardeerd. \n" +
+                "Voor kleine kindjes is hij misschien wat te bruusk. Yakovlev is een imposante verschijning, maar heeft een tof en braaf karakter. \n" +
+                "Voor wie van een maatje groter houdt en een trouwe kameraad wilt, Yakovlev staat alvast te popelen om aan een nieuw leven te mogen beginnen...",
+            sex = AnimalSex.MALE,
+            birthday = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+            weight = 48,
+            vaccinated = true,
+            sterilized = true,
+            likes = mutableSetOf(),
+            photos = mutableSetOf(yako1, yako2)
+        )
+        animalRepository.save(yako)
+
+        val boelie1 = Image(
+            url = "https://dierenasielgenk.be/wp-content/uploads/2020/11/boelie-1.jpg",
+            type = ImageType.PHOTO,
+            source = ImageSource.EXTERNAL,
+        )
+        imageRepository.save(boelie1)
+
+        val boelie2 = Image(
+            url = "https://dierenasielgenk.be/wp-content/uploads/2020/11/boelieee-scaled.jpg",
+            type = ImageType.PHOTO,
+            source = ImageSource.EXTERNAL,
+        )
+        imageRepository.save(boelie2)
+
+        val boelie = Animal(
+            shelter = genk,
+            kind = AnimalKind.DOG,
+            breed = "Akita",
+            name = "Yako",
+            description = "Boelie is een actieve hond die graag dingen onderneemt, maar zeker ook nog verdere opvoeding en structuur nodig had.\n" +
+                "We zeggen ‘had’, omdat er in het asiel heel hard gewerkt is aan etiquette.\n" +
+                "Boelie heeft geleerd om na te denken op momenten dat hij gefrustreerd wordt, daar waar hij voorheen kon happen. Hij heeft hier enorme vooruitgang in geboekt.",
+            sex = AnimalSex.MALE,
+            birthday = ZonedDateTime.of(2020, 1, 21, 0, 0, 0, 0, ZoneOffset.UTC),
+            weight = 34,
+            vaccinated = true,
+            sterilized = false,
+            likes = mutableSetOf(),
+            photos = mutableSetOf(boelie1, boelie2)
+        )
+        animalRepository.save(boelie)
+
         return "Ok"
     }
 }
