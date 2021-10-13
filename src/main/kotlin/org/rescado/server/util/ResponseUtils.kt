@@ -125,6 +125,7 @@ fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
 fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
     id = id,
     name = name,
+    description = description,
     kind = kind.name,
     breed = breed,
     sex = sex.name,
