@@ -13,8 +13,10 @@ data class Unauthorized(
     httpStatus = HttpStatus.UNAUTHORIZED,
     httpHeaders = HttpHeaders()
 ) {
+    val error: String
+
     init {
-        val description = when (reason) {
+        error = when (reason) {
             Reason.INVALID_CREDENTIALS -> "The provided authentication string is of the wrong type"
             Reason.MALFORMED_CREDENTIALS -> "The provided authentication string is invalid"
 
@@ -26,7 +28,7 @@ data class Unauthorized(
 
         httpHeaders.add(
             HttpHeaders.WWW_AUTHENTICATE,
-            """Bearer realm="$realm", charset="UTF-8", error="${reason.name.lowercase(Locale.ENGLISH)}", error_description="$description""""
+            """Bearer realm="$realm", charset="UTF-8", error="${reason.name.lowercase(Locale.ENGLISH)}", error_description="$error""""
         )
     }
 
