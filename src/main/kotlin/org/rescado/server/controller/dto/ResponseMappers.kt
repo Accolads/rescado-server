@@ -102,6 +102,7 @@ fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
     id = id,
     name = name,
+    description = description,
     kind = kind.name,
     breed = breed,
     sex = sex.name,
