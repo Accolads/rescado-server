@@ -32,7 +32,7 @@ class SecurityConfig(
             /**/.anyRequest().permitAll().and()
             .regexMatcher("^\\$ADMIN_ROUTE.*")
             /**/.addFilter(BasicAuthorizationFilter(authenticationManager(), adminService, handlerExceptionResolver))
-            .regexMatcher("^(?!\\$ADMIN_ROUTE|\\/$AUTH_ROUTE|\\$INFO_ROUTE).*")
+            .regexMatcher("^(?!\\$ADMIN_ROUTE|\\$AUTH_ROUTE|\\$INFO_ROUTE).*")
             /**/.addFilter(JwtAuthorizationFilter(authenticationManager(), accountService, handlerExceptionResolver))
     }
 }
