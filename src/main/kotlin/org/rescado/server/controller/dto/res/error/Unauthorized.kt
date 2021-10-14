@@ -1,14 +1,15 @@
 package org.rescado.server.controller.dto.res.error
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.rescado.server.controller.dto.res.Response
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import java.util.Locale
 
 class Unauthorized(
-    val error: String,
-    val reason: Reason,
-    val realm: String,
+    @get:JsonIgnore val error: String,
+    @get:JsonIgnore val reason: Reason,
+    @get:JsonIgnore val realm: String,
 ) : Response(
     httpStatus = HttpStatus.UNAUTHORIZED,
     errors = listOf(error),

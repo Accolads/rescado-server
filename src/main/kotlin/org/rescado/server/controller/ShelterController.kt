@@ -1,6 +1,5 @@
 package org.rescado.server.controller
 
-import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddShelterDTO
 import org.rescado.server.controller.dto.req.PatchShelterDTO
@@ -31,12 +30,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping(
-    value = [
-        "/shelter",
-        "${SecurityConstants.ADMIN_ROUTE}/shelter"
-    ]
-)
+@RequestMapping("/shelter")
 class ShelterController(
     private val shelterService: ShelterService,
     private val imageService: ImageService,

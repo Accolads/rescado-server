@@ -1,10 +1,8 @@
 package org.rescado.server.config
 
-import org.rescado.server.constant.SecurityConstants.ADMIN_ROUTE
 import org.rescado.server.constant.SecurityConstants.AUTH_ROUTE
 import org.rescado.server.constant.SecurityConstants.INFO_ROUTE
-import org.rescado.server.filter.BasicAuthorizationFilter
-import org.rescado.server.filter.JwtAuthorizationFilter
+import org.rescado.server.filter.AuthenticationFilter
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.AdminService
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -30,9 +28,14 @@ class SecurityConfig(
             /**/.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             /**/.anyRequest().permitAll().and()
-            .regexMatcher("^\\$ADMIN_ROUTE.*")
-            /**/.addFilter(BasicAuthorizationFilter(authenticationManager(), adminService, handlerExceptionResolver))
-            .regexMatcher("^(?!\\$ADMIN_ROUTE|\\$AUTH_ROUTE|\\$INFO_ROUTE).*")
-            /**/.addFilter(JwtAuthorizationFilter(authenticationManager(), accountService, handlerExceptionResolver))
+            .regexMatcher("^(?!\\$AUTH_ROUTE|\\$INFO_ROUTE).*")
+            /**/.addFilter(
+                AuthenticationFilter(
+                    authenticationManager = authenticationManager(),
+                    adminService = adminService,
+                    accountService = accountService,
+                    handlerExceptionResolver = handlerExceptionResolver
+                )
+            )
     }
 }

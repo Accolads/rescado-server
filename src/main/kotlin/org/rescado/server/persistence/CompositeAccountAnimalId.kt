@@ -3,8 +3,8 @@ package org.rescado.server.persistence
 import java.io.Serializable
 
 open class CompositeAccountAnimalId(
-    open var account: Long,
-    open var animal: Long,
+    open var account: Long = -1,
+    open var animal: Long = -1,
 ) : Serializable {
 
     override fun equals(other: Any?): Boolean {
