@@ -17,7 +17,6 @@ fun checkPassword(password: String, encryptedPassword: String) = BCrypt.checkpw(
 fun generateAccessToken(account: Account, session: Session, serverName: String): String {
     val now = Instant.now()
     val jwt = Jwts.builder()
-        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
         .setHeaderParam("typ", SecurityConstants.TOKEN_TYPE)
         .setIssuer("$serverName${SecurityConstants.AUTH_ROUTE}")
         .setAudience(serverName)
@@ -29,6 +28,7 @@ fun generateAccessToken(account: Account, session: Session, serverName: String):
         .claim("agent", session.agent)
         .claim("refresh_token", session.refreshToken)
         .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
+        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
         .compact()
     return "${SecurityConstants.TOKEN_PREFIX}$jwt"
 }
