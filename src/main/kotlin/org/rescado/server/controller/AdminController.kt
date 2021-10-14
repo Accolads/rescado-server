@@ -33,7 +33,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build() // TODO add label
+            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
