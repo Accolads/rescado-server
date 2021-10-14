@@ -12,11 +12,11 @@ import org.rescado.server.controller.dto.res.error.InternalServerError
 import org.rescado.server.controller.dto.res.error.MethodNotAllowed
 import org.rescado.server.controller.dto.res.error.NotFound
 import org.rescado.server.controller.dto.res.error.Unauthorized
-import org.rescado.server.filter.BasicAuthorizationException
-import org.rescado.server.filter.MalformedBasicAuthorizationException
-import org.rescado.server.filter.UnsupportedBasicAuthorizationException
-import org.rescado.server.service.ImageSourceException
+import org.rescado.server.filter.exception.BasicAuthorizationException
+import org.rescado.server.filter.exception.MalformedBasicAuthorizationException
+import org.rescado.server.filter.exception.UnsupportedBasicAuthorizationException
 import org.rescado.server.service.MessageService
+import org.rescado.server.service.exception.ImageSourceException
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException

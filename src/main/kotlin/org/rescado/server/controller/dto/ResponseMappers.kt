@@ -2,6 +2,7 @@ package org.rescado.server.controller.dto
 
 import org.locationtech.jts.geom.Point
 import org.rescado.server.controller.dto.res.AccountDTO
+import org.rescado.server.controller.dto.res.AdminDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
@@ -9,6 +10,7 @@ import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
 import org.rescado.server.controller.dto.res.ShelterDTO
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
@@ -60,6 +62,13 @@ fun Account.toAccountDTO() = AccountDTO(
     name = name,
     status = status.name,
 )
+// endregion
+// region Admin mappers
+
+fun Admin.toAdminDTO() = AdminDTO(
+    username = username,
+)
+
 // endregion
 // region Session mappers
 

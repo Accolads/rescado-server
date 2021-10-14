@@ -42,7 +42,7 @@ class AuthenticationController(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
         @Valid @RequestBody dto: RegisterAccountDTO?,
         res: BindingResult,
-        req: HttpServletRequest
+        req: HttpServletRequest,
     ): ResponseEntity<Response> {
         if (dto != null && dto.hasPartialCoordinates())
             return BadRequest(error = messageService["error.PartialCoordinates.message"]).build()
@@ -64,13 +64,13 @@ class AuthenticationController(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
         @Valid @RequestBody dto: AuthWithPasswordDTO,
         res: BindingResult,
-        req: HttpServletRequest
+        req: HttpServletRequest,
     ): ResponseEntity<Response> {
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         val account = accountService.getByEmailAndPassword(dto.email, dto.password)
-            ?: return BadRequest(error = messageService["error.IncorrectCredentials.message"]).build()
+            ?: return BadRequest(error = messageService["error.CredentialsMismatch.message"]).build()
 
         val session = sessionService.create(
             account = account,
@@ -86,7 +86,7 @@ class AuthenticationController(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
         @Valid @RequestBody dto: AuthWithTokenDTO,
         res: BindingResult,
-        req: HttpServletRequest
+        req: HttpServletRequest,
     ): ResponseEntity<Response> {
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()

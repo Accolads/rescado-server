@@ -89,7 +89,7 @@ class ShelterController(
             country = dto.country,
             geometry = pointGenerator.make(dto.latitude, dto.longitude)!!,
             logo = logo,
-            banner = banner
+            banner = banner,
         ).toShelterDTO().build(HttpStatus.CREATED)
     }
 

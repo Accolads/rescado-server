@@ -2,6 +2,9 @@ package org.rescado.server.filter
 
 import org.postgresql.util.Base64
 import org.rescado.server.constant.SecurityConstants
+import org.rescado.server.filter.exception.BasicAuthorizationException
+import org.rescado.server.filter.exception.MalformedBasicAuthorizationException
+import org.rescado.server.filter.exception.UnsupportedBasicAuthorizationException
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.service.AdminService
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException

@@ -1,4 +1,4 @@
-package org.rescado.server.service
+package org.rescado.server.service.exception
 
 import org.rescado.server.persistence.entity.Image
 

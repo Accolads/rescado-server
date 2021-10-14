@@ -3,35 +3,35 @@ package org.rescado.server.controller.dto.req
 import org.hibernate.validator.constraints.URL
 import org.rescado.server.controller.dto.validation.InRange
 import javax.validation.constraints.Email
-import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 data class AddShelterDTO(
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.name}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.name}")
     val name: String,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.email}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.email}")
     @get:Email(message = "{Email.AddShelterDTO.email}")
     val email: String,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.website}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.website}")
     @get:URL(message = "{URL.AddShelterDTO.website}")
     val website: String,
 
     @get:URL(message = "{URL.AddShelterDTO.newsfeed}")
     val newsfeed: String?,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.address}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.address}")
     val address: String,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.postalCode}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.postalCode}")
     val postalCode: String,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.city}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.city}")
     val city: String,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.country}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.country}")
     val country: String,
 
     @get:NotNull(message = "{NotNull.AddShelterDTO.latitude}")
@@ -42,7 +42,7 @@ data class AddShelterDTO(
     @get:InRange(min = -180.0, max = 180.0, message = "{InRange.AddShelterDTO.longitude}")
     val longitude: Double,
 
-    @get:NotEmpty(message = "{NotEmpty.AddShelterDTO.logo}")
+    @get:NotBlank(message = "{NotBlank.AddShelterDTO.logo}")
     val logo: String,
 
     val banner: String?,

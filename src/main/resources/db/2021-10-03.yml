@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
         - createSequence:
             sequenceName: id_sequence
-            dataType: bigint
+            dataType: BIGINT
             minValue: 1
             maxValue: 9223372036854775807
             startValue: 1000
@@ -25,7 +25,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: username
-                  type: VARCHAR(20)
+                  type: VARCHAR(40)
                   constraints:
                     nullable: false
                     unique: true
