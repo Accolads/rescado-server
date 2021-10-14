@@ -28,67 +28,69 @@ import org.springframework.web.servlet.NoHandlerFoundException
 import javax.servlet.http.HttpServletRequest
 
 @ControllerAdvice
-class ExceptionResolver(private val messages: MessageService) {
+class ExceptionResolver(
+    private val messageService: MessageService,
+) {
 
     @ExceptionHandler
     fun handleImageSourceException(e: ImageSourceException) =
-        BadRequest(error = messages["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
+        BadRequest(error = messageService["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException) =
-        BadRequest(error = messages["exception.HttpMessageNotReadableException.message"]).build()
+        BadRequest(error = messageService["exception.HttpMessageNotReadableException.message"]).build()
 
     @ExceptionHandler
     fun handleMissingRequestHeaderException(e: MissingRequestHeaderException) =
-        BadRequest(error = messages["exception.MissingRequestHeaderException.message", e.headerName]).build()
+        BadRequest(error = messageService["exception.MissingRequestHeaderException.message", e.headerName]).build()
 
     @ExceptionHandler
     fun handleNoHandlerFoundException(e: NoHandlerFoundException) =
-        NotFound(error = messages["exception.NoHandlerFoundException.message"]).build()
+        NotFound(error = messageService["exception.NoHandlerFoundException.message"]).build()
 
     @ExceptionHandler
     fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException) =
-        MethodNotAllowed(error = e.message!!).build()
+        MethodNotAllowed(error = messageService["exception.HttpRequestMethodNotSupportedException.message", e.method]).build()
 
     @ExceptionHandler
     fun handleJwtException(e: JwtException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.JwtException.message"], reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleBasicAuthorizationException(e: BasicAuthorizationException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.BasicAuthorizationException.message"], reason = Unauthorized.Reason.NO_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleUnsupportedJwtException(e: UnsupportedJwtException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.UnsupportedJwtException.message"], reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleUnsupportedBasicAuthorizationException(e: UnsupportedBasicAuthorizationException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.UnsupportedBasicAuthorizationException.message"], reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleMalformedJwtException(e: MalformedJwtException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.MalformedJwtException.message"], reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleMalformedBasicAuthorizationException(e: MalformedBasicAuthorizationException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.MalformedBasicAuthorizationException.message"], reason = Unauthorized.Reason.MALFORMED_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleSignatureException(e: SignatureException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.INVALID_ACCESS_TOKEN, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.SignatureException.message"], reason = Unauthorized.Reason.INVALID_ACCESS_TOKEN, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleExpiredJwtException(e: ExpiredJwtException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.ExpiredJwtException.message"], reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleAuthenticationCredentialsNotFoundException(e: AuthenticationCredentialsNotFoundException, req: HttpServletRequest) =
-        Unauthorized(reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
+        Unauthorized(error = messageService["exception.AuthenticationCredentialsNotFoundException.message"], reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
 
     @ExceptionHandler
     fun handleException(e: Exception): ResponseEntity<Response> {
-        val oopsies = mutableListOf(messages["exception.Exception.message"], e.message ?: e.javaClass.simpleName)
+        val oopsies = mutableListOf(messageService["exception.Exception.message"], e.message ?: e.javaClass.simpleName)
         var cause = e.cause
         var limit = 10
         while (cause != null && limit != 0) {

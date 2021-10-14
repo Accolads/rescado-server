@@ -47,7 +47,8 @@ class ShelterController(
     @GetMapping("/all")
     fun getAll(): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account) return Forbidden().build()
+        if (user is Account)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         return shelterService.getAll().toShelterArrayDTO().build()
     }
@@ -68,7 +69,8 @@ class ShelterController(
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account) return Forbidden().build()
+        if (user is Account)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -98,7 +100,8 @@ class ShelterController(
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account && user.shelter?.id != id) return Forbidden().build()
+        if (user is Account && user.shelter?.id != id)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -130,7 +133,8 @@ class ShelterController(
         @PathVariable id: Long,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account && user.shelter?.id != id) return Forbidden().build()
+        if (user is Account && user.shelter?.id != id)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         val shelter = shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
