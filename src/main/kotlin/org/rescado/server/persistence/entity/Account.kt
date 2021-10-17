@@ -60,6 +60,7 @@ open class Account(
     enum class Status {
         ANONYMOUS,
         ENROLLED,
+        VOLUNTEER,
         BLOCKED,
     }
 }

@@ -46,25 +46,28 @@ fun Point.toCoordinatesDTO() = CoordinatesDTO(
 fun Account.toNewAccountDTO(authorization: String) = AuthenticationDTO(
     httpStatus = HttpStatus.CREATED,
     authorization = authorization,
+    status = status.name,
     uuid = uuid,
     email = email,
     name = name,
-    status = status.name,
+    shelter = shelter?.toShelterDTO(true),
 )
 
 fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
     authorization = authorization,
+    status = status.name,
     uuid = uuid,
     email = email,
     name = name,
-    status = status.name,
+    shelter = shelter?.toShelterDTO(true),
 )
 
 fun Account.toAccountDTO() = AccountDTO(
+    status = status.name,
     uuid = uuid,
     email = email,
     name = name,
-    status = status.name,
+    shelter = shelter?.toShelterDTO(true),
 )
 // endregion
 // region Admin mappers

@@ -15,6 +15,7 @@ data class AuthenticationDTO(
     val uuid: String,
     val email: String?,
     val name: String?,
+    val shelter: ShelterDTO?,
 ) : Response() {
     init {
         httpHeaders.add(SecurityConstants.AUTHORIZATION_HEADER, this.authorization)

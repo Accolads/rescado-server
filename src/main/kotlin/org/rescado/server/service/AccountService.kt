@@ -1,6 +1,7 @@
 package org.rescado.server.service
 
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AccountRepository
 import org.rescado.server.util.checkPassword
 import org.rescado.server.util.hashPassword
@@ -11,6 +12,8 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class AccountService(private val accountRepository: AccountRepository) {
+
+    fun getById(id: Long): Account? = accountRepository.findById(id).orElse(null)
 
     fun getByUuid(uuid: String) = accountRepository.findByUuid(uuid)
 
@@ -45,6 +48,12 @@ class AccountService(private val accountRepository: AccountRepository) {
         if (account.status == Account.Status.ANONYMOUS)
             account.status = Account.Status.ENROLLED
 
+        return accountRepository.save(account)
+    }
+
+    fun setVolunteer(account: Account, shelter: Shelter?): Account {
+        account.shelter = shelter
+        account.status = if (shelter == null) Account.Status.ENROLLED else Account.Status.VOLUNTEER
         return accountRepository.save(account)
     }
 }
