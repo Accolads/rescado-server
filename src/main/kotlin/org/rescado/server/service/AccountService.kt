@@ -27,7 +27,7 @@ class AccountService(private val accountRepository: AccountRepository) {
             email = email,
             password = password?.let { hashPassword(it) },
             name = name,
-            status = Account.Status.ENABLED,
+            status = Account.Status.ANONYMOUS,
             shelter = null,
             avatar = null,
             favorites = mutableSetOf(),
@@ -37,10 +37,13 @@ class AccountService(private val accountRepository: AccountRepository) {
         return accountRepository.save(account)
     }
 
-    fun update(account: Account, email: String?, password: String?, name: String?): Account {
+    fun update(account: Account, name: String?, email: String?, password: String?): Account {
+        name?.let { account.name = it }
         email?.let { account.email = it }
         password?.let { account.password = it }
-        name?.let { account.name = it }
+
+        if (account.status == Account.Status.ANONYMOUS)
+            account.status = Account.Status.ENROLLED
 
         return accountRepository.save(account)
     }

@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity
 import java.time.Duration
 import java.time.ZonedDateTime
 
+// region Response mappers
+
 fun Response.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
     this,
     this.httpHeaders,
@@ -31,7 +33,7 @@ fun List<Response>.build(httpStatusOverride: HttpStatus? = null) = ResponseEntit
     this.firstOrNull()?.httpHeaders ?: HttpHeaders.EMPTY,
     httpStatusOverride ?: this.firstOrNull()?.httpStatus ?: HttpStatus.OK
 )
-
+// endregion
 // region Point mappers
 
 fun Point.toCoordinatesDTO() = CoordinatesDTO(
@@ -41,19 +43,21 @@ fun Point.toCoordinatesDTO() = CoordinatesDTO(
 // endregion
 // region Account mappers
 
-fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
-    authorization = authorization,
-    uuid = uuid,
-    email = email,
-    name = name
-)
-
 fun Account.toNewAccountDTO(authorization: String) = AuthenticationDTO(
     httpStatus = HttpStatus.CREATED,
     authorization = authorization,
     uuid = uuid,
     email = email,
-    name = name
+    name = name,
+    status = status.name,
+)
+
+fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
+    authorization = authorization,
+    uuid = uuid,
+    email = email,
+    name = name,
+    status = status.name,
 )
 
 fun Account.toAccountDTO() = AccountDTO(

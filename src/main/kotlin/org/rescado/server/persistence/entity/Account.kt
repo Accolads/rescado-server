@@ -58,7 +58,8 @@ open class Account(
 ) : Identifiable() {
 
     enum class Status {
-        ENABLED,
-        DISABLED,
+        ANONYMOUS,
+        ENROLLED,
+        BLOCKED,
     }
 }

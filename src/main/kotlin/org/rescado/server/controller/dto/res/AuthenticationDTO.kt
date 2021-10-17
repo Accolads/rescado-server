@@ -11,6 +11,7 @@ data class AuthenticationDTO(
 
     @JsonIgnore val authorization: String,
 
+    val status: String,
     val uuid: String,
     val email: String?,
     val name: String?,
