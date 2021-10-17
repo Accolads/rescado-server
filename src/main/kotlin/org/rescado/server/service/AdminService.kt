@@ -9,7 +9,9 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class AdminService(private val adminRepository: AdminRepository) {
+class AdminService(
+    private val adminRepository: AdminRepository,
+) {
 
     fun getByUsername(username: String) = adminRepository.findByUsername(username)
 

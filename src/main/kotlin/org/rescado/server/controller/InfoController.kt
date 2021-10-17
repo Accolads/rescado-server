@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.ZonedDateTime
 
 @RestController
-@RequestMapping(SecurityConstants.INFO_ROUTE)
+@RequestMapping("${SecurityConstants.PUBLIC_ROUTE}/info")
 class InfoController(
     private val sessionService: SessionService,
     private val buildProperties: BuildProperties,
