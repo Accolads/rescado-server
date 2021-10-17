@@ -43,9 +43,4 @@ class AdminController(
             password = dto.password,
         ).toAdminDTO().build(HttpStatus.CREATED)
     }
-
-    @PostMapping("/xx")
-    fun x(): String {
-        return "Hello"
-    }
 }
