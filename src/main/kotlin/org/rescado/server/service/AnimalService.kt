@@ -12,6 +12,8 @@ class AnimalService(
     private val animalRepository: AnimalRepository,
 ) {
 
+    fun getById(id: Long): Animal? = animalRepository.findById(id).orElse(null)
+
     fun getAll(): List<Animal> {
         val animals = animalRepository.findAll()
         animals.forEach {

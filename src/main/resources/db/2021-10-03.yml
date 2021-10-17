@@ -306,7 +306,7 @@ databaseChangeLog:
                     primaryKeyName: likes_pkey
                     nullable: false
               - column:
-                  name: chat_ref
+                  name: reference
                   type: VARCHAR(255)
                   constraints:
                     unique: true

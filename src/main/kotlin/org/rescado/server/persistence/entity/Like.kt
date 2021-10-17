@@ -25,8 +25,8 @@ open class Like(
     @JoinColumn(name = "animal_id")
     open var animal: Animal,
 
-    @Column(name = "chat_ref")
-    open var uuid: String?,
+    @Column(name = "reference")
+    open var reference: String?,
 
     @Column(name = "unread_count")
     open var unreadCount: Int,
