@@ -6,6 +6,8 @@ import javax.validation.constraints.Size
 
 data class PatchAccountDTO(
 
+    val name: String?,
+
     @get:Email(message = "{Email.PatchAccountDTO.email}")
     val email: String?,
 
@@ -13,5 +15,4 @@ data class PatchAccountDTO(
     @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAccountDTO.password}")
     val password: String?,
 
-    val name: String?,
 )
