@@ -11,11 +11,12 @@ import javax.transaction.Transactional
 @Transactional
 class ShelterService(
     private val shelterRepository: ShelterRepository,
+    private val imageService: ImageService,
 ) {
 
-    fun getAll(): MutableList<Shelter> = shelterRepository.findAll()
-
     fun getById(id: Long): Shelter? = shelterRepository.findById(id).orElse(null)
+
+    fun getAll(): MutableList<Shelter> = shelterRepository.findAll()
 
     fun create(
         name: String,
@@ -70,8 +71,14 @@ class ShelterService(
         city?.let { shelter.city = it }
         country?.let { shelter.country = it }
         geometry?.let { shelter.geometry = it }
-        logo?.let { shelter.logo = it }
-        banner?.let { shelter.banner = it }
+        logo?.let {
+            imageService.delete(shelter.logo)
+            shelter.logo = it
+        }
+        banner?.let {
+            shelter.banner?.let { oldBanner -> imageService.delete(oldBanner) }
+            shelter.banner = it
+        }
 
         return shelterRepository.save(shelter)
     }
