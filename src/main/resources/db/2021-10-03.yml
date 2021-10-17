@@ -306,6 +306,11 @@ databaseChangeLog:
                     primaryKeyName: likes_pkey
                     nullable: false
               - column:
+                  name: timestamp
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
                   name: reference
                   type: VARCHAR(255)
                   constraints:

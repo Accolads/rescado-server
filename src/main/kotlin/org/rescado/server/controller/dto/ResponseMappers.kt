@@ -92,16 +92,10 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) ShelterDTO(
     id = id,
     name = name,
-    email = null,
-    website = null,
-    newsfeed = null,
-    address = null,
-    postalCode = null,
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
     logo = logo.reference,
-    banner = null,
 ) else ShelterDTO(
     id = id,
     name = name,
@@ -121,7 +115,15 @@ fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
+fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
+    id = id,
+    name = name,
+    kind = kind.name,
+    breed = breed,
+    sex = sex.name,
+    photos = photos.map { it.reference },
+    shelter = shelter.toShelterDTO(true),
+)else AnimalDTO(
     id = id,
     name = name,
     description = description,
