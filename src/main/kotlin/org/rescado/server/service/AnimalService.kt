@@ -1,10 +1,12 @@
 package org.rescado.server.service
 
 import org.hibernate.Hibernate
+import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
+import org.rescado.server.service.exception.ImageLimitReachedException
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
 import javax.transaction.Transactional
@@ -85,6 +87,8 @@ class AnimalService(
     }
 
     fun addPhoto(animal: Animal, photo: Image): Animal {
+        if (animal.photos.size >= SecurityConstants.IMAGE_MAX_REFERENCES)
+            throw ImageLimitReachedException(SecurityConstants.IMAGE_MAX_REFERENCES)
         animal.photos.add(photo)
         animalRepository.save(animal)
         return animal

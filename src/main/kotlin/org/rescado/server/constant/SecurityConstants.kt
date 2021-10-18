@@ -20,6 +20,8 @@ object SecurityConstants {
         "michelle", "123456789", "0123456789", "012345678", "1234567890", "corvette", "00000000", "test1234",
     )
 
+    val IMAGE_MAX_REFERENCES = 10
+
     val IMAGE_CONTENTTYPE_WHITELIST = listOf(
         "image/jpeg", "image/png",
     )

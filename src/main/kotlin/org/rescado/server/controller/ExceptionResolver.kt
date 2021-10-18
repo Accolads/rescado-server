@@ -14,6 +14,7 @@ import org.rescado.server.filter.exception.MalformedCredentialsException
 import org.rescado.server.filter.exception.MissingCredentialsException
 import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.service.MessageService
+import org.rescado.server.service.exception.ImageLimitReachedException
 import org.rescado.server.service.exception.ImageSourceException
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -33,6 +34,10 @@ class ExceptionResolver(
     @ExceptionHandler
     fun handleImageSourceException(e: ImageSourceException) =
         BadRequest(error = messageService["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
+
+    @ExceptionHandler
+    fun handleImageLimitReachedException(e: ImageLimitReachedException) =
+        BadRequest(error = messageService["exception.ImageLimitReachedException.message", e.limit]).build()
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException) =
