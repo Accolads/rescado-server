@@ -15,4 +15,5 @@ data class PatchAccountDTO(
     @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAccountDTO.password}")
     val password: String?,
 
+    val avatar: String?,
 )

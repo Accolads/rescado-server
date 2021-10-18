@@ -1,6 +1,7 @@
 package org.rescado.server.service
 
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AccountRepository
 import org.rescado.server.util.checkPassword
@@ -11,7 +12,10 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class AccountService(private val accountRepository: AccountRepository) {
+class AccountService(
+    private val accountRepository: AccountRepository,
+    private val imageService: ImageService,
+) {
 
     fun getById(id: Long): Account? = accountRepository.findById(id).orElse(null)
 
@@ -40,10 +44,14 @@ class AccountService(private val accountRepository: AccountRepository) {
         return accountRepository.save(account)
     }
 
-    fun update(account: Account, name: String?, email: String?, password: String?): Account {
+    fun update(account: Account, name: String?, email: String?, password: String?, avatar: Image?): Account {
         name?.let { account.name = it }
         email?.let { account.email = it }
         password?.let { account.password = it }
+        avatar?.let {
+            account.avatar?.let { oldAvatar -> imageService.delete(oldAvatar) }
+            account.avatar = it
+        }
 
         if (account.status == Account.Status.ANONYMOUS)
             account.status = Account.Status.ENROLLED

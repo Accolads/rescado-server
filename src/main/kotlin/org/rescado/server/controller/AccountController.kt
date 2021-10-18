@@ -7,7 +7,9 @@ import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
 import org.rescado.server.controller.dto.toAccountDTO
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Image
 import org.rescado.server.service.AccountService
+import org.rescado.server.service.ImageService
 import org.rescado.server.service.MessageService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -22,11 +24,12 @@ import javax.validation.Valid
 @RequestMapping("/account")
 class AccountController(
     private val accountService: AccountService,
+    private val imageService: ImageService,
     private val messageService: MessageService,
 ) {
 
     @PatchMapping
-    fun patchCredentials(
+    fun patch(
         @Valid @RequestBody dto: PatchAccountDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
@@ -42,6 +45,7 @@ class AccountController(
             name = dto.name,
             email = dto.name,
             password = dto.password,
+            avatar = dto.avatar?.let { imageService.create(Image.Type.AVATAR, dto.avatar) },
         ).toAccountDTO().build()
     }
 }
