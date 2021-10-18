@@ -6,12 +6,14 @@ import org.rescado.server.controller.dto.res.AdminDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
+import org.rescado.server.controller.dto.res.ImageDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
 import org.rescado.server.controller.dto.res.ShelterDTO
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
+import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
 import org.springframework.http.HttpHeaders
@@ -49,7 +51,6 @@ fun Account.toNewAccountDTO(authorization: String) = AuthenticationDTO(
     status = status.name,
     uuid = uuid,
     email = email,
-    name = name,
     shelter = shelter?.toShelterDTO(true),
 )
 
@@ -58,7 +59,6 @@ fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
     status = status.name,
     uuid = uuid,
     email = email,
-    name = name,
     shelter = shelter?.toShelterDTO(true),
 )
 
@@ -67,6 +67,7 @@ fun Account.toAccountDTO() = AccountDTO(
     uuid = uuid,
     email = email,
     name = name,
+    avatar = avatar?.toImageDTO(),
     shelter = shelter?.toShelterDTO(true),
 )
 // endregion
@@ -98,7 +99,7 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) Shel
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.reference,
+    logo = logo.toImageDTO(),
 ) else ShelterDTO(
     id = id,
     name = name,
@@ -110,8 +111,8 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) Shel
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.reference,
-    banner = banner?.reference,
+    logo = logo.toImageDTO(),
+    banner = banner?.toImageDTO(),
 )
 
 fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
@@ -124,9 +125,9 @@ fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
     kind = kind.name,
     breed = breed,
     sex = sex.name,
-    photos = photos.map { it.reference },
+    photos = photos.toImageArrayDTO(),
     shelter = shelter.toShelterDTO(true),
-)else AnimalDTO(
+) else AnimalDTO(
     id = id,
     name = name,
     description = description,
@@ -137,9 +138,19 @@ fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
-    photos = photos.map { it.reference },
+    photos = photos.toImageArrayDTO(),
     shelter = shelter.toShelterDTO(true),
 )
 
 fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime) = this.map { it.toAnimalDTO(now) }
+// endregion
+// region Image mappers
+
+fun Image.toImageDTO() = ImageDTO(
+    reference = reference,
+    type = type.name,
+    source = source.name,
+)
+
+fun MutableSet<Image>.toImageArrayDTO() = this.map { it.toImageDTO() }
 // endregion

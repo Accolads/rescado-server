@@ -84,15 +84,17 @@ class AnimalService(
         return animalRepository.save(animal)
     }
 
-    fun addPhoto(animal: Animal, photo: Image) {
+    fun addPhoto(animal: Animal, photo: Image): Animal {
         animal.photos.add(photo)
         animalRepository.save(animal)
+        return animal
     }
 
-    fun removePhoto(animal: Animal, photo: Image) {
+    fun removePhoto(animal: Animal, photo: Image): Animal {
         imageService.delete(photo)
         animal.photos.remove(photo)
         animalRepository.save(animal)
+        return animal
     }
 
     fun delete(animal: Animal) = animalRepository.delete(animal)

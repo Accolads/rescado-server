@@ -14,6 +14,6 @@ data class ShelterDTO(
     val city: String,
     val country: String,
     val coordinates: CoordinatesDTO,
-    val logo: String,
-    val banner: String? = null,
+    val logo: ImageDTO,
+    val banner: ImageDTO? = null,
 ) : Response()

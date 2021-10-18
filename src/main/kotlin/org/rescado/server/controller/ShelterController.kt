@@ -2,6 +2,7 @@ package org.rescado.server.controller
 
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddAnimalDTO
+import org.rescado.server.controller.dto.req.AddAnimalPhotoDTO
 import org.rescado.server.controller.dto.req.AddShelterDTO
 import org.rescado.server.controller.dto.req.PatchAnimalDTO
 import org.rescado.server.controller.dto.req.PatchShelterDTO
@@ -10,6 +11,8 @@ import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
 import org.rescado.server.controller.dto.res.error.NotFound
 import org.rescado.server.controller.dto.toAnimalDTO
+import org.rescado.server.controller.dto.toImageArrayDTO
+import org.rescado.server.controller.dto.toImageDTO
 import org.rescado.server.controller.dto.toShelterArrayDTO
 import org.rescado.server.controller.dto.toShelterDTO
 import org.rescado.server.persistence.entity.Account
@@ -44,7 +47,6 @@ class ShelterController(
     private val messageService: MessageService,
     private val pointGenerator: PointGenerator,
 ) {
-
     // region Shelter
 
     @GetMapping("/all")
@@ -100,10 +102,10 @@ class ShelterController(
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account && user.shelter?.id != id) // TODO user.shelter is probably never initialized when pulled from SecurityContext -- to verify and fix
+        if (user is Account && user.shelter?.id != id)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = shelterService.getById(id)
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
 
         if (res.hasErrors())
@@ -133,7 +135,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != id)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = shelterService.getById(id)
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
 
         shelterService.delete(shelter)
@@ -212,7 +214,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != id)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = shelterService.getById(id)
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -237,7 +239,7 @@ class ShelterController(
     }
 
     @DeleteMapping("/{id}/animal/{animalId}")
-    fun removeById(
+    fun removeAnimalById(
         @PathVariable id: Long,
         @PathVariable animalId: Long,
     ): ResponseEntity<Response> {
@@ -245,13 +247,91 @@ class ShelterController(
         if (user is Account && user.shelter?.id != id)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = shelterService.getById(id)
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
             ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
             ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
 
         animalService.delete(animal)
+        return Response(httpStatus = HttpStatus.NO_CONTENT).build()
+    }
+
+    // endregion
+    // region Animal.photos
+
+    @GetMapping("/{id}/animal/{animalId}/photo/all")
+    fun getAllAnimalPhotos(
+        @PathVariable id: Long,
+        @PathVariable animalId: Long,
+    ): ResponseEntity<*> {
+        val shelter = shelterService.getById(id)
+            ?: return BadRequest(error = messageService["error.ShelterNotFound.message"]).build()
+
+        val animal = shelter.animals.find { it.id == animalId }
+            ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
+
+        return animal.photos.toImageArrayDTO().build()
+    }
+
+    @GetMapping("/{id}/animal/{animalId}/photo/{photoId}")
+    fun getAnimalPhotoById(
+        @PathVariable id: Long,
+        @PathVariable animalId: Long,
+        @PathVariable photoId: Long,
+    ): ResponseEntity<Response> {
+        val shelter = shelterService.getById(id)
+            ?: return BadRequest(error = messageService["error.ShelterNotFound.message"]).build()
+
+        val animal = shelter.animals.find { it.id == animalId }
+            ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
+
+        val photo = animal.photos.find { it.id == photoId }
+            ?: return NotFound(error = messageService["error.AnimalPhotoNotFound.message"]).build()
+
+        return photo.toImageDTO().build()
+    }
+
+    @PostMapping("/{id}/animal/{animalId}/photo")
+    fun addAnimalPhoto(
+        @PathVariable id: Long,
+        @PathVariable animalId: Long,
+        @Valid @RequestBody dto: AddAnimalPhotoDTO,
+    ): ResponseEntity<*> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user is Account && user.shelter?.id != id)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
+            ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
+
+        val animal = shelter.animals.find { it.id == animalId }
+            ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
+
+        return animalService.addPhoto(animal, imageService.create(Image.Type.PHOTO, dto.reference))
+            .photos.toImageArrayDTO().build()
+    }
+
+    @DeleteMapping("/{id}/animal/{animalId}/photo/{photoId}")
+    fun removeAnimalPhotoById(
+        @PathVariable id: Long,
+        @PathVariable animalId: Long,
+        @PathVariable photoId: Long,
+    ): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user is Account && user.shelter?.id != id)
+            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+
+        val shelter = if (user is Account) user.shelter!! else shelterService.getById(id)
+            ?: return NotFound(error = messageService["error.ShelterNotFound.message"]).build()
+
+        val animal = shelter.animals.find { it.id == animalId }
+            ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
+
+        val photo = animal.photos.find { it.id == photoId }
+            ?: return NotFound(error = messageService["error.AnimalPhotoNotFound.message"]).build()
+
+        imageService.delete(photo)
         return Response(httpStatus = HttpStatus.NO_CONTENT).build()
     }
 

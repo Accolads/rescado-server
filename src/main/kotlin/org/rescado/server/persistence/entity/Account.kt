@@ -33,11 +33,11 @@ open class Account(
     @Enumerated(EnumType.STRING)
     open var status: Status,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shelter_id", referencedColumnName = "id")
     open var shelter: Shelter?, // if not null, this is a volunteer
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "avatar_image_id", referencedColumnName = "id")
     open var avatar: Image?,
 

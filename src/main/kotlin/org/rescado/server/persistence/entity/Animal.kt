@@ -50,7 +50,7 @@ open class Animal(
     @Column(name = "sterilized")
     open var sterilized: Boolean,
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "photos",
         joinColumns = [JoinColumn(name = "animal_id", referencedColumnName = "id") ],

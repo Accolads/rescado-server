@@ -5,5 +5,6 @@ data class AccountDTO(
     val uuid: String,
     val email: String?,
     val name: String?,
+    val avatar: ImageDTO?,
     val shelter: ShelterDTO?,
 ) : Response()
