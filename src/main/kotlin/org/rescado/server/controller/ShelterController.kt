@@ -331,7 +331,7 @@ class ShelterController(
         val photo = animal.photos.find { it.id == photoId }
             ?: return NotFound(error = messageService["error.AnimalPhotoNotFound.message"]).build()
 
-        imageService.delete(photo)
+        animalService.removePhoto(animal, photo)
         return Response(httpStatus = HttpStatus.NO_CONTENT).build()
     }
 
