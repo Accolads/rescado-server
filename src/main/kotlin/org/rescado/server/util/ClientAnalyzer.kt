@@ -16,18 +16,18 @@ class ClientAnalyzer {
         .build()
 
     fun getFromUserAgent(userAgent: String): String {
-        when {
-            userAgent.contains("rescado", true) -> return userAgent
-            userAgent.contains("postman", true) -> return userAgent
-            userAgent.contains("insomnia", true) -> return userAgent
+        return when {
+            userAgent.contains("rescado", true) -> userAgent
+            userAgent.contains("postman", true) -> userAgent
+            userAgent.contains("insomnia", true) -> userAgent
             else -> {
                 val analyzer = userAgentAnalyzer.parse(userAgent)
 
                 val agent = analyzer.getValue("AgentNameVersionMajor").let {
-                    if (it.equals("??")) return UNKNOWN_AGENT
+                    if (it.equals("??")) UNKNOWN_AGENT else it
                 }
                 val os = analyzer.getValue("OperatingSystemNameVersionMajor").let {
-                    if (it.equals("??")) return UNKNOWN_OS
+                    if (it.equals("??")) UNKNOWN_OS else it
                 }
                 return "$agent on $os"
             }

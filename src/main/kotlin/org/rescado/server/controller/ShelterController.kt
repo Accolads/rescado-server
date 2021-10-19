@@ -16,6 +16,7 @@ import org.rescado.server.controller.dto.toImageDTO
 import org.rescado.server.controller.dto.toShelterArrayDTO
 import org.rescado.server.controller.dto.toShelterDTO
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.service.AnimalService
@@ -52,7 +53,7 @@ class ShelterController(
     @GetMapping("/all")
     fun getAll(): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account)
+        if (user !is Admin)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         return shelterService.getAll().toShelterArrayDTO().build()
@@ -74,7 +75,7 @@ class ShelterController(
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
-        if (user is Account)
+        if (user !is Admin)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
         if (res.hasErrors())

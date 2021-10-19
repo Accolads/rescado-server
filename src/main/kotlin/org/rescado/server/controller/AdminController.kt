@@ -3,7 +3,6 @@ package org.rescado.server.controller
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddAdminDTO
 import org.rescado.server.controller.dto.req.AddVolunteerDTO
-import org.rescado.server.controller.dto.req.RemoveVolunteerDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
@@ -20,6 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -77,9 +77,9 @@ class AdminController(
         return accountService.setVolunteer(account, shelter).toAccountDTO().build()
     }
 
-    @DeleteMapping("/volunteer")
+    @DeleteMapping("/volunteer/{id}")
     fun removeVolunteer(
-        @Valid @RequestBody dto: RemoveVolunteerDTO,
+        @PathVariable id: Long,
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -89,12 +89,12 @@ class AdminController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getById(dto.accountId)
-            ?: return BadRequest(error = messageService["error.NonExistentAccount.message", dto.accountId]).build()
+        val account = accountService.getById(id)
+            ?: return BadRequest(error = messageService["error.NonExistentAccount.message", id]).build()
         if (account.status == Account.Status.ANONYMOUS)
-            return BadRequest(error = messageService["error.AccountIsAnonymous.message", dto.accountId]).build()
+            return BadRequest(error = messageService["error.AccountIsAnonymous.message", id]).build()
         if (account.shelter == null)
-            return BadRequest(error = messageService["error.AccountIsNotVolunteer.message", dto.accountId]).build()
+            return BadRequest(error = messageService["error.AccountIsNotVolunteer.message", id]).build()
 
         return accountService.setVolunteer(account, null).toAccountDTO().build()
     }
