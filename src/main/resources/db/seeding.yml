@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: seeding
-      author: Kristof Dewilde
+      author: rescado-server
       changes:
         - insert:
             tableName: admin

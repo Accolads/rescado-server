@@ -3,6 +3,7 @@ package org.rescado.server.filter
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
 import org.postgresql.util.Base64
 import org.rescado.server.constant.SecurityConstants
@@ -58,7 +59,7 @@ class AuthenticationFilter(
     )
     private fun bearerAuthentication(authHeader: String): UsernamePasswordAuthenticationToken {
         val jwt = Jwts.parserBuilder()
-            .setSigningKey(SecurityConstants.JWT_SECRET.toByteArray())
+            .setSigningKey(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
             .build()
             .parseClaimsJws(authHeader.replace(SecurityConstants.TOKEN_PREFIX, ""))
 

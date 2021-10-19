@@ -43,7 +43,7 @@ class AccountController(
         return accountService.update(
             account = user,
             name = dto.name,
-            email = dto.name,
+            email = dto.email,
             password = dto.password,
             avatar = dto.avatar?.let { imageService.create(Image.Type.AVATAR, dto.avatar) },
         ).toAccountDTO().build()

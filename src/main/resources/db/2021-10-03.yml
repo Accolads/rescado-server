@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 2021-10-03
-      author: Kristof Dewilde
+      author: rescado-server
       changes:
         - createSequence:
             sequenceName: id_sequence
