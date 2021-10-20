@@ -56,7 +56,7 @@ class AdminController(
     }
 
     @PatchMapping
-    fun patchById(
+    fun patch(
         @Valid @RequestBody dto: PatchAdminDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
