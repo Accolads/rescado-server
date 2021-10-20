@@ -384,7 +384,7 @@ databaseChangeLog:
             referencedTableName: account
             referencedColumnNames: id
             onUpdate: CASCADE
-            onDelete: NO ACTION
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: account_shelter_id
@@ -401,8 +401,8 @@ databaseChangeLog:
             baseColumnNames: avatar_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: shelter_logo_image_id
@@ -410,8 +410,8 @@ databaseChangeLog:
             baseColumnNames: logo_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: shelter_banner_image_id
@@ -419,8 +419,8 @@ databaseChangeLog:
             baseColumnNames: banner_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: animal_shelter_id
