@@ -83,7 +83,7 @@ class ShelterController(
 
         return shelterService.create(
             name = dto.name,
-            email = dto.name,
+            email = dto.email,
             website = dto.website,
             newsfeed = dto.newsfeed,
             address = dto.address,

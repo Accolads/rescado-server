@@ -28,5 +28,4 @@ data class PatchAnimalDTO(
     val vaccinated: Boolean?,
 
     val sterilized: Boolean?,
-
 )

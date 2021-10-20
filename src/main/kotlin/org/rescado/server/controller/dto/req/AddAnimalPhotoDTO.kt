@@ -6,5 +6,4 @@ data class AddAnimalPhotoDTO(
 
     @get:NotBlank(message = "{NotBlank.AddAnimalPhotoDTO.reference}")
     val reference: String,
-
 )
