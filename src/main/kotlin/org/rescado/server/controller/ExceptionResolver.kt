@@ -19,6 +19,7 @@ import org.rescado.server.service.exception.ImageSourceException
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
+import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -42,6 +43,10 @@ class ExceptionResolver(
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException) =
         BadRequest(error = messageService["exception.HttpMessageNotReadableException.message"]).build()
+
+    @ExceptionHandler
+    fun handleHttpMediaTypeNotSupportedException(e: HttpMediaTypeNotSupportedException) =
+        BadRequest(error = messageService["exception.HttpMediaTypeNotSupportedException.message", e.contentType.toString()]).build()
 
     @ExceptionHandler
     fun handleMissingRequestHeaderException(e: MissingRequestHeaderException) =
