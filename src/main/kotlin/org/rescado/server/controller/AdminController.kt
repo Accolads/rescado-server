@@ -3,6 +3,7 @@ package org.rescado.server.controller
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddAdminDTO
 import org.rescado.server.controller.dto.req.AddVolunteerDTO
+import org.rescado.server.controller.dto.req.PatchAdminDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -51,6 +53,25 @@ class AdminController(
             username = dto.username,
             password = dto.password,
         ).toAdminDTO().build(HttpStatus.CREATED)
+    }
+
+    @PatchMapping
+    fun patchById(
+        @Valid @RequestBody dto: PatchAdminDTO,
+        res: BindingResult,
+    ): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Admin)
+            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+
+        if (res.hasErrors())
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
+
+        return adminService.update(
+            admin = user,
+            username = dto.username,
+            password = dto.password,
+        ).toAdminDTO().build()
     }
 
     @PostMapping("/volunteer")
