@@ -4,7 +4,6 @@ import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
 import org.rescado.server.controller.dto.build
-import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.InternalServerError
 import org.rescado.server.controller.dto.res.error.MethodNotAllowed
@@ -16,7 +15,6 @@ import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.service.MessageService
 import org.rescado.server.service.exception.ImageLimitReachedException
 import org.rescado.server.service.exception.ImageSourceException
-import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.web.HttpMediaTypeNotSupportedException
@@ -24,6 +22,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.NoHandlerFoundException
 import javax.servlet.http.HttpServletRequest
 
@@ -55,6 +54,10 @@ class ExceptionResolver(
     @ExceptionHandler
     fun handleNoHandlerFoundException(e: NoHandlerFoundException) =
         NotFound(error = messageService["exception.NoHandlerFoundException.message"]).build()
+
+    @ExceptionHandler
+    fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException) =
+        BadRequest(error = messageService["exception.MethodArgumentTypeMismatchException.message", e.value, e.name ]).build()
 
     @ExceptionHandler
     fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException) =
@@ -89,15 +92,17 @@ class ExceptionResolver(
         Unauthorized(error = messageService["exception.ExpiredJwtException.message"], reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName).build()
 
     @ExceptionHandler
-    fun handleException(e: Exception): ResponseEntity<Response> {
-        val oopsies = mutableListOf(messageService["exception.Exception.message"], e.message ?: e.javaClass.simpleName)
-        var cause = e.cause
-        var limit = 10
-        while (cause != null && limit != 0) {
-            oopsies.add(cause.message ?: cause.javaClass.simpleName)
-            cause = cause.cause
-            limit--
-        }
-        return InternalServerError(errors = oopsies.toList()).build()
-    }
+    fun handleException(e: Exception) =
+        InternalServerError(
+            errors = mutableListOf(messageService["exception.Exception.message"]).apply {
+                e.printStackTrace()
+                var cause: Throwable? = e
+                var limit = 10
+                while (cause != null && limit != 0) {
+                    add("[exception] ${cause.javaClass.simpleName}: ${cause.message}")
+                    cause = cause.cause
+                    limit--
+                }
+            }
+        ).build()
 }
