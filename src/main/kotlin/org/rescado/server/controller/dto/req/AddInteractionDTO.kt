@@ -5,5 +5,5 @@ import javax.validation.constraints.NotEmpty
 data class AddInteractionDTO(
 
     @get:NotEmpty(message = "{NotEmpty.AddInteractionDTO.ids}")
-    val ids: List<Long>
+    val ids: List<Long>?
 )

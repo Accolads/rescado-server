@@ -8,7 +8,7 @@ data class AuthAnonymouslyDTO(
 
     @get:NotBlank(message = "{NotBlank.AuthAnonymouslyDTO.password}")
     @get:Pattern(message = "{Pattern.AuthAnonymouslyDTO.uuid}", regexp = "^[\\w]{8}-[\\w]{4}-[\\w]{4}-[\\w]{4}-[\\w]{12}$")
-    val uuid: String,
+    val uuid: String?,
 
     @get:InRange(min = -90.0, max = 90.0, message = "{InRange.AuthAnonymouslyDTO.latitude}")
     override val latitude: Double?,

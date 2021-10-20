@@ -8,10 +8,10 @@ data class AuthWithPasswordDTO(
 
     @get:NotBlank(message = "{NotBlank.AuthWithPasswordDTO.email}")
     @get:Email(message = "{Email.AuthWithPasswordDTO.email}")
-    val email: String,
+    val email: String?,
 
     @get:NotBlank(message = "{NotBlank.AuthWithPasswordDTO.password}")
-    val password: String,
+    val password: String?,
 
     @get:InRange(min = -90.0, max = 90.0, message = "{InRange.AuthWithPasswordDTO.latitude}")
     override val latitude: Double?,

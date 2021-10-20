@@ -5,5 +5,5 @@ import javax.validation.constraints.NotBlank
 data class AddAnimalPhotoDTO(
 
     @get:NotBlank(message = "{NotBlank.AddAnimalPhotoDTO.reference}")
-    val reference: String,
+    val reference: String?,
 )

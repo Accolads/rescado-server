@@ -5,9 +5,9 @@ import javax.validation.constraints.Size
 
 data class PatchAdminDTO(
 
-    val username: String,
+    val username: String?,
 
     @get:Size(min = 8, message = "{Size.PatchAdminDTO.password}")
     @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAdminDTO.password}")
-    val password: String,
+    val password: String?,
 )

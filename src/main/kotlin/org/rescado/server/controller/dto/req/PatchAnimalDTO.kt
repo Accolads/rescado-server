@@ -23,7 +23,7 @@ data class PatchAnimalDTO(
     val birthday: String?,
 
     @get:Min(value = 1, message = "{Min.PatchAnimalDTO.weight")
-    val weight: Int,
+    val weight: Int?,
 
     val vaccinated: Boolean?,
 

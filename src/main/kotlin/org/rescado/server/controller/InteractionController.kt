@@ -69,7 +69,7 @@ class InteractionController(
         val alreadyLikedAnimalIds = mutableListOf<Long>()
         val nonExistentAnimalIds = mutableListOf<Long>()
 
-        dto.ids.forEach { id ->
+        dto.ids!!.forEach { id ->
             animalService.getById(id)?.let {
                 try {
                     likeService.create(user, it)

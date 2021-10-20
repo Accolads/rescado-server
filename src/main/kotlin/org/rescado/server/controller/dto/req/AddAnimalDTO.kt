@@ -12,35 +12,35 @@ data class AddAnimalDTO(
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.kind}")
     @get:AnimalKind(message = "{AnimalKind.AddAnimalDTO.kind")
-    val kind: String,
+    val kind: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.breed}")
-    val breed: String,
+    val breed: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.name}")
-    val name: String,
+    val name: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.description}")
-    val description: String,
+    val description: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.sex}")
     @get:AnimalSex(message = "{AnimalSex.AddAnimalDTO.sex")
-    val sex: String,
+    val sex: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.birthday}")
     @get:Pattern(message = "{Pattern.AddAnimalDTO.birthday}", regexp = "^20\\d{2}-[0-1][1-9]-[0-3]\\d\$")
-    val birthday: String,
+    val birthday: String?,
 
     @get:NotNull(message = "{NotNull.AddAnimalDTO.weight}")
     @get:Min(value = 1, message = "{Min.AddAnimalDTO.weight")
-    val weight: Int,
+    val weight: Int?,
 
     @get:NotNull(message = "{NotNull.AddAnimalDTO.vaccinated}")
-    val vaccinated: Boolean,
+    val vaccinated: Boolean?,
 
     @get:NotNull(message = "{NotNull.AddAnimalDTO.sterilized}")
-    val sterilized: Boolean,
+    val sterilized: Boolean?,
 
     @get:NotEmpty(message = "{NotEmpty.AddAnimalDTO.photos}")
-    val photos: List<String>
+    val photos: List<String>?
 )

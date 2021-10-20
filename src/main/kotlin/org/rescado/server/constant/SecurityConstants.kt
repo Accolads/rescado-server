@@ -2,12 +2,9 @@ package org.rescado.server.constant
 
 object SecurityConstants {
     const val DEFAULT_ADMIN_USERNAME = "rescado-superadmin"
-    const val DEFAULT_ADMIN_PASSWORD = "?R3\$c4d0-P4s\$W0rd!"
-
-    const val AUTHORIZATION_HEADER = "Authorization"
+    const val DEFAULT_ADMIN_PASSWORD = "rescado-password"
 
     const val BASIC_PREFIX = "Basic "
-
     const val TOKEN_PREFIX = "Bearer "
     const val TOKEN_TYPE = "JWT"
     const val TOKEN_TTL = 24L // 24 hours

@@ -50,8 +50,8 @@ class AdminController(
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         return adminService.create(
-            username = dto.username,
-            password = dto.password,
+            username = dto.username!!,
+            password = dto.password!!,
         ).toAdminDTO().build(HttpStatus.CREATED)
     }
 
@@ -86,11 +86,11 @@ class AdminController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getById(dto.accountId)
+        val account = accountService.getById(dto.accountId!!)
             ?: return BadRequest(error = messageService["error.NonExistentAccount.message", dto.accountId]).build()
         if (account.status == Account.Status.ANONYMOUS)
             return BadRequest(error = messageService["error.AccountIsAnonymous.message", dto.accountId]).build()
-        val shelter = shelterService.getById(dto.shelterId)
+        val shelter = shelterService.getById(dto.shelterId!!)
             ?: return BadRequest(error = messageService["error.NonExistentShelter.message", dto.shelterId]).build()
         if (account.shelter != null)
             return BadRequest(error = messageService["error.AccountIsAlreadyVolunteer.message", dto.accountId]).build()

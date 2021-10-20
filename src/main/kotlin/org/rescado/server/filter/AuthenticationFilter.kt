@@ -13,6 +13,7 @@ import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.AdminService
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -37,7 +38,7 @@ class AuthenticationFilter(
     )
     override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, chain: FilterChain) {
         try {
-            val authHeader = req.getHeader(SecurityConstants.AUTHORIZATION_HEADER) ?: throw MissingCredentialsException()
+            val authHeader = req.getHeader(HttpHeaders.AUTHORIZATION) ?: throw MissingCredentialsException()
 
             SecurityContextHolder.getContext().authentication = when {
                 authHeader.startsWith(SecurityConstants.TOKEN_PREFIX) -> bearerAuthentication(authHeader)

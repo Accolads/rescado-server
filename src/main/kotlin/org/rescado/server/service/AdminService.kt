@@ -9,7 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.core.env.Environment
+import org.springframework.core.env.Profiles
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -17,16 +17,15 @@ import javax.transaction.Transactional
 @Transactional
 class AdminService(
     private val adminRepository: AdminRepository,
-    private val environment: Environment,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @EventListener
-    fun onApplicationEvent(event: ContextRefreshedEvent?) {
+    fun onApplicationEvent(event: ContextRefreshedEvent) {
         if (adminRepository.count() == 0L) {
             logger.warn("No admins found in the database. Creating admin with default credentials...")
             create(SecurityConstants.DEFAULT_ADMIN_USERNAME, SecurityConstants.DEFAULT_ADMIN_PASSWORD)
-        } else if (!environment.activeProfiles.any { it.equals("PROD", true) }) {
+        } else if (event.applicationContext.environment.acceptsProfiles(Profiles.of("!prod"))) {
             val admin = getByUsername(SecurityConstants.DEFAULT_ADMIN_USERNAME)
                 ?: return
             logger.warn("Default admin found in database. Resetting its password...")
@@ -51,7 +50,7 @@ class AdminService(
 
     fun update(admin: Admin, username: String?, password: String?): Admin {
         username?.let { admin.username = it }
-        password?.let { admin.password = it }
+        password?.let { admin.password = hashPassword(it) }
 
         return adminRepository.save(admin)
     }

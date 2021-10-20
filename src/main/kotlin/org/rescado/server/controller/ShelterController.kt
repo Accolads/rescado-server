@@ -82,16 +82,16 @@ class ShelterController(
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
         return shelterService.create(
-            name = dto.name,
-            email = dto.email,
-            website = dto.website,
+            name = dto.name!!,
+            email = dto.email!!,
+            website = dto.website!!,
             newsfeed = dto.newsfeed,
-            address = dto.address,
-            postalCode = dto.postalCode,
-            city = dto.city,
-            country = dto.country,
+            address = dto.address!!,
+            postalCode = dto.postalCode!!,
+            city = dto.city!!,
+            country = dto.country!!,
             geometry = pointGenerator.make(dto.latitude, dto.longitude)!!,
-            logo = imageService.create(Image.Type.LOGO, dto.logo),
+            logo = imageService.create(Image.Type.LOGO, dto.logo!!),
             banner = dto.banner?.let { imageService.create(Image.Type.BANNER, dto.banner) },
         ).toShelterDTO().build(HttpStatus.CREATED)
     }
@@ -191,16 +191,16 @@ class ShelterController(
         val now = ZonedDateTime.now()
         return animalService.create(
             shelter = shelter,
-            kind = Animal.Kind.valueOf(dto.kind),
-            breed = dto.breed,
-            name = dto.name,
-            description = dto.description,
-            sex = Animal.Sex.valueOf(dto.sex),
+            kind = Animal.Kind.valueOf(dto.kind!!),
+            breed = dto.breed!!,
+            name = dto.name!!,
+            description = dto.description!!,
+            sex = Animal.Sex.valueOf(dto.sex!!),
             birthday = ZonedDateTime.parse(dto.birthday),
-            weight = dto.weight,
-            vaccinated = dto.vaccinated,
-            sterilized = dto.sterilized,
-            photos = dto.photos.map { imageService.create(Image.Type.BANNER, it) }.toMutableSet()
+            weight = dto.weight!!,
+            vaccinated = dto.vaccinated!!,
+            sterilized = dto.sterilized!!,
+            photos = dto.photos!!.map { imageService.create(Image.Type.BANNER, it) }.toMutableSet()
         ).toAnimalDTO(now).build(HttpStatus.CREATED)
     }
 
@@ -309,7 +309,7 @@ class ShelterController(
         val animal = shelter.animals.find { it.id == animalId }
             ?: return NotFound(error = messageService["error.AnimalNotFound.message"]).build()
 
-        return animalService.addPhoto(animal, imageService.create(Image.Type.PHOTO, dto.reference))
+        return animalService.addPhoto(animal, imageService.create(Image.Type.PHOTO, dto.reference!!))
             .photos.toImageArrayDTO().build()
     }
 

@@ -71,7 +71,7 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getByEmailAndPassword(dto.email, dto.password)
+        val account = accountService.getByEmailAndPassword(dto.email!!, dto.password!!)
             ?: return BadRequest(error = messageService["error.CredentialsMismatch.message"]).build()
 
         val session = sessionService.create(
@@ -93,7 +93,7 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getByUuid(dto.uuid)
+        val account = accountService.getByUuid(dto.uuid!!)
             ?: return BadRequest(error = messageService["error.NotAnonymous.message"]).build() // don't tell account isn't registered
         if (account.status != Account.Status.ANONYMOUS)
             return BadRequest(error = messageService["error.NotAnonymous.message"]).build()
@@ -117,10 +117,10 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getByUuid(dto.uuid)
+        val account = accountService.getByUuid(dto.uuid!!)
             ?: return BadRequest(error = messageService["error.TokenMismatch.message"]).build() // don't tell account isn't registered
 
-        var session = sessionService.getInitializedByToken(dto.token)
+        var session = sessionService.getInitializedByToken(dto.token!!)
         if (session?.account != account) // token is null or token account does not match the requested account
             return BadRequest(error = messageService["error.TokenMismatch.message"]).build()
 
