@@ -5,8 +5,10 @@ import org.rescado.server.controller.dto.req.PatchAccountDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
+import org.rescado.server.controller.dto.toAccountArrayDTO
 import org.rescado.server.controller.dto.toAccountDTO
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.ImageService
@@ -14,6 +16,7 @@ import org.rescado.server.service.MessageService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,6 +30,24 @@ class AccountController(
     private val imageService: ImageService,
     private val messageService: MessageService,
 ) {
+
+    @GetMapping("/all")
+    fun getAll(): ResponseEntity<*> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Admin)
+            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+
+        return accountService.getAll().toAccountArrayDTO().build()
+    }
+
+    @GetMapping
+    fun get(): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Account)
+            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+
+        return user.toAccountDTO().build()
+    }
 
     @PatchMapping
     fun patch(

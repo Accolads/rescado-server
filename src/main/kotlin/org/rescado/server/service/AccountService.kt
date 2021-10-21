@@ -17,6 +17,12 @@ class AccountService(
     private val imageService: ImageService,
 ) {
 
+    fun getAll(): List<Account> = accountRepository.findAll()
+
+    fun getAllVolunteers(): List<Account> = accountRepository.findAllByShelterIsNotNull()
+
+    fun getAllVolunteers(shelter: Shelter): List<Account> = accountRepository.findAllByShelter(shelter)
+
     fun getById(id: Long): Account? = accountRepository.findById(id).orElse(null)
 
     fun getByUuid(uuid: String) = accountRepository.findByUuid(uuid)

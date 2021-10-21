@@ -1,6 +1,5 @@
 package org.rescado.server.service
 
-import org.hibernate.Hibernate
 import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
@@ -19,17 +18,6 @@ class AnimalService(
 ) {
 
     fun getById(id: Long): Animal? = animalRepository.findById(id).orElse(null)
-
-    fun getAll(): List<Animal> {
-        val animals = animalRepository.findAll()
-        animals.forEach {
-            Hibernate.initialize(it.photos)
-            Hibernate.initialize(it.shelter)
-            Hibernate.initialize(it.shelter.logo)
-            Hibernate.initialize(it.shelter.banner)
-        }
-        return animals
-    }
 
     fun create(
         shelter: Shelter,

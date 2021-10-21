@@ -390,8 +390,8 @@ databaseChangeLog:
             constraintName: account_shelter_id
             baseTableName: account
             baseColumnNames: shelter_id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: SET NULL
+            onDelete: SET NULL
             referencedColumnNames: id
             referencedTableName: shelter
             validate: true

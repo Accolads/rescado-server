@@ -57,7 +57,7 @@ class ExceptionResolver(
 
     @ExceptionHandler
     fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException) =
-        BadRequest(error = messageService["exception.MethodArgumentTypeMismatchException.message", e.value, e.name ]).build()
+        BadRequest(error = messageService["exception.MethodArgumentTypeMismatchException.message", e.value]).build()
 
     @ExceptionHandler
     fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException) =

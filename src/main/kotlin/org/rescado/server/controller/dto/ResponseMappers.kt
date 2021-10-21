@@ -49,20 +49,15 @@ fun Account.toNewAccountDTO(authorization: String) = AuthenticationDTO(
     httpStatus = HttpStatus.CREATED,
     authorization = authorization,
     status = status.name,
-    uuid = uuid,
-    email = email,
-    shelter = shelter?.toShelterDTO(true),
 )
 
 fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
     authorization = authorization,
     status = status.name,
-    uuid = uuid,
-    email = email,
-    shelter = shelter?.toShelterDTO(true),
 )
 
 fun Account.toAccountDTO() = AccountDTO(
+    id = id,
     status = status.name,
     uuid = uuid,
     email = email,
@@ -70,10 +65,13 @@ fun Account.toAccountDTO() = AccountDTO(
     avatar = avatar?.toImageDTO(),
     shelter = shelter?.toShelterDTO(true),
 )
+
+fun List<Account>.toAccountArrayDTO() = this.map { it.toAccountDTO() }
 // endregion
 // region Admin mappers
 
 fun Admin.toAdminDTO() = AdminDTO(
+    id = id,
     username = username,
 )
 

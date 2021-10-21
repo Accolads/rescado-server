@@ -1,5 +1,6 @@
 package org.rescado.server.service
 
+import org.hibernate.Hibernate
 import org.locationtech.jts.geom.Point
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
@@ -14,9 +15,13 @@ class ShelterService(
     private val imageService: ImageService,
 ) {
 
+    fun getAll(): MutableList<Shelter> = shelterRepository.findAll()
+
     fun getById(id: Long): Shelter? = shelterRepository.findById(id).orElse(null)
 
-    fun getAll(): MutableList<Shelter> = shelterRepository.findAll()
+    fun getByIdWithAnimals(id: Long) = getById(id)?.apply {
+        Hibernate.initialize(animals)
+    }
 
     fun create(
         name: String,

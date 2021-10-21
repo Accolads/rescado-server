@@ -30,7 +30,7 @@ class InteractionController(
     private val likeService: LikeService,
     private val animalService: AnimalService,
     private val messageService: MessageService,
-) {
+) { // TODO Test and implement more interactions
 
     @GetMapping("/like")
     fun getLikes(
@@ -74,7 +74,7 @@ class InteractionController(
                 try {
                     likeService.create(user, it)
                     successfullyLikedAnimalIds.add(id)
-                } catch (e: Exception) { // TODO only catch SQL Exception that is thrown when adding duplicates
+                } catch (e: Exception) { // TODO only catch SQL constraint-specific Exception that is thrown when adding duplicates
                     alreadyLikedAnimalIds.add(id)
                 }
             } ?: run {

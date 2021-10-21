@@ -26,8 +26,8 @@ fun generateAccessToken(account: Account, session: Session, serverName: String):
         .setNotBefore(Date.from(now))
         .claim("status", account.status.name)
         .claim("agent", session.agent)
-        .claim("refresh_token", session.refreshToken)
-        .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
+        .claim("refreshToken", session.refreshToken)
+        .claim("refreshExpiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
         .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
         .compact()
     return "${SecurityConstants.TOKEN_PREFIX}$jwt"

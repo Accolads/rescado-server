@@ -11,9 +11,6 @@ data class AuthenticationDTO(
     @JsonIgnore val authorization: String,
 
     val status: String,
-    val uuid: String,
-    val email: String?,
-    val shelter: ShelterDTO?,
 ) : Response() {
     init {
         httpHeaders.add(HttpHeaders.AUTHORIZATION, this.authorization)
