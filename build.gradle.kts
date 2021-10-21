@@ -7,7 +7,7 @@ group = "org.rescado"
 version = "1.0.0-${if (revision.isNullOrBlank()) "SNAPSHOT" else "$branch-$revision"}"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-print("Current build version: $version")
+println("Current build version: $version")
 
 // Sources
 repositories {
@@ -109,6 +109,7 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "11" // JVM version
         freeCompilerArgs = listOf("-Xjsr305=strict") // strict null-safety
     }
+    dependsOn("ktlintFormat") // format before compiling
     finalizedBy("installGitHooks") // install most recent Git hooks
 }
 

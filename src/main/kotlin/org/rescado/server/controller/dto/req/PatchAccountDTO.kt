@@ -4,13 +4,13 @@ import org.rescado.server.controller.dto.validation.WhitelistedPassword
 import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
-data class UpdateAccountDTO(
+data class PatchAccountDTO(
 
-    @get:Email(message = "{Email.UpdateAccountEmailDTO.email}")
+    @get:Email(message = "{Email.PatchAccountDTO.email}")
     val email: String?,
 
-    @get:Size(min = 8, message = "{Size.UpdatePasswordDTO.password}")
-    @get:WhitelistedPassword(message = "{WhitelistedPassword.UpdatePasswordDTO.password}")
+    @get:Size(min = 8, message = "{Size.PatchAccountDTO.password}")
+    @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAccountDTO.password}")
     val password: String?,
 
     val name: String?,

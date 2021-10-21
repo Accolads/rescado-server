@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
         - createSequence:
             sequenceName: id_sequence
-            dataType: bigint
+            dataType: BIGINT
             minValue: 1
             maxValue: 9223372036854775807
             startValue: 1000
@@ -13,6 +13,25 @@ databaseChangeLog:
             cacheSize: 1
             cycle: false
 
+        - createTable:
+            tableName: admin
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: admin_pkey
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(60)
         - createTable:
             tableName: session
             columns:
@@ -133,12 +152,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: city
+                  name: postal_code
                   type: VARCHAR(45)
                   constraints:
                     nullable: false
               - column:
-                  name: postal_code
+                  name: city
                   type: VARCHAR(45)
                   constraints:
                     nullable: false
@@ -229,7 +248,7 @@ databaseChangeLog:
                     primaryKeyName: image_pkey
                     nullable: false
               - column:
-                  name: url
+                  name: reference
                   type: VARCHAR(255)
                   constraints:
                     unique: true

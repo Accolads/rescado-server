@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/2021-10-03.yml
+  - include:
+      file: db/seeding.yml # TODO remove this

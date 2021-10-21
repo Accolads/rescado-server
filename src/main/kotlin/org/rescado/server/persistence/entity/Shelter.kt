@@ -29,11 +29,11 @@ open class Shelter(
     @Column(name = "address")
     open var address: String,
 
-    @Column(name = "city")
-    open var city: String,
-
     @Column(name = "postal_code")
     open var postalCode: String,
+
+    @Column(name = "city")
+    open var city: String,
 
     @Column(name = "country")
     open var country: String,

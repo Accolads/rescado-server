@@ -11,27 +11,28 @@ import javax.persistence.Table
 @Table(name = "image")
 open class Image(
 
-    @Column(name = "url")
-    open var url: String,
+    @Column(name = "reference")
+    open var reference: String,
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    open var type: ImageType,
+    open var type: Type,
 
     @Column(name = "source")
     @Enumerated(EnumType.STRING)
-    open var source: ImageSource,
+    open var source: Source,
 
-) : Identifiable()
+) : Identifiable() {
 
-enum class ImageType {
-    AVATAR, // Account profile picture
-    LOGO, // Shelter logo
-    BANNER, // Shelter page banner
-    PHOTO, // Animal photo
-}
+    enum class Type {
+        AVATAR, // Account profile picture
+        LOGO, // Shelter logo
+        BANNER, // Shelter page banner
+        PHOTO, // Animal photo
+    }
 
-enum class ImageSource {
-    EXTERNAL, // hosted on external site
-    FIREBASE, // in our Firebase Cloud Storage
+    enum class Source {
+        EXTERNAL, // hosted on external site
+        INTERNAL, // in our Firebase Cloud Storage
+    }
 }

@@ -31,7 +31,7 @@ open class Account(
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    open var status: AccountStatus,
+    open var status: Status,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shelter_id", referencedColumnName = "id")
@@ -55,9 +55,10 @@ open class Account(
     @OneToMany(mappedBy = "account")
     open var swipes: MutableSet<Swipe>,
 
-) : Identifiable()
+) : Identifiable() {
 
-enum class AccountStatus {
-    ENABLED,
-    DISABLED,
+    enum class Status {
+        ENABLED,
+        DISABLED,
+    }
 }

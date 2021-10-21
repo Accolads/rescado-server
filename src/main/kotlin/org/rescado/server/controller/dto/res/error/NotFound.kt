@@ -3,6 +3,9 @@ package org.rescado.server.controller.dto.res.error
 import org.rescado.server.controller.dto.res.Response
 import org.springframework.http.HttpStatus
 
-data class NotFound(
-    val error: String = "The data you are looking for could not be found"
-) : Response(httpStatus = HttpStatus.NOT_FOUND)
+class NotFound(errors: List<String>) : Response(
+    httpStatus = HttpStatus.NOT_FOUND,
+    errors = errors,
+) {
+    constructor(error: String) : this(listOf(error))
+}

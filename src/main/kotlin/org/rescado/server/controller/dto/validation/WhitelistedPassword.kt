@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 @Constraint(validatedBy = [WhitelistedPasswordValidator::class])
 annotation class WhitelistedPassword(
-    val message: String = "{nuntium.validation.WhitelistedPassword.message}",
+    val message: String = "{validation.WhitelistedPassword.message}",
     val groups: Array<KClass<out Any>> = [],
     val payload: Array<KClass<out Any>> = [],
 )

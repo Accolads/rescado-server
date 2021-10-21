@@ -1,10 +1,8 @@
-package org.rescado.server.util
+package org.rescado.server.controller.dto
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.locationtech.jts.geom.Point
-import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.res.AccountDTO
+import org.rescado.server.controller.dto.res.AdminDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
@@ -12,39 +10,27 @@ import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
 import org.rescado.server.controller.dto.res.ShelterDTO
 import org.rescado.server.persistence.entity.Account
+import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.Duration
-import java.time.Instant
 import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
-import java.util.Date
 
-fun generateResponse(response: Response): ResponseEntity<Response> = ResponseEntity(response, response.httpHeaders, response.httpStatus)
+fun Response.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
+    this,
+    this.httpHeaders,
+    httpStatusOverride ?: this.httpStatus
+)
 
-fun generateResponse(response: List<Response>): ResponseEntity<List<Response>> = if (response.isEmpty()) ResponseEntity(response, HttpStatus.OK) else ResponseEntity(response, response.first().httpHeaders, response.first().httpStatus)
-
-fun generateAccessToken(account: Account, session: Session, serverName: String): String {
-    val now = Instant.now()
-    val jwt = Jwts.builder()
-        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
-        .setHeaderParam("typ", SecurityConstants.TOKEN_TYPE)
-        .setIssuer("$serverName${SecurityConstants.AUTH_ROUTE}")
-        .setAudience(serverName)
-        .setSubject(account.uuid)
-        .setExpiration(Date.from(now.plus(SecurityConstants.TOKEN_TTL, ChronoUnit.HOURS)))
-        .setIssuedAt(Date.from(now))
-        .setNotBefore(Date.from(now))
-        .claim("account", account.email)
-        .claim("agent", session.agent)
-        .claim("refresh_token", session.refreshToken)
-        .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
-        .compact()
-    return "${SecurityConstants.TOKEN_PREFIX}$jwt"
-}
+fun List<Response>.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
+    this,
+    this.firstOrNull()?.httpHeaders ?: HttpHeaders.EMPTY,
+    httpStatusOverride ?: this.firstOrNull()?.httpStatus ?: HttpStatus.OK
+)
 
 // region Point mappers
 
@@ -77,6 +63,13 @@ fun Account.toAccountDTO() = AccountDTO(
     status = status.name,
 )
 // endregion
+// region Admin mappers
+
+fun Admin.toAdminDTO() = AdminDTO(
+    username = username,
+)
+
+// endregion
 // region Session mappers
 
 fun Session.toSessionDTO() = SessionDTO(
@@ -92,7 +85,7 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 // endregion
 // region Shelter mappers
 
-fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
+fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) ShelterDTO(
     id = id,
     name = name,
     email = null,
@@ -103,7 +96,7 @@ fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.url,
+    logo = logo.reference,
     banner = null,
 ) else ShelterDTO(
     id = id,
@@ -116,9 +109,11 @@ fun Shelter.toShelterDTO(shortVersion: Boolean) = if (shortVersion) ShelterDTO(
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.url,
-    banner = banner?.url,
+    logo = logo.reference,
+    banner = banner?.reference,
 )
+
+fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
@@ -133,7 +128,7 @@ fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
-    photos = photos.map { it.url },
+    photos = photos.map { it.reference },
     shelter = shelter.toShelterDTO(true),
 )
 
