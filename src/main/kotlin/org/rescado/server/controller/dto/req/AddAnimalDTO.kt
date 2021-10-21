@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern
 data class AddAnimalDTO(
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.kind}")
-    @get:AnimalKind(message = "{AnimalKind.AddAnimalDTO.kind")
+    @get:AnimalKind(message = "{AnimalKind.AddAnimalDTO.kind}")
     val kind: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.breed}")
@@ -24,7 +24,7 @@ data class AddAnimalDTO(
     val description: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.sex}")
-    @get:AnimalSex(message = "{AnimalSex.AddAnimalDTO.sex")
+    @get:AnimalSex(message = "{AnimalSex.AddAnimalDTO.sex}")
     val sex: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAnimalDTO.birthday}")
@@ -32,7 +32,7 @@ data class AddAnimalDTO(
     val birthday: String?,
 
     @get:NotNull(message = "{NotNull.AddAnimalDTO.weight}")
-    @get:Min(value = 1, message = "{Min.AddAnimalDTO.weight")
+    @get:Min(value = 1, message = "{Min.AddAnimalDTO.weight}")
     val weight: Int?,
 
     @get:NotNull(message = "{NotNull.AddAnimalDTO.vaccinated}")

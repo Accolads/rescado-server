@@ -7,7 +7,7 @@ data class PatchAdminDTO(
 
     val username: String?,
 
-    @get:Size(min = 8, message = "{Size.PatchAdminDTO.password}")
+    @get:Size(message = "{Size.PatchAdminDTO.password}", min = 8)
     @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAdminDTO.password}")
     val password: String?,
 )

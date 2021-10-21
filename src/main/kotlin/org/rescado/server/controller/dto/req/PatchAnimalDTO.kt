@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern
 
 data class PatchAnimalDTO(
 
-    @get:AnimalKind(message = "{AnimalKind.PatchAnimalDTO.kind")
+    @get:AnimalKind(message = "{AnimalKind.PatchAnimalDTO.kind}")
     val kind: String?,
 
     val breed: String?,
@@ -16,7 +16,7 @@ data class PatchAnimalDTO(
 
     val description: String?,
 
-    @get:AnimalSex(message = "{AnimalSex.PatchAnimalDTO.sex")
+    @get:AnimalSex(message = "{AnimalSex.PatchAnimalDTO.sex}")
     val sex: String?,
 
     @get:Pattern(message = "{Pattern.PatchAnimalDTO.birthday}", regexp = "^20\\d{2}-[0-1][1-9]-[0-3]\\d\$")

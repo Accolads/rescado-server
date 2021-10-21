@@ -10,7 +10,7 @@ data class AddAdminDTO(
     val username: String?,
 
     @get:NotBlank(message = "{NotBlank.AddAdminDTO.password}")
-    @get:Size(min = 8, message = "{Size.AddAdminDTO.password}")
+    @get:Size(message = "{Size.AddAdminDTO.password}", min = 8)
     @get:WhitelistedPassword(message = "{WhitelistedPassword.AddAdminDTO.password}")
     val password: String?,
 )

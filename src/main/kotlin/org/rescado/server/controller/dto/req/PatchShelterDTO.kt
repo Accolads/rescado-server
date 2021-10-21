@@ -11,7 +11,7 @@ data class PatchShelterDTO(
     @get:Email(message = "{Email.PatchShelterDTO.email}")
     val email: String?,
 
-    @get:URL(message = "{URL.PatchShelterDTO.website}",)
+    @get:URL(message = "{URL.PatchShelterDTO.website}")
     val website: String?,
 
     @get:URL(message = "{URL.PatchShelterDTO.newsfeed}")
@@ -25,10 +25,10 @@ data class PatchShelterDTO(
 
     val country: String?,
 
-    @get:InRange(min = -90.0, max = 90.0, message = "{InRange.PatchShelterDTO.latitude}")
+    @get:InRange(message = "{InRange.PatchShelterDTO.latitude}", min = -90.0, max = 90.0)
     val latitude: Double?,
 
-    @get:InRange(min = -180.0, max = 180.0, message = "{InRange.PatchShelterDTO.longitude}")
+    @get:InRange(message = "{InRange.PatchShelterDTO.longitude}", min = -180.0, max = 180.0)
     val longitude: Double?,
 
     val logo: String?,

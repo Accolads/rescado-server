@@ -11,7 +11,7 @@ data class PatchAccountDTO(
     @get:Email(message = "{Email.PatchAccountDTO.email}")
     val email: String?,
 
-    @get:Size(min = 8, message = "{Size.PatchAccountDTO.password}")
+    @get:Size(message = "{Size.PatchAccountDTO.password}", min = 8)
     @get:WhitelistedPassword(message = "{WhitelistedPassword.PatchAccountDTO.password}")
     val password: String?,
 

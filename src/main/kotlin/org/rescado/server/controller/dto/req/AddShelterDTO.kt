@@ -35,11 +35,11 @@ data class AddShelterDTO(
     val country: String?,
 
     @get:NotNull(message = "{NotNull.AddShelterDTO.latitude}")
-    @get:InRange(min = -90.0, max = 90.0, message = "{InRange.AddShelterDTO.latitude}")
+    @get:InRange(message = "{InRange.AddShelterDTO.latitude}", min = -90.0, max = 90.0)
     val latitude: Double?,
 
     @get:NotNull(message = "{NotNull.AddShelterDTO.longitude}")
-    @get:InRange(min = -180.0, max = 180.0, message = "{InRange.AddShelterDTO.longitude}")
+    @get:InRange(message = "{InRange.AddShelterDTO.longitude}", min = -180.0, max = 180.0)
     val longitude: Double?,
 
     @get:NotBlank(message = "{NotBlank.AddShelterDTO.logo}")

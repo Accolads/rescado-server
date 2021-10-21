@@ -14,10 +14,10 @@ data class AuthWithTokenDTO(
     @get:Pattern(message = "{Pattern.AuthWithTokenDTO.token}", regexp = "^[\\w]{8}-[\\w]{4}-[\\w]{4}-[\\w]{4}-[\\w]{12}$")
     val token: String?,
 
-    @get:InRange(min = -90.0, max = 90.0, message = "{InRange.AuthWithTokenDTO.latitude}")
+    @get:InRange(message = "{InRange.AuthWithTokenDTO.latitude}", min = -90.0, max = 90.0)
     override val latitude: Double?,
 
-    @get:InRange(min = -180.0, max = 180.0, message = "{InRange.AuthWithTokenDTO.longitude}")
+    @get:InRange(message = "{InRange.AuthWithTokenDTO.longitude}", min = -180.0, max = 180.0)
     override val longitude: Double?,
 
 ) : AuthDTO(latitude, longitude)
