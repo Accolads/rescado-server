@@ -1,6 +1,7 @@
 package org.rescado.server.controller.dto.req
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.validation.AnimalKind
 import org.rescado.server.controller.dto.validation.AnimalSex
 import javax.validation.constraints.Min
@@ -54,6 +55,6 @@ data class AddAnimalDTO(
 
     @JsonProperty("photos")
     @get:NotEmpty(message = "{NotEmpty.AddAnimalDTO.photos}")
-    @get:Size(message = "{Size.AddAnimalDTO.photos}", max = 10)
+    @get:Size(message = "{Size.AddAnimalDTO.photos}", max = SecurityConstants.IMAGE_MAX_REFERENCES)
     val photos: List<String>?
 )
