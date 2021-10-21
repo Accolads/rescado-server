@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.Duration
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 // region Response mappers
@@ -117,14 +118,14 @@ fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
+fun Animal.toAnimalDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
     id = id,
     name = name,
     kind = kind.name,
     breed = breed,
     sex = sex.name,
     photos = photos.toImageArrayDTO(),
-    shelter = shelter.toShelterDTO(true),
+    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
 ) else AnimalDTO(
     id = id,
     name = name,
@@ -132,15 +133,15 @@ fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
     kind = kind.name,
     breed = breed,
     sex = sex.name,
-    age = (Duration.between(birthday, now).toDays() / 365).toInt(),
+    age = (Duration.between(birthday.atStartOfDay(ZoneId.systemDefault()), now).toDays() / 365).toInt(),
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
     photos = photos.toImageArrayDTO(),
-    shelter = shelter.toShelterDTO(true),
+    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
 )
 
-fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime) = this.map { it.toAnimalDTO(now) }
+fun List<Animal>.toAnimalArrayDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(shelterOverride, now) }
 // endregion
 // region Image mappers
 

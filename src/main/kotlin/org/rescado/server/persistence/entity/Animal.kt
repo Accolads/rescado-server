@@ -1,7 +1,7 @@
 package org.rescado.server.persistence.entity
 
 import org.rescado.server.persistence.Identifiable
-import java.time.ZonedDateTime
+import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -39,7 +39,7 @@ open class Animal(
     open var sex: Sex,
 
     @Column(name = "birthday")
-    open var birthday: ZonedDateTime,
+    open var birthday: LocalDate,
 
     @Column(name = "weight")
     open var weight: Int,

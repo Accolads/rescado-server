@@ -1,6 +1,5 @@
 package org.rescado.server.controller
 
-import liquibase.pro.packaged.it
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddAnimalDTO
 import org.rescado.server.controller.dto.req.AddAnimalPhotoDTO
@@ -39,7 +38,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import javax.validation.Valid
 
 @RestController
@@ -161,7 +162,7 @@ class ShelterController(
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val now = ZonedDateTime.now()
-        return shelter.animals.map { it.toAnimalDTO(now) }.build()
+        return shelter.animals.map { it.toAnimalDTO(shelter, now) }.build()
     }
 
     @GetMapping("/{shelterId}/animal/{animalId}")
@@ -176,7 +177,7 @@ class ShelterController(
             ?: return NotFound(error = messageService["error.NonExistentAnimal.message", animalId]).build()
 
         val now = ZonedDateTime.now()
-        return animal.toAnimalDTO(now).build()
+        return animal.toAnimalDTO(shelter, now).build()
     }
 
     @PostMapping("/{shelterId}/animal")
@@ -198,17 +199,17 @@ class ShelterController(
         val now = ZonedDateTime.now()
         return animalService.create(
             shelter = shelter,
-            kind = Animal.Kind.valueOf(dto.kind!!),
+            kind = Animal.Kind.valueOf(dto.kind!!.uppercase()),
             breed = dto.breed!!,
             name = dto.name!!,
             description = dto.description!!,
-            sex = Animal.Sex.valueOf(dto.sex!!),
-            birthday = ZonedDateTime.parse(dto.birthday),
+            sex = Animal.Sex.valueOf(dto.sex!!.uppercase()),
+            birthday = LocalDate.parse(dto.birthday, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
             weight = dto.weight!!,
             vaccinated = dto.vaccinated!!,
             sterilized = dto.sterilized!!,
             photos = dto.photos!!.map { imageService.create(Image.Type.BANNER, it) }.toMutableSet()
-        ).toAnimalDTO(now).build(HttpStatus.CREATED)
+        ).toAnimalDTO(shelter, now).build(HttpStatus.CREATED)
     }
 
     @PatchMapping("/{shelterId}/animal/{animalId}")
@@ -222,7 +223,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != shelterId)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = if (user is Account) user.shelter!! else shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -234,16 +235,16 @@ class ShelterController(
         val now = ZonedDateTime.now()
         return animalService.update(
             animal = animal,
-            kind = dto.kind?.let { Animal.Kind.valueOf(it) },
+            kind = dto.kind?.let { Animal.Kind.valueOf(it.uppercase()) },
             breed = dto.breed,
             name = dto.name,
             description = dto.description,
-            sex = dto.sex?.let { Animal.Sex.valueOf(it) },
-            birthday = ZonedDateTime.parse(dto.birthday),
+            sex = dto.sex?.let { Animal.Sex.valueOf(it.uppercase()) },
+            birthday = dto.birthday?.let { LocalDate.parse(dto.birthday, DateTimeFormatter.ofPattern("yyyy-MM-dd")) },
             weight = dto.weight,
             vaccinated = dto.vaccinated,
             sterilized = dto.sterilized,
-        ).toAnimalDTO(now).build()
+        ).toAnimalDTO(shelter, now).build()
     }
 
     @DeleteMapping("/{shelterId}/animal/{animalId}")
@@ -255,7 +256,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != shelterId)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = if (user is Account) user.shelter!! else shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -273,7 +274,7 @@ class ShelterController(
         @PathVariable shelterId: Long,
         @PathVariable animalId: Long,
     ): ResponseEntity<*> {
-        val shelter = shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -288,7 +289,7 @@ class ShelterController(
         @PathVariable animalId: Long,
         @PathVariable photoId: Long,
     ): ResponseEntity<Response> {
-        val shelter = shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -310,7 +311,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != shelterId)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = if (user is Account) user.shelter!! else shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }
@@ -330,7 +331,7 @@ class ShelterController(
         if (user is Account && user.shelter?.id != shelterId)
             return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
 
-        val shelter = if (user is Account) user.shelter!! else shelterService.getById(shelterId)
+        val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
         val animal = shelter.animals.find { it.id == animalId }

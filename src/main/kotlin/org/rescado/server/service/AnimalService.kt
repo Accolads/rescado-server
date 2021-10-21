@@ -7,7 +7,7 @@ import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
 import org.rescado.server.service.exception.ImageLimitReachedException
 import org.springframework.stereotype.Service
-import java.time.ZonedDateTime
+import java.time.LocalDate
 import javax.transaction.Transactional
 
 @Service
@@ -26,7 +26,7 @@ class AnimalService(
         name: String,
         description: String,
         sex: Animal.Sex,
-        birthday: ZonedDateTime,
+        birthday: LocalDate,
         weight: Int,
         vaccinated: Boolean,
         sterilized: Boolean,
@@ -56,7 +56,7 @@ class AnimalService(
         name: String?,
         description: String?,
         sex: Animal.Sex?,
-        birthday: ZonedDateTime?,
+        birthday: LocalDate?,
         weight: Int?,
         vaccinated: Boolean?,
         sterilized: Boolean?,

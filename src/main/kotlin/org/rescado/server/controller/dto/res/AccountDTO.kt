@@ -1,5 +1,7 @@
 package org.rescado.server.controller.dto.res
 
+import com.fasterxml.jackson.annotation.JsonInclude
+
 data class AccountDTO(
     val id: Long,
     val status: String,
@@ -7,5 +9,5 @@ data class AccountDTO(
     val email: String?,
     val name: String?,
     val avatar: ImageDTO?,
-    val shelter: ShelterDTO?,
+    @JsonInclude(JsonInclude.Include.NON_NULL) val shelter: ShelterDTO?,
 ) : Response()

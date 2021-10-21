@@ -20,6 +20,6 @@ class AnimalKindValidator : ConstraintValidator<AnimalKind, String> {
     override fun initialize(constraintAnnotation: AnimalKind) {}
 
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
-        return enumValues<Animal.Kind>().any { it.name.equals(value, true) }
+        return if (value == null) true else enumValues<Animal.Kind>().any { it.name.equals(value, true) }
     }
 }
