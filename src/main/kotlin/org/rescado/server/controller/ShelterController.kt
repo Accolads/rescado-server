@@ -208,7 +208,7 @@ class ShelterController(
             weight = dto.weight!!,
             vaccinated = dto.vaccinated!!,
             sterilized = dto.sterilized!!,
-            photos = dto.photos!!.map { imageService.create(Image.Type.BANNER, it) }.toMutableSet()
+            photos = dto.photos!!.map { imageService.create(Image.Type.PHOTO, it) }.toMutableSet()
         ).toAnimalDTO(shelter, now).build(HttpStatus.CREATED)
     }
 

@@ -146,6 +146,7 @@ fun List<Animal>.toAnimalArrayDTO(shelterOverride: Shelter? = null, now: ZonedDa
 // region Image mappers
 
 fun Image.toImageDTO() = ImageDTO(
+    id = if (type == Image.Type.PHOTO) id else null,
     reference = reference,
     type = type.name,
     source = source.name,

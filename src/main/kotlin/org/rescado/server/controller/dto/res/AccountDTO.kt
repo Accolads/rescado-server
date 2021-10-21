@@ -9,5 +9,5 @@ data class AccountDTO(
     val email: String?,
     val name: String?,
     val avatar: ImageDTO?,
-    @JsonInclude(JsonInclude.Include.NON_NULL) val shelter: ShelterDTO?,
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val shelter: ShelterDTO?,
 ) : Response()
