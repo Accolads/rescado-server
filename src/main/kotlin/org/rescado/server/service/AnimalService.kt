@@ -5,7 +5,8 @@ import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
-import org.rescado.server.service.exception.ImageLimitReachedException
+import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
+import org.rescado.server.service.exception.PhotoMinimumLimitReachedException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import javax.transaction.Transactional
@@ -76,13 +77,15 @@ class AnimalService(
 
     fun addPhoto(animal: Animal, photo: Image): Animal {
         if (animal.photos.size >= SecurityConstants.IMAGE_MAX_REFERENCES)
-            throw ImageLimitReachedException(SecurityConstants.IMAGE_MAX_REFERENCES)
+            throw PhotoMaximumLimitReachedException(SecurityConstants.IMAGE_MAX_REFERENCES)
         animal.photos.add(photo)
         animalRepository.save(animal)
         return animal
     }
 
     fun removePhoto(animal: Animal, photo: Image): Animal {
+        if (animal.photos.size == 1)
+            throw PhotoMinimumLimitReachedException(1)
         imageService.delete(photo)
         animal.photos.remove(photo)
         animalRepository.save(animal)

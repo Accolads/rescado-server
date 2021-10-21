@@ -5,6 +5,7 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.res.error.BadRequest
+import org.rescado.server.controller.dto.res.error.Conflict
 import org.rescado.server.controller.dto.res.error.InternalServerError
 import org.rescado.server.controller.dto.res.error.MethodNotAllowed
 import org.rescado.server.controller.dto.res.error.NotFound
@@ -13,8 +14,9 @@ import org.rescado.server.filter.exception.MalformedCredentialsException
 import org.rescado.server.filter.exception.MissingCredentialsException
 import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.service.MessageService
-import org.rescado.server.service.exception.ImageLimitReachedException
 import org.rescado.server.service.exception.ImageSourceException
+import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
+import org.rescado.server.service.exception.PhotoMinimumLimitReachedException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.web.HttpMediaTypeNotSupportedException
@@ -36,8 +38,12 @@ class ExceptionResolver(
         BadRequest(error = messageService["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
 
     @ExceptionHandler
-    fun handleImageLimitReachedException(e: ImageLimitReachedException) =
-        BadRequest(error = messageService["exception.ImageLimitReachedException.message", e.limit]).build()
+    fun handlePhotoMinimumLimitReachedException(e: PhotoMinimumLimitReachedException) =
+        Conflict(error = messageService["exception.PhotoMinimumLimitReachedException.message", e.limit]).build()
+
+    @ExceptionHandler
+    fun handlePhotoMaximumLimitReachedException(e: PhotoMaximumLimitReachedException) =
+        Conflict(error = messageService["exception.PhotoMaximumLimitReachedException.message", e.limit]).build()
 
     @ExceptionHandler
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException) =
