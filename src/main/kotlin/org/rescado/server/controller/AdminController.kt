@@ -41,6 +41,8 @@ class AdminController(
     private val messageService: MessageService,
 ) {
 
+    // region Admin
+
     @PostMapping
     fun add(
         @Valid @RequestBody dto: AddAdminDTO,
@@ -77,6 +79,24 @@ class AdminController(
             password = dto.password,
         ).toAdminDTO().build()
     }
+
+    @DeleteMapping("/{adminId}")
+    fun removeById(
+        @PathVariable(required = false) adminId: Long? = null,
+    ): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Admin)
+            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+
+        val admin = if (adminId == null) user else adminService.getById(adminId)
+            ?: return NotFound(error = messageService["error.NonExistentAdmin.message", adminId]).build()
+
+        adminService.delete(admin)
+        return Response(httpStatus = HttpStatus.NO_CONTENT).build()
+    }
+
+    // endregion
+    // region Volunteer
 
     @GetMapping("/volunteer")
     fun getVolunteers(
@@ -120,7 +140,7 @@ class AdminController(
     }
 
     @DeleteMapping("/volunteer/{accountId}")
-    fun removeVolunteer(
+    fun removeVolunteerByAccountId(
         @PathVariable accountId: Long,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -136,4 +156,6 @@ class AdminController(
 
         return accountService.setVolunteer(account, null).toAccountDTO().build()
     }
+
+    // endregion
 }

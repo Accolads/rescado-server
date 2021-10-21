@@ -60,7 +60,7 @@ class AuthenticationFilter(
     )
     private fun bearerAuthentication(authHeader: String): UsernamePasswordAuthenticationToken {
         val jwt = Jwts.parserBuilder()
-            .setSigningKey(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
+            .setSigningKey(Keys.hmacShaKeyFor(SecurityConstants.SECRET.toByteArray()))
             .build()
             .parseClaimsJws(authHeader.replace(SecurityConstants.TOKEN_PREFIX, ""))
 

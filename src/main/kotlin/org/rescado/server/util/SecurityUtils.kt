@@ -10,7 +10,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Date
 
-fun hashPassword(password: String): String = BCrypt.hashpw(password, BCrypt.gensalt(12))
+fun hashPassword(password: String): String = BCrypt.hashpw(password, SecurityConstants.SALT)
 
 fun checkPassword(password: String, hashedPassword: String) = BCrypt.checkpw(password, hashedPassword)
 
@@ -28,7 +28,7 @@ fun generateAccessToken(account: Account, session: Session, serverName: String):
         .claim("agent", session.agent)
         .claim("refreshToken", session.refreshToken)
         .claim("refreshExpiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
-        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
+        .signWith(Keys.hmacShaKeyFor(SecurityConstants.SECRET.toByteArray()))
         .compact()
     return "${SecurityConstants.TOKEN_PREFIX}$jwt"
 }
