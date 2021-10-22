@@ -20,7 +20,9 @@ jobs:
           java-version: '11'
       - name: Checkout codebase
         id: checkout-codebase
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
       - name: Log in to DockerHub
         id: connect-docker
         uses: docker/login-action@v1.10.0

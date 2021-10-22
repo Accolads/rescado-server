@@ -25,7 +25,9 @@ jobs:
           java-version: '11'
       - name: Checkout codebase
         id: checkout-codebase
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
       - name: Verify code quality
         id: verify-quality
         run: ./gradlew ktlintCheck
