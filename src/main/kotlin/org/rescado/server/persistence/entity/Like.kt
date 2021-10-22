@@ -1,6 +1,7 @@
 package org.rescado.server.persistence.entity
 
 import org.rescado.server.persistence.CompositeAccountAnimalId
+import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -25,8 +26,11 @@ open class Like(
     @JoinColumn(name = "animal_id")
     open var animal: Animal,
 
-    @Column(name = "chat_ref")
-    open var uuid: String?,
+    @Column(name = "timestamp")
+    open var timestamp: ZonedDateTime,
+
+    @Column(name = "reference")
+    open var reference: String?,
 
     @Column(name = "unread_count")
     open var unreadCount: Int,

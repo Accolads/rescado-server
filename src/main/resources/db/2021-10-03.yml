@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 2021-10-03
-      author: Kristof Dewilde
+      author: rescado-server
       changes:
         - createSequence:
             sequenceName: id_sequence
@@ -251,7 +251,6 @@ databaseChangeLog:
                   name: reference
                   type: VARCHAR(255)
                   constraints:
-                    unique: true
                     nullable: false
               - column:
                   name: type
@@ -306,7 +305,12 @@ databaseChangeLog:
                     primaryKeyName: likes_pkey
                     nullable: false
               - column:
-                  name: chat_ref
+                  name: timestamp
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reference
                   type: VARCHAR(255)
                   constraints:
                     unique: true
@@ -379,14 +383,14 @@ databaseChangeLog:
             referencedTableName: account
             referencedColumnNames: id
             onUpdate: CASCADE
-            onDelete: NO ACTION
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: account_shelter_id
             baseTableName: account
             baseColumnNames: shelter_id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: SET NULL
+            onDelete: SET NULL
             referencedColumnNames: id
             referencedTableName: shelter
             validate: true
@@ -396,8 +400,8 @@ databaseChangeLog:
             baseColumnNames: avatar_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: shelter_logo_image_id
@@ -405,8 +409,8 @@ databaseChangeLog:
             baseColumnNames: logo_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: shelter_banner_image_id
@@ -414,8 +418,8 @@ databaseChangeLog:
             baseColumnNames: banner_image_id
             referencedTableName: image
             referencedColumnNames: id
-            onUpdate: NO ACTION
-            onDelete: NO ACTION
+            onUpdate: CASCADE
+            onDelete: CASCADE
             validate: true
         - addForeignKeyConstraint:
             constraintName: animal_shelter_id

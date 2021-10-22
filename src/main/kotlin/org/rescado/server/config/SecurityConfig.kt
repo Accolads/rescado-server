@@ -1,7 +1,7 @@
 package org.rescado.server.config
 
 import org.rescado.server.constant.SecurityConstants.AUTH_ROUTE
-import org.rescado.server.constant.SecurityConstants.INFO_ROUTE
+import org.rescado.server.constant.SecurityConstants.PUBLIC_ROUTE
 import org.rescado.server.filter.AuthenticationFilter
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.AdminService
@@ -28,7 +28,7 @@ class SecurityConfig(
             /**/.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             /**/.anyRequest().permitAll().and()
-            .regexMatcher("^(?!\\$AUTH_ROUTE|\\$INFO_ROUTE).*")
+            .regexMatcher("^(?!\\$AUTH_ROUTE|\\$PUBLIC_ROUTE).*")
             /**/.addFilter(
                 AuthenticationFilter(
                     authenticationManager = authenticationManager(),

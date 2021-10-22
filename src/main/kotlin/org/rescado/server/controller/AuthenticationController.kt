@@ -2,6 +2,7 @@ package org.rescado.server.controller
 
 import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.build
+import org.rescado.server.controller.dto.req.AuthAnonymouslyDTO
 import org.rescado.server.controller.dto.req.AuthWithPasswordDTO
 import org.rescado.server.controller.dto.req.AuthWithTokenDTO
 import org.rescado.server.controller.dto.req.RegisterAccountDTO
@@ -10,6 +11,7 @@ import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Unauthorized
 import org.rescado.server.controller.dto.toAuthenticationDTO
 import org.rescado.server.controller.dto.toNewAccountDTO
+import org.rescado.server.persistence.entity.Account
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.MessageService
 import org.rescado.server.service.SessionService
@@ -69,8 +71,32 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getByEmailAndPassword(dto.email, dto.password)
+        val account = accountService.getByEmailAndPassword(dto.email!!, dto.password!!)
             ?: return BadRequest(error = messageService["error.CredentialsMismatch.message"]).build()
+
+        val session = sessionService.create(
+            account = account,
+            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            ipAddress = req.remoteAddr,
+            geometry = pointGenerator.make(dto.latitude, dto.longitude),
+        )
+        return account.toAuthenticationDTO(generateAccessToken(account, session, req.serverName)).build()
+    }
+
+    @PostMapping("/recover")
+    fun authAnonymously(
+        @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
+        @Valid @RequestBody dto: AuthAnonymouslyDTO,
+        res: BindingResult,
+        req: HttpServletRequest,
+    ): ResponseEntity<Response> {
+        if (res.hasErrors())
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
+
+        val account = accountService.getByUuid(dto.uuid!!)
+            ?: return BadRequest(error = messageService["error.NotAnonymous.message"]).build() // don't tell account isn't registered
+        if (account.status != Account.Status.ANONYMOUS)
+            return BadRequest(error = messageService["error.NotAnonymous.message"]).build()
 
         val session = sessionService.create(
             account = account,
@@ -91,10 +117,12 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val account = accountService.getByUuid(dto.uuid)
-            ?: return BadRequest(error = messageService["error.TokenMismatch.message"]).build() // don't tell account is registered
+        val account = accountService.getByUuid(dto.uuid!!)
+            ?: return BadRequest(error = messageService["error.TokenMismatch.message"]).build() // don't tell account isn't registered
 
-        var session = sessionService.getInitializedByToken(dto.token)
+        var session = sessionService.getInitializedByToken(
+            dto.token!!
+        )
         if (session?.account != account) // token is null or token account does not match the requested account
             return BadRequest(error = messageService["error.TokenMismatch.message"]).build()
 

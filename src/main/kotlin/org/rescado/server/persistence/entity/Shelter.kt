@@ -42,11 +42,11 @@ open class Shelter(
     @Column(name = "geometry")
     open var geometry: Point,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "logo_image_id", referencedColumnName = "id")
     open var logo: Image,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "banner_image_id", referencedColumnName = "id")
     open var banner: Image?,
 

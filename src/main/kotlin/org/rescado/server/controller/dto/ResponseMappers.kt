@@ -6,19 +6,24 @@ import org.rescado.server.controller.dto.res.AdminDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
+import org.rescado.server.controller.dto.res.ImageDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
 import org.rescado.server.controller.dto.res.ShelterDTO
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
+import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.Duration
+import java.time.ZoneId
 import java.time.ZonedDateTime
+
+// region Response mappers
 
 fun Response.build(httpStatusOverride: HttpStatus? = null) = ResponseEntity(
     this,
@@ -31,7 +36,7 @@ fun List<Response>.build(httpStatusOverride: HttpStatus? = null) = ResponseEntit
     this.firstOrNull()?.httpHeaders ?: HttpHeaders.EMPTY,
     httpStatusOverride ?: this.firstOrNull()?.httpStatus ?: HttpStatus.OK
 )
-
+// endregion
 // region Point mappers
 
 fun Point.toCoordinatesDTO() = CoordinatesDTO(
@@ -41,31 +46,33 @@ fun Point.toCoordinatesDTO() = CoordinatesDTO(
 // endregion
 // region Account mappers
 
-fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
-    authorization = authorization,
-    uuid = uuid,
-    email = email,
-    name = name
-)
-
 fun Account.toNewAccountDTO(authorization: String) = AuthenticationDTO(
     httpStatus = HttpStatus.CREATED,
     authorization = authorization,
-    uuid = uuid,
-    email = email,
-    name = name
+    status = status.name,
+)
+
+fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
+    authorization = authorization,
+    status = status.name,
 )
 
 fun Account.toAccountDTO() = AccountDTO(
+    id = id,
+    status = status.name,
     uuid = uuid,
     email = email,
     name = name,
-    status = status.name,
+    avatar = avatar?.toImageDTO(),
+    shelter = shelter?.toShelterDTO(true),
 )
+
+fun List<Account>.toAccountArrayDTO() = this.map { it.toAccountDTO() }
 // endregion
 // region Admin mappers
 
 fun Admin.toAdminDTO() = AdminDTO(
+    id = id,
     username = username,
 )
 
@@ -88,16 +95,10 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) ShelterDTO(
     id = id,
     name = name,
-    email = null,
-    website = null,
-    newsfeed = null,
-    address = null,
-    postalCode = null,
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.reference,
-    banner = null,
+    logo = logo.toImageDTO(),
 ) else ShelterDTO(
     id = id,
     name = name,
@@ -109,28 +110,47 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) Shel
     city = city,
     country = country,
     coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.reference,
-    banner = banner?.reference,
+    logo = logo.toImageDTO(),
+    banner = banner?.toImageDTO(),
 )
 
 fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(now: ZonedDateTime) = AnimalDTO(
+fun Animal.toAnimalDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
+    id = id,
+    name = name,
+    kind = kind.name,
+    breed = breed,
+    sex = sex.name,
+    photos = photos.toImageArrayDTO(),
+    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
+) else AnimalDTO(
     id = id,
     name = name,
     description = description,
     kind = kind.name,
     breed = breed,
     sex = sex.name,
-    age = (Duration.between(birthday, now).toDays() / 365).toInt(),
+    age = (Duration.between(birthday.atStartOfDay(ZoneId.systemDefault()), now).toDays() / 365).toInt(),
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
-    photos = photos.map { it.reference },
-    shelter = shelter.toShelterDTO(true),
+    photos = photos.toImageArrayDTO(),
+    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
 )
 
-fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime) = this.map { it.toAnimalDTO(now) }
+fun List<Animal>.toAnimalArrayDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(shelterOverride, now) }
+// endregion
+// region Image mappers
+
+fun Image.toImageDTO() = ImageDTO(
+    id = if (type == Image.Type.PHOTO) id else null,
+    reference = reference,
+    type = type.name,
+    source = source.name,
+)
+
+fun MutableSet<Image>.toImageArrayDTO() = this.map { it.toImageDTO() }
 // endregion

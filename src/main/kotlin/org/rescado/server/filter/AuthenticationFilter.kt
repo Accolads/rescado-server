@@ -3,6 +3,7 @@ package org.rescado.server.filter
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
 import org.postgresql.util.Base64
 import org.rescado.server.constant.SecurityConstants
@@ -12,6 +13,7 @@ import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.AdminService
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -36,7 +38,7 @@ class AuthenticationFilter(
     )
     override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, chain: FilterChain) {
         try {
-            val authHeader = req.getHeader(SecurityConstants.AUTHORIZATION_HEADER) ?: throw MissingCredentialsException()
+            val authHeader = req.getHeader(HttpHeaders.AUTHORIZATION) ?: throw MissingCredentialsException()
 
             SecurityContextHolder.getContext().authentication = when {
                 authHeader.startsWith(SecurityConstants.TOKEN_PREFIX) -> bearerAuthentication(authHeader)
@@ -58,7 +60,7 @@ class AuthenticationFilter(
     )
     private fun bearerAuthentication(authHeader: String): UsernamePasswordAuthenticationToken {
         val jwt = Jwts.parserBuilder()
-            .setSigningKey(SecurityConstants.JWT_SECRET.toByteArray())
+            .setSigningKey(Keys.hmacShaKeyFor(SecurityConstants.SECRET.toByteArray()))
             .build()
             .parseClaimsJws(authHeader.replace(SecurityConstants.TOKEN_PREFIX, ""))
 

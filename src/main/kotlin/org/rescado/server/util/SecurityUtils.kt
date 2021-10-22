@@ -10,9 +10,9 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Date
 
-fun hashPassword(password: String): String = BCrypt.hashpw(password, BCrypt.gensalt(12))
+fun hashPassword(password: String): String = BCrypt.hashpw(password, SecurityConstants.SALT)
 
-fun checkPassword(password: String, encryptedPassword: String) = BCrypt.checkpw(password, encryptedPassword)
+fun checkPassword(password: String, hashedPassword: String) = BCrypt.checkpw(password, hashedPassword)
 
 fun generateAccessToken(account: Account, session: Session, serverName: String): String {
     val now = Instant.now()
@@ -24,11 +24,11 @@ fun generateAccessToken(account: Account, session: Session, serverName: String):
         .setExpiration(Date.from(now.plus(SecurityConstants.TOKEN_TTL, ChronoUnit.HOURS)))
         .setIssuedAt(Date.from(now))
         .setNotBefore(Date.from(now))
-        .claim("account", account.email)
+        .claim("status", account.status.name)
         .claim("agent", session.agent)
-        .claim("refresh_token", session.refreshToken)
-        .claim("refresh_expiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
-        .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.toByteArray()))
+        .claim("refreshToken", session.refreshToken)
+        .claim("refreshExpiry", session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).toEpochSecond())
+        .signWith(Keys.hmacShaKeyFor(SecurityConstants.SECRET.toByteArray()))
         .compact()
     return "${SecurityConstants.TOKEN_PREFIX}$jwt"
 }

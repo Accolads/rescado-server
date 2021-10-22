@@ -35,6 +35,8 @@ class ImageService(
         return imageRepository.save(image)
     }
 
+    fun delete(image: Image) = imageRepository.delete(image)
+
     private fun isValidInternalReference(reference: String) = reference.startsWith("rescado/")
 
     private fun isValidExternalReference(reference: String): Boolean {
