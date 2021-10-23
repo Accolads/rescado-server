@@ -30,9 +30,9 @@ class InteractionController(
     private val likeService: LikeService,
     private val animalService: AnimalService,
     private val messageService: MessageService,
-) { // TODO Test and implement more interactions
+) {
 
-    @GetMapping("/like")
+    @GetMapping("/likes")
     fun getLikes(
         @RequestParam detailed: Boolean = false,
     ): ResponseEntity<*> {
@@ -40,20 +40,18 @@ class InteractionController(
         if (user !is Account)
             return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
 
-        val likes = likeService.getByAccount(user)
-
         if (detailed)
-            return likes.map {
+            return likeService.getByAccountWithAnimalsAndAnimalShelter(user).map {
                 LikeDTO(
                     timestamp = it.timestamp,
                     reference = it.reference,
                     animal = it.animal.toAnimalDTO()
                 )
             }.build()
-        return ResponseEntity(likes.map { it.animal.id }, HttpStatus.OK)
+        return ResponseEntity(likeService.getByAccountWithAnimals(user).map { it.animal.id }, HttpStatus.OK)
     }
 
-    @PostMapping("/like")
+    @PostMapping("/likes")
     fun addLikes(
         @Valid @RequestBody dto: AddInteractionDTO,
         res: BindingResult,
@@ -65,16 +63,16 @@ class InteractionController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val successfullyLikedAnimalIds = mutableListOf<Long>()
-        val alreadyLikedAnimalIds = mutableListOf<Long>()
         val nonExistentAnimalIds = mutableListOf<Long>()
+        val alreadyLikedAnimalIds = mutableListOf<Long>()
+        val successfullyLikedAnimalIds = mutableListOf<Long>()
 
         dto.ids!!.forEach { id ->
             animalService.getById(id)?.let {
-                try {
+                if (!likeService.checkIfExists(user, it)) {
                     likeService.create(user, it)
                     successfullyLikedAnimalIds.add(id)
-                } catch (e: Exception) { // TODO only catch SQL constraint-specific Exception that is thrown when adding duplicates
+                } else {
                     alreadyLikedAnimalIds.add(id)
                 }
             } ?: run {
@@ -84,8 +82,8 @@ class InteractionController(
 
         return InteractionDTO(
             likes = successfullyLikedAnimalIds,
-            errors = alreadyLikedAnimalIds.map { messageService["error.AlreadyLikedAnimal.message", it] } +
-                nonExistentAnimalIds.map { messageService["error.NonExistentAnimal.message", it] }
+            errors = nonExistentAnimalIds.map { messageService["error.NonExistentAnimal.message", it] } +
+                alreadyLikedAnimalIds.map { messageService["error.AlreadyLikedAnimal.message", it] }
         ).build()
     }
 }

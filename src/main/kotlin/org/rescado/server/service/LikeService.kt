@@ -1,5 +1,6 @@
 package org.rescado.server.service
 
+import org.hibernate.Hibernate
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Like
@@ -14,7 +15,18 @@ class LikeService(
     private val likeRepository: LikeRepository,
 ) {
 
+    fun checkIfExists(account: Account, animal: Animal) = likeRepository.existsByAccountAndAnimal(account, animal)
+
     fun getByAccount(account: Account) = likeRepository.findAllByAccount(account)
+
+    fun getByAccountWithAnimals(account: Account) = likeRepository.findAllByAccount(account).onEach {
+        Hibernate.initialize(it.animal)
+    }
+
+    fun getByAccountWithAnimalsAndAnimalShelter(account: Account) = likeRepository.findAllByAccount(account).onEach {
+        Hibernate.initialize(it.animal)
+        Hibernate.initialize(it.animal.shelter)
+    }
 
     fun create(account: Account, animal: Animal): Like {
         val like = Like(
