@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository
 @Repository
 interface LikeRepository : JpaRepository<Like, Long> {
 
+    fun existsByAccountAndAnimal(account: Account, animal: Animal): Boolean
+
     fun findAllByAccount(account: Account): List<Like>
 
     fun findAllByAnimal(animal: Animal): List<Like>
 
-    fun existsByAccountAndAnimal(account: Account, animal: Animal): Boolean
+    fun deleteByAccountAndAnimal(account: Account, animal: Animal)
 }

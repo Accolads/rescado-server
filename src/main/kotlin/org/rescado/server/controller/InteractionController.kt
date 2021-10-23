@@ -1,7 +1,8 @@
 package org.rescado.server.controller
 
+import liquibase.pro.packaged.it
 import org.rescado.server.controller.dto.build
-import org.rescado.server.controller.dto.req.AddInteractionDTO
+import org.rescado.server.controller.dto.req.ListOfIdsDTO
 import org.rescado.server.controller.dto.res.InteractionDTO
 import org.rescado.server.controller.dto.res.LikeDTO
 import org.rescado.server.controller.dto.res.Response
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -31,6 +33,8 @@ class InteractionController(
     private val animalService: AnimalService,
     private val messageService: MessageService,
 ) {
+
+    // region Likes
 
     @GetMapping("/likes")
     fun getLikes(
@@ -53,7 +57,7 @@ class InteractionController(
 
     @PostMapping("/likes")
     fun addLikes(
-        @Valid @RequestBody dto: AddInteractionDTO,
+        @Valid @RequestBody dto: ListOfIdsDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -86,4 +90,42 @@ class InteractionController(
                 alreadyLikedAnimalIds.map { messageService["error.AlreadyLikedAnimal.message", it] }
         ).build()
     }
+
+    @DeleteMapping("/likes")
+    fun deleteLikes(
+        @Valid @RequestBody dto: org.rescado.server.controller.dto.req.ListOfIdsDTO,
+        res: BindingResult,
+    ): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Account)
+            return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
+
+        if (res.hasErrors())
+            return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
+
+        val nonExistentAnimalIds = mutableListOf<Long>()
+        val notLikedAnimalIds = mutableListOf<Long>()
+        val successfullyLikedAnimalIds = mutableListOf<Long>()
+
+        dto.ids!!.forEach { id ->
+            animalService.getById(id)?.let {
+                if (likeService.checkIfExists(user, it)) {
+                    likeService.delete(user, it)
+                    successfullyLikedAnimalIds.add(id)
+                } else {
+                    notLikedAnimalIds.add(id)
+                }
+            } ?: run {
+                nonExistentAnimalIds.add(id)
+            }
+        }
+
+        return InteractionDTO(
+            likes = successfullyLikedAnimalIds,
+            errors = nonExistentAnimalIds.map { messageService["error.NonExistentAnimal.message", it] } +
+                notLikedAnimalIds.map { messageService["error.NotLikedAnimal.message", it] }
+        ).build()
+    }
+
+    // endregion
 }

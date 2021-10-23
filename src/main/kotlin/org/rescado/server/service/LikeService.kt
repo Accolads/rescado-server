@@ -46,5 +46,5 @@ class LikeService(
         return likeRepository.save(like)
     }
 
-    fun delete(like: Like) = likeRepository.delete(like)
+    fun delete(account: Account, animal: Animal) = likeRepository.deleteByAccountAndAnimal(account, animal)
 }
