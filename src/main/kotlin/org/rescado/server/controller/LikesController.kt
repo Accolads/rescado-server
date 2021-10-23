@@ -1,10 +1,9 @@
 package org.rescado.server.controller
 
-import liquibase.pro.packaged.it
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.ListOfIdsDTO
-import org.rescado.server.controller.dto.res.InteractionDTO
 import org.rescado.server.controller.dto.res.LikeDTO
+import org.rescado.server.controller.dto.res.LikesActionDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
@@ -27,17 +26,15 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/interaction")
-class InteractionController(
+@RequestMapping("/likes")
+class LikesController(
     private val likeService: LikeService,
     private val animalService: AnimalService,
     private val messageService: MessageService,
 ) {
 
-    // region Likes
-
-    @GetMapping("/likes")
-    fun getLikes(
+    @GetMapping
+    fun get(
         @RequestParam detailed: Boolean = false,
     ): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -55,8 +52,8 @@ class InteractionController(
         return ResponseEntity(likeService.getByAccountWithAnimals(user).map { it.animal.id }, HttpStatus.OK)
     }
 
-    @PostMapping("/likes")
-    fun addLikes(
+    @PostMapping
+    fun add(
         @Valid @RequestBody dto: ListOfIdsDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
@@ -84,16 +81,16 @@ class InteractionController(
             }
         }
 
-        return InteractionDTO(
+        return LikesActionDTO(
             likes = successfullyLikedAnimalIds,
             errors = nonExistentAnimalIds.map { messageService["error.NonExistentAnimal.message", it] } +
                 alreadyLikedAnimalIds.map { messageService["error.AlreadyLikedAnimal.message", it] }
         ).build()
     }
 
-    @DeleteMapping("/likes")
-    fun deleteLikes(
-        @Valid @RequestBody dto: org.rescado.server.controller.dto.req.ListOfIdsDTO,
+    @DeleteMapping
+    fun delete(
+        @Valid @RequestBody dto: ListOfIdsDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -120,12 +117,10 @@ class InteractionController(
             }
         }
 
-        return InteractionDTO(
+        return LikesActionDTO(
             likes = successfullyLikedAnimalIds,
             errors = nonExistentAnimalIds.map { messageService["error.NonExistentAnimal.message", it] } +
                 notLikedAnimalIds.map { messageService["error.NotLikedAnimal.message", it] }
         ).build()
     }
-
-    // endregion
 }
