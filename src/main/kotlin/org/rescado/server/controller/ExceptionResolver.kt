@@ -17,8 +17,10 @@ import org.rescado.server.service.MessageService
 import org.rescado.server.service.exception.ImageSourceException
 import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
 import org.rescado.server.service.exception.PhotoMinimumLimitReachedException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
+import org.springframework.security.web.firewall.RequestRejectedException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MissingRequestHeaderException
@@ -70,6 +72,10 @@ class ExceptionResolver(
         MethodNotAllowed(error = messageService["exception.HttpRequestMethodNotSupportedException.message", e.method]).build()
 
     @ExceptionHandler
+    fun handleRequestRejectedException(e: RequestRejectedException) =
+        BadRequest(error = messageService["exception.RequestRejectedException.message"]).build()
+
+    @ExceptionHandler
     fun handleAuthenticationCredentialsNotFoundException(e: AuthenticationCredentialsNotFoundException, req: HttpServletRequest) =
         Unauthorized(error = messageService["exception.AuthenticationCredentialsNotFoundException.message"], reason = Unauthorized.Reason.INVALID_CREDENTIALS, realm = req.serverName).build()
 
@@ -96,6 +102,10 @@ class ExceptionResolver(
     @ExceptionHandler
     fun handleExpiredJwtException(e: ExpiredJwtException, req: HttpServletRequest) =
         Unauthorized(error = messageService["exception.ExpiredJwtException.message"], reason = Unauthorized.Reason.EXPIRED_ACCESS_TOKEN, realm = req.serverName).build()
+
+    @ExceptionHandler
+    fun handleDataIntegrityViolationException(e: DataIntegrityViolationException) =
+        InternalServerError(error = messageService["exception.DataIntegrityViolationException.message"]).build()
 
     @ExceptionHandler
     fun handleException(e: Exception) =
