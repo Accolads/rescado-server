@@ -208,6 +208,7 @@ class ShelterController(
             weight = dto.weight!!,
             vaccinated = dto.vaccinated!!,
             sterilized = dto.sterilized!!,
+            availability = Animal.Availability.valueOf(dto.availability!!.uppercase()),
             photos = dto.photos!!.map { imageService.create(Image.Type.PHOTO, it) }.toMutableSet()
         ).toAnimalDTO(shelter, now).build(HttpStatus.CREATED)
     }
@@ -244,6 +245,7 @@ class ShelterController(
             weight = dto.weight,
             vaccinated = dto.vaccinated,
             sterilized = dto.sterilized,
+            availability = dto.availability?.let { Animal.Availability.valueOf(it.uppercase()) },
         ).toAnimalDTO(shelter, now).build()
     }
 

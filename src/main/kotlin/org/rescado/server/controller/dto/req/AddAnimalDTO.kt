@@ -2,6 +2,7 @@ package org.rescado.server.controller.dto.req
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.rescado.server.constant.SecurityConstants
+import org.rescado.server.controller.dto.validation.AnimalAvailability
 import org.rescado.server.controller.dto.validation.AnimalKind
 import org.rescado.server.controller.dto.validation.AnimalSex
 import javax.validation.constraints.Min
@@ -52,6 +53,11 @@ data class AddAnimalDTO(
     @JsonProperty("sterilized")
     @get:NotNull(message = "{NotNull.AddAnimalDTO.sterilized}")
     val sterilized: Boolean?,
+
+    @JsonProperty("availability")
+    @get:NotBlank(message = "{NotBlank.AddAnimalDTO.availability}")
+    @get:AnimalAvailability(message = "{AnimalAvailability.PatchAnimalDTO.availability}")
+    val availability: String?,
 
     @JsonProperty("photos")
     @get:NotEmpty(message = "{NotEmpty.AddAnimalDTO.photos}")

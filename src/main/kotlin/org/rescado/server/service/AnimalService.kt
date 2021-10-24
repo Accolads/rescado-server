@@ -31,6 +31,7 @@ class AnimalService(
         weight: Int,
         vaccinated: Boolean,
         sterilized: Boolean,
+        availability: Animal.Availability,
         photos: MutableSet<Image>,
     ): Animal {
         val animal = Animal(
@@ -44,6 +45,7 @@ class AnimalService(
             weight = weight,
             vaccinated = vaccinated,
             sterilized = sterilized,
+            availability = availability,
             photos = photos,
             likes = mutableSetOf(),
         )
@@ -61,6 +63,7 @@ class AnimalService(
         weight: Int?,
         vaccinated: Boolean?,
         sterilized: Boolean?,
+        availability: Animal.Availability?,
     ): Animal {
         kind?.let { animal.kind = it }
         breed?.let { animal.breed = it }
@@ -71,6 +74,7 @@ class AnimalService(
         weight?.let { animal.weight = it }
         vaccinated?.let { animal.vaccinated = it }
         sterilized?.let { animal.sterilized = it }
+        availability?.let { animal.availability = it }
 
         return animalRepository.save(animal)
     }

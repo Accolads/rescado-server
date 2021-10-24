@@ -50,11 +50,15 @@ open class Animal(
     @Column(name = "sterilized")
     open var sterilized: Boolean,
 
+    @Column(name = "availability")
+    @Enumerated(EnumType.STRING)
+    open var availability: Availability,
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "photos",
-        joinColumns = [JoinColumn(name = "animal_id", referencedColumnName = "id") ],
-        inverseJoinColumns = [JoinColumn(name = "image_id", referencedColumnName = "id") ]
+        joinColumns = [JoinColumn(name = "animal_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "image_id", referencedColumnName = "id")]
     )
     open var photos: MutableSet<Image>,
 
@@ -71,5 +75,11 @@ open class Animal(
     enum class Sex {
         FEMALE,
         MALE,
+    }
+
+    enum class Availability {
+        AVAILABLE,
+        UNAVAILABLE,
+        ADOPTED,
     }
 }

@@ -219,7 +219,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: birthday
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: DATE
                   constraints:
                     nullable: false
               - column:
@@ -235,6 +235,11 @@ databaseChangeLog:
               - column:
                   name: sterilized
                   type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: availability
+                  type: VARCHAR(10)
                   constraints:
                     nullable: false
         - createTable:
@@ -342,21 +347,21 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - createTable:
-            tableName: favorites
+            tableName: following
             columns:
               - column:
                   name: account_id
                   type: BIGINT
                   constraints:
                     primaryKey: true
-                    primaryKeyName: favorites_pkey
+                    primaryKeyName: following_pkey
                     nullable: false
               - column:
                   name: shelter_id
                   type: BIGINT
                   constraints:
                     primaryKey: true
-                    primaryKeyName: favorites_pkey
+                    primaryKeyName: following_pkey
                     nullable: false
         - createTable:
             tableName: photos
@@ -467,8 +472,8 @@ databaseChangeLog:
             onDelete: NO ACTION
             validate: true
         - addForeignKeyConstraint:
-            constraintName: favorites_account_id
-            baseTableName: favorites
+            constraintName: following_account_id
+            baseTableName: following
             baseColumnNames: account_id
             referencedTableName: account
             referencedColumnNames: id
@@ -476,8 +481,8 @@ databaseChangeLog:
             onDelete: NO ACTION
             validate: true
         - addForeignKeyConstraint:
-            constraintName: favorites_shelter_id
-            baseTableName: favorites
+            constraintName: following_shelter_id
+            baseTableName: following
             baseColumnNames: shelter_id
             referencedTableName: shelter
             referencedColumnNames: id
