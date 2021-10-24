@@ -1,5 +1,6 @@
 package org.rescado.server.service
 
+import org.hibernate.Hibernate
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
@@ -25,6 +26,10 @@ class AccountService(
 
     fun getById(id: Long): Account? = accountRepository.findById(id).orElse(null)
 
+    fun getByIdWithFollowing(id: Long) = getById(id)?.apply {
+        Hibernate.initialize(following)
+    }
+
     fun getByUuid(uuid: String) = accountRepository.findByUuid(uuid)
 
     fun getByEmail(email: String) = accountRepository.findByEmail(email)
@@ -43,7 +48,7 @@ class AccountService(
             status = Account.Status.ANONYMOUS,
             shelter = null,
             avatar = null,
-            favorites = mutableSetOf(),
+            following = mutableSetOf(),
             likes = mutableSetOf(),
             swipes = mutableSetOf(),
         )

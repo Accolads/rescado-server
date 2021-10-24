@@ -43,11 +43,11 @@ open class Account(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "favorites",
+        name = "following",
         joinColumns = [JoinColumn(name = "account_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "shelter_id", referencedColumnName = "id")]
     )
-    open var favorites: MutableSet<Shelter>,
+    open var following: MutableSet<Shelter>,
 
     @OneToMany(mappedBy = "account")
     open var likes: MutableSet<Like>,
