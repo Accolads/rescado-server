@@ -104,7 +104,7 @@ databaseChangeLog:
                   type: VARCHAR(60)
               - column:
                   name: status
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
               - column:
@@ -196,7 +196,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: kind
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
               - column:
@@ -214,7 +214,7 @@ databaseChangeLog:
                   type: TEXT
               - column:
                   name: sex
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
               - column:
@@ -239,7 +239,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: availability
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
         - createTable:
@@ -259,12 +259,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: type
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
               - column:
                   name: source
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
         - createTable:
@@ -279,7 +279,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: type
-                  type: VARCHAR(10)
+                  type: VARCHAR(25)
                   constraints:
                     nullable: false
               - column:
@@ -288,7 +288,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: reference
+                  name: animal_id
                   type: BIGINT
                   constraints:
                     nullable: false
