@@ -34,5 +34,4 @@ open class Like(
 
     @Column(name = "unread_count")
     open var unreadCount: Int,
-
 )

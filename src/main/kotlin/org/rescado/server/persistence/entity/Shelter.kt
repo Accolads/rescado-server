@@ -50,7 +50,7 @@ open class Shelter(
     @JoinColumn(name = "banner_image_id", referencedColumnName = "id")
     open var banner: Image?,
 
-    @OneToMany(mappedBy = "shelter")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shelter")
     open var animals: MutableSet<Animal>,
 
 ) : Identifiable()

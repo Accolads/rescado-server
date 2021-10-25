@@ -62,7 +62,7 @@ open class Animal(
     )
     open var photos: MutableSet<Image>,
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal")
     open var likes: MutableSet<Like>,
 
 ) : Identifiable() {

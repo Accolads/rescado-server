@@ -49,10 +49,10 @@ open class Account(
     )
     open var following: MutableSet<Shelter>,
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     open var likes: MutableSet<Like>,
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     open var swipes: MutableSet<Swipe>,
 
 ) : Identifiable() {
