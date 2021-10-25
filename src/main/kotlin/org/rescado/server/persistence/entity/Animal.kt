@@ -17,7 +17,7 @@ import javax.persistence.Table
 @Table(name = "animal")
 open class Animal(
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shelter_id")
     open var shelter: Shelter,
 

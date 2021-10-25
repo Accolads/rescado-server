@@ -120,14 +120,15 @@ fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
+fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
     id = id,
     name = name,
     kind = kind.name,
     breed = breed,
     sex = sex.name,
+    availability = availability.name,
     photos = photos.toImageArrayDTO(),
-    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
+    shelter = shelter.toShelterDTO(true),
 ) else AnimalDTO(
     id = id,
     name = name,
@@ -139,11 +140,12 @@ fun Animal.toAnimalDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = n
     weight = weight,
     vaccinated = vaccinated,
     sterilized = sterilized,
+    availability = availability.name,
     photos = photos.toImageArrayDTO(),
-    shelter = (shelterOverride ?: shelter).toShelterDTO(true),
+    shelter = shelter.toShelterDTO(true),
 )
 
-fun List<Animal>.toAnimalArrayDTO(shelterOverride: Shelter? = null, now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(shelterOverride, now) }
+fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(now) }
 // endregion
 // region Image mappers
 

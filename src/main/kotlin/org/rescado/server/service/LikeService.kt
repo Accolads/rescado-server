@@ -23,11 +23,6 @@ class LikeService(
         Hibernate.initialize(it.animal)
     }
 
-    fun getByAccountWithAnimalsAndAnimalShelter(account: Account) = likeRepository.findAllByAccount(account).onEach {
-        Hibernate.initialize(it.animal)
-        Hibernate.initialize(it.animal.shelter)
-    }
-
     fun create(account: Account, animal: Animal): Like {
         val like = Like(
             account = account,

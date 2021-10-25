@@ -14,6 +14,7 @@ data class AnimalDTO(
     val weight: Int? = null,
     val vaccinated: Boolean? = null,
     val sterilized: Boolean? = null,
+    val availability: String,
     val photos: List<ImageDTO>,
     val shelter: ShelterDTO,
 ) : Response()

@@ -29,7 +29,7 @@ class NewsController(
         if (user !is Account)
             return Forbidden(error = messageService["error.NewsForbidden.message"]).build()
 
-        val likes = likeService.getByAccountWithAnimalsAndAnimalShelter(user).map { it.animal }
+        val likes = likeService.getByAccountWithAnimals(user).map { it.animal }
         val followings = accountService.getByIdWithFollowing(user.id)!!.following.flatMap { it.animals } // TODO check if animals arent lazy
 
         return newsService.getByReferences(likes + followings).toNewsArrayDTO().build()

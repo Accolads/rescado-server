@@ -42,7 +42,7 @@ class LikesController(
             return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
 
         if (detailed)
-            return likeService.getByAccountWithAnimalsAndAnimalShelter(user).map {
+            return likeService.getByAccountWithAnimals(user).map {
                 LikeDTO(
                     timestamp = it.timestamp,
                     reference = it.reference,
