@@ -1,10 +1,8 @@
 package org.rescado.server.controller
 
 import org.rescado.server.controller.dto.build
-import org.rescado.server.controller.dto.res.NewsDTO
 import org.rescado.server.controller.dto.res.error.Forbidden
-import org.rescado.server.controller.dto.toAnimalDTO
-import org.rescado.server.controller.dto.toShelterDTO
+import org.rescado.server.controller.dto.toNewsArrayDTO
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.LikeService
@@ -31,24 +29,9 @@ class NewsController(
         if (user !is Account)
             return Forbidden(error = messageService["error.NewsForbidden.message"]).build()
 
-        val news = likeService.getByAccountWithAnimalsAndAnimalShelter(user).flatMap {
-            newsService.getByReference(it.animal.id).map { news ->
-                NewsDTO(
-                    type = news.type.name,
-                    timestamp = news.timestamp,
-                    reference = it.animal.toAnimalDTO()
-                )
-            }
-        } + accountService.getByIdWithFollowing(user.id)!!.following.flatMap {
-            newsService.getByReference(it.id).map { news ->
-                NewsDTO(
-                    type = news.type.name,
-                    timestamp = news.timestamp,
-                    reference = it.toShelterDTO(true)
-                )
-            }
-        }.sortedByDescending { it.timestamp }
+        val likes = likeService.getByAccountWithAnimalsAndAnimalShelter(user).map { it.animal }
+        val followings = accountService.getByIdWithFollowing(user.id)!!.following.flatMap { it.animals } // TODO check if animals arent lazy
 
-        return news.build()
+        return newsService.getByReferences(likes + followings).toNewsArrayDTO().build()
     }
 }

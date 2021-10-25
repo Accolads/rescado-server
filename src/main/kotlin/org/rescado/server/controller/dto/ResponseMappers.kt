@@ -7,6 +7,7 @@ import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
 import org.rescado.server.controller.dto.res.ImageDTO
+import org.rescado.server.controller.dto.res.NewsDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
 import org.rescado.server.controller.dto.res.ShelterDTO
@@ -14,6 +15,7 @@ import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
+import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
 import org.springframework.http.HttpHeaders
@@ -153,4 +155,14 @@ fun Image.toImageDTO() = ImageDTO(
 )
 
 fun MutableSet<Image>.toImageArrayDTO() = this.map { it.toImageDTO() }
+// endregion
+// region News mappers
+
+fun News.toNewsDTO() = NewsDTO(
+    type = type.name,
+    timestamp = timestamp,
+    reference = animal.toAnimalDTO()
+)
+
+fun Collection<News>.toNewsArrayDTO() = this.map { it.toNewsDTO() }
 // endregion

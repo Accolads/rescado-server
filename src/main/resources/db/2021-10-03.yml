@@ -436,6 +436,16 @@ databaseChangeLog:
             onDelete: NO ACTION
             validate: true
         - addForeignKeyConstraint:
+            constraintName: news_animal_id
+            baseTableName: news
+            baseColumnNames: animal_id
+            referencedTableName: animal
+            referencedColumnNames: id
+            onUpdate: CASCADE
+            onDelete: CASCADE
+            onDelete: CASCADE
+            validate: true
+        - addForeignKeyConstraint:
             constraintName: likes_account_id
             baseTableName: likes
             baseColumnNames: account_id

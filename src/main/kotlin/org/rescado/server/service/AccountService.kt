@@ -27,7 +27,11 @@ class AccountService(
     fun getById(id: Long): Account? = accountRepository.findById(id).orElse(null)
 
     fun getByIdWithFollowing(id: Long) = getById(id)?.apply {
-        Hibernate.initialize(following)
+        Hibernate.initialize(
+            following.onEach {
+                Hibernate.initialize(it.animals)
+            }
+        )
     }
 
     fun getByUuid(uuid: String) = accountRepository.findByUuid(uuid)

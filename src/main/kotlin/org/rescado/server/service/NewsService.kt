@@ -1,5 +1,6 @@
 package org.rescado.server.service
 
+import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.repository.NewsRepository
 import org.springframework.stereotype.Service
@@ -12,14 +13,12 @@ class NewsService(
     private val newsRepository: NewsRepository,
 ) {
 
-    // TODO add scheduled job to remove old news from the database
+    fun getByReferences(animals: Collection<Animal>) = newsRepository.findAllByAnimalInOrderByTimestampDesc(animals)
 
-    fun getByReference(reference: Long) = newsRepository.findAllByReferenceOrderByTimestampDesc(reference)
-
-    fun create(type: News.Type, reference: Long): News {
+    fun create(type: News.Type, animal: Animal): News {
         val news = News(
             type = type,
-            reference = reference,
+            animal = animal,
             timestamp = ZonedDateTime.now(),
         )
         return newsRepository.save(news)

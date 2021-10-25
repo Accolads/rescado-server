@@ -3,6 +3,7 @@ package org.rescado.server.service
 import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
+import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
 import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
@@ -16,6 +17,7 @@ import javax.transaction.Transactional
 class AnimalService(
     private val animalRepository: AnimalRepository,
     private val imageService: ImageService,
+    private val newsService: NewsService,
 ) {
 
     fun getById(id: Long): Animal? = animalRepository.findById(id).orElse(null)
@@ -34,22 +36,26 @@ class AnimalService(
         availability: Animal.Availability,
         photos: MutableSet<Image>,
     ): Animal {
-        val animal = Animal(
-            shelter = shelter,
-            kind = kind,
-            breed = breed,
-            name = name,
-            description = description,
-            sex = sex,
-            birthday = birthday,
-            weight = weight,
-            vaccinated = vaccinated,
-            sterilized = sterilized,
-            availability = availability,
-            photos = photos,
-            likes = mutableSetOf(),
+        val animal = animalRepository.save(
+            Animal(
+                shelter = shelter,
+                kind = kind,
+                breed = breed,
+                name = name,
+                description = description,
+                sex = sex,
+                birthday = birthday,
+                weight = weight,
+                vaccinated = vaccinated,
+                sterilized = sterilized,
+                availability = availability,
+                photos = photos,
+                likes = mutableSetOf(),
+            )
         )
-        return animalRepository.save(animal)
+        if (animal.availability == Animal.Availability.AVAILABLE)
+            newsService.create(News.Type.SHELTER_NEW_ANIMAL, animal)
+        return animal
     }
 
     fun update(
@@ -74,7 +80,14 @@ class AnimalService(
         weight?.let { animal.weight = it }
         vaccinated?.let { animal.vaccinated = it }
         sterilized?.let { animal.sterilized = it }
-        availability?.let { animal.availability = it }
+        availability?.let {
+            when (availability) {
+                Animal.Availability.AVAILABLE -> newsService.create(News.Type.SHELTER_AVAILABLE_ANIMAL, animal)
+                Animal.Availability.ADOPTED -> newsService.create(News.Type.ANIMAL_ADOPTED, animal)
+                else -> Unit
+            }
+            animal.availability = it
+        }
 
         return animalRepository.save(animal)
     }
@@ -84,6 +97,7 @@ class AnimalService(
             throw PhotoMaximumLimitReachedException(SecurityConstants.IMAGE_MAX_REFERENCES)
         animal.photos.add(photo)
         animalRepository.save(animal)
+        newsService.create(News.Type.ANIMAL_NEW_PHOTO, animal)
         return animal
     }
 
