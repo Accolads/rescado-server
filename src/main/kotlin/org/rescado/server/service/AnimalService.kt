@@ -29,7 +29,7 @@ class AnimalService(
         val latitude = 16.5269
         val longitude = 103.3332
         val radius = 200
-        return cardsRepository.findCards(account, latitude, longitude, radius)
+        return cardsRepository.findCards(account, 50, latitude, longitude, radius)
     }
 
     fun create(

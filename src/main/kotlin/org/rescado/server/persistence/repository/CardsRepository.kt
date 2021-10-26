@@ -21,6 +21,7 @@ class CardsRepository(
 ) {
     fun findCards(
         account: Account,
+        limit: Int,
         latitude: Double? = null,
         longitude: Double? = null,
         radius: Int? = null,
@@ -41,14 +42,17 @@ class CardsRepository(
         val where = mutableListOf<Predicate>().apply {
             add(builder.isNull(likes.get<Animal>("animal")))
             add(builder.isNull(swipes.get<Animal>("animal")))
-            // Add specific clauses aka filters below
+
             if (latitude != null && longitude != null && radius != null)
-                add(builder.lessThanOrEqualTo(distance(builder, shelter.get("geometry"), latitude, longitude), builder.literal(radius * 1000.0)))
+                add(builder.lessThan(distance(builder, shelter.get("geometry"), latitude, longitude), builder.literal(radius * 1000.0)))
         }
         query.where(*where.toTypedArray())
+        query.orderBy(builder.asc(builder.function<Unit>("RANDOM", null))) // TODO find something more performant
 
-        return entityManager.createQuery(query)
-            .resultList
+        val typedQuery = entityManager.createQuery(query).apply {
+            maxResults = limit
+        }
+        return typedQuery.resultList
     }
 
     private fun distance(
