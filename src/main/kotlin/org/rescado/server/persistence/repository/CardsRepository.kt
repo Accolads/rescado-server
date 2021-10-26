@@ -9,11 +9,9 @@ import org.rescado.server.persistence.entity.Swipe
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Expression
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
 
 @Repository
 class CardsRepository(
@@ -27,9 +25,9 @@ class CardsRepository(
         radius: Int? = null,
     ): List<Animal> {
         val builder = entityManager.criteriaBuilder
-        val query: CriteriaQuery<Animal> = builder.createQuery(Animal::class.java)
+        val query = builder.createQuery(Animal::class.java)
 
-        val animal: Root<Animal> = query.from(Animal::class.java)
+        val animal = query.from(Animal::class.java)
 
         val shelter = animal.join<Animal, Shelter>("shelter", JoinType.LEFT)
 
