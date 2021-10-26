@@ -1,11 +1,13 @@
 package org.rescado.server.service
 
 import org.rescado.server.constant.SecurityConstants
+import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AnimalRepository
+import org.rescado.server.persistence.repository.CardsRepository
 import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
 import org.rescado.server.service.exception.PhotoMinimumLimitReachedException
 import org.springframework.stereotype.Service
@@ -18,9 +20,17 @@ class AnimalService(
     private val animalRepository: AnimalRepository,
     private val imageService: ImageService,
     private val newsService: NewsService,
+    private val cardsRepository: CardsRepository,
 ) {
 
     fun getById(id: Long): Animal? = animalRepository.findById(id).orElse(null)
+
+    fun getCards(account: Account): List<Animal> {
+        val latitude = 16.5269
+        val longitude = 103.3332
+        val radius = 200
+        return cardsRepository.findCards(account, latitude, longitude, radius)
+    }
 
     fun create(
         shelter: Shelter,
@@ -51,6 +61,7 @@ class AnimalService(
                 availability = availability,
                 photos = photos,
                 likes = mutableSetOf(),
+                swipes = mutableSetOf(),
             )
         )
         if (animal.availability == Animal.Availability.AVAILABLE)

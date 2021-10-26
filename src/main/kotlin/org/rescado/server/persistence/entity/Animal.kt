@@ -65,6 +65,9 @@ open class Animal(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal")
     open var likes: MutableSet<Like>,
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal")
+    open var swipes: MutableSet<Swipe>,
+
 ) : Identifiable() {
 
     enum class Kind {

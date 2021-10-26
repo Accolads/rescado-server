@@ -39,7 +39,7 @@ class LikesController(
     ): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
+            return Forbidden(error = messageService["error.LikesForbidden.message"]).build()
 
         if (detailed)
             return likeService.getByAccountWithAnimals(user).map {
@@ -59,7 +59,7 @@ class LikesController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
+            return Forbidden(error = messageService["error.LikesForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -95,7 +95,7 @@ class LikesController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.LikeForbidden.message"]).build()
+            return Forbidden(error = messageService["error.LikesForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
