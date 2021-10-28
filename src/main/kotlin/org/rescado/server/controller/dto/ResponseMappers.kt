@@ -18,12 +18,15 @@ import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.util.UriComponentsBuilder
 import java.time.Duration
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import javax.servlet.http.HttpServletRequest
 
 // region Response mappers
 
@@ -38,6 +41,24 @@ fun List<Response>.build(httpStatusOverride: HttpStatus? = null) = ResponseEntit
     this.firstOrNull()?.httpHeaders ?: HttpHeaders.EMPTY,
     httpStatusOverride ?: this.firstOrNull()?.httpStatus ?: HttpStatus.OK
 )
+
+fun List<Response>.withLinks(req: HttpServletRequest, result: Page<*>): List<Response> {
+    if (isNotEmpty()) {
+        val linkBuilder = StringBuilder()
+        val urlBuilder = UriComponentsBuilder.fromHttpUrl("${req.requestURL}?${req.queryString ?: ""}")
+
+        if (result.number != 0)
+            linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.number - 1).toUriString()}>; rel=\"prev\", ")
+        if (result.number != result.totalPages - 1)
+            linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.number + 1).toUriString()}>; rel=\"next\", ")
+
+        linkBuilder.append("<${urlBuilder.replaceQueryParam("page", 0).toUriString()}>; rel=\"first\", ")
+        linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.totalPages - 1).toUriString()}>; rel=\"last\"")
+
+        first().httpHeaders.add(HttpHeaders.LINK, linkBuilder.toString())
+    }
+    return this
+}
 // endregion
 // region Point mappers
 
@@ -94,56 +115,64 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 // endregion
 // region Shelter mappers
 
-fun Shelter.toShelterDTO(shortVersion: Boolean = false) = if (shortVersion) ShelterDTO(
-    id = id,
-    name = name,
-    city = city,
-    country = country,
-    coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.toImageDTO(),
-) else ShelterDTO(
-    id = id,
-    name = name,
-    email = email,
-    website = website,
-    newsfeed = newsfeed,
-    address = address,
-    postalCode = postalCode,
-    city = city,
-    country = country,
-    coordinates = geometry.toCoordinatesDTO(),
-    logo = logo.toImageDTO(),
-    banner = banner?.toImageDTO(),
-)
+fun Shelter.toShelterDTO(shortVersion: Boolean = false) =
+    if (shortVersion)
+        ShelterDTO(
+            id = id,
+            name = name,
+            city = city,
+            country = country,
+            coordinates = geometry.toCoordinatesDTO(),
+            logo = logo.toImageDTO(),
+        )
+    else
+        ShelterDTO(
+            id = id,
+            name = name,
+            email = email,
+            website = website,
+            newsfeed = newsfeed,
+            address = address,
+            postalCode = postalCode,
+            city = city,
+            country = country,
+            coordinates = geometry.toCoordinatesDTO(),
+            logo = logo.toImageDTO(),
+            banner = banner?.toImageDTO(),
+        )
 
 fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(now: ZonedDateTime? = null) = if (now == null) AnimalDTO(
-    id = id,
-    name = name,
-    kind = kind.name,
-    breed = breed,
-    sex = sex.name,
-    availability = availability.name,
-    photos = photos.toImageArrayDTO(),
-    shelter = shelter.toShelterDTO(true),
-) else AnimalDTO(
-    id = id,
-    name = name,
-    description = description,
-    kind = kind.name,
-    breed = breed,
-    sex = sex.name,
-    age = (Duration.between(birthday.atStartOfDay(ZoneId.systemDefault()), now).toDays() / 365).toInt(),
-    weight = weight,
-    vaccinated = vaccinated,
-    sterilized = sterilized,
-    availability = availability.name,
-    photos = photos.toImageArrayDTO(),
-    shelter = shelter.toShelterDTO(true),
-)
+fun Animal.toAnimalDTO(now: ZonedDateTime? = null) =
+    if (now == null)
+        AnimalDTO(
+            id = id,
+            name = name,
+            kind = kind.name,
+            breed = breed,
+            sex = sex.name,
+            availability = availability.name,
+            photos = photos.toImageArrayDTO(),
+            shelter = shelter.toShelterDTO(true),
+        )
+    else
+        AnimalDTO(
+            id = id,
+            name = name,
+            description = description,
+            kind = kind.name,
+            breed = breed,
+            sex = sex.name,
+            age = (Duration.between(birthday.atStartOfDay(ZoneId.systemDefault()), now).toDays() / 365).toInt(),
+            weight = weight,
+            vaccinated = vaccinated,
+            sterilized = sterilized,
+            availability = availability.name,
+            photos = photos.toImageArrayDTO(),
+            shelter = shelter.toShelterDTO(true),
+        )
 
 fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(now) }
 // endregion

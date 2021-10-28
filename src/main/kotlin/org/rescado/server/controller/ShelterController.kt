@@ -1,5 +1,6 @@
 package org.rescado.server.controller
 
+import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.build
 import org.rescado.server.controller.dto.req.AddAnimalDTO
 import org.rescado.server.controller.dto.req.AddAnimalPhotoDTO
@@ -16,16 +17,19 @@ import org.rescado.server.controller.dto.toImageArrayDTO
 import org.rescado.server.controller.dto.toImageDTO
 import org.rescado.server.controller.dto.toShelterArrayDTO
 import org.rescado.server.controller.dto.toShelterDTO
+import org.rescado.server.controller.dto.withLinks
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
+import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.AnimalService
 import org.rescado.server.service.ImageService
 import org.rescado.server.service.MessageService
 import org.rescado.server.service.ShelterService
 import org.rescado.server.util.PointGenerator
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -37,10 +41,13 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 @RestController
@@ -54,6 +61,28 @@ class ShelterController(
     private val pointGenerator: PointGenerator,
 ) {
     // region Shelter
+
+    @GetMapping
+    fun getAll(
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("limit", defaultValue = SecurityConstants.DEFAULT_LIMIT.toString()) size: Int,
+        @RequestParam("sort") sort: String?,
+        req: HttpServletRequest,
+    ): ResponseEntity<*> {
+        if (size > SecurityConstants.MAX_LIMIT)
+            return BadRequest(error = messageService["error.LimitExceeded.message"]).build()
+        try {
+            val shelterPage: Page<Shelter> = shelterService.getPage(page, size, sort)
+            if (page > shelterPage.totalPages - 1)
+                return BadRequest(error = messageService["error.OutOfPages.message"]).build()
+
+            return shelterPage.content.toShelterArrayDTO()
+                .withLinks(req, shelterPage)
+                .build()
+        } catch (e: IllegalArgumentException) {
+            return BadRequest(error = messageService["error.IllegalPagination.message"]).build()
+        }
+    }
 
     @GetMapping("/all")
     fun getAll(): ResponseEntity<*> {

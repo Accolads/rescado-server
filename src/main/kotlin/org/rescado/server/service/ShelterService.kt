@@ -5,6 +5,8 @@ import org.locationtech.jts.geom.Point
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.ShelterRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -14,6 +16,12 @@ class ShelterService(
     private val shelterRepository: ShelterRepository,
     private val imageService: ImageService,
 ) {
+
+    fun getPage(page: Int, size: Int, sort: String?) =
+        if (sort.isNullOrEmpty())
+            shelterRepository.findAll(PageRequest.of(page, size))
+        else
+            shelterRepository.findAll(PageRequest.of(page, size, Sort.by(sort)))
 
     fun getAll(): MutableList<Shelter> = shelterRepository.findAll()
 
