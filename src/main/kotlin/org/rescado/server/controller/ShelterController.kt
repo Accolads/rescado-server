@@ -63,7 +63,7 @@ class ShelterController(
     // region Shelter
 
     @GetMapping
-    fun getAll(
+    fun getPaged(
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("limit", defaultValue = SecurityConstants.DEFAULT_LIMIT.toString()) size: Int,
         @RequestParam("sort") sort: String?,
