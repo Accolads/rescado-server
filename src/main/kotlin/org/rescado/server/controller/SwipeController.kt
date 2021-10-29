@@ -1,30 +1,33 @@
 package org.rescado.server.controller
 
 import org.rescado.server.controller.dto.build
+import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.error.BadRequest
 import org.rescado.server.controller.dto.res.error.Forbidden
 import org.rescado.server.controller.dto.toAnimalArrayDTO
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Animal
-import org.rescado.server.service.CardsService
 import org.rescado.server.service.MessageService
+import org.rescado.server.service.SwipeService
 import org.rescado.server.util.AreaData
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/cards")
-class CardsController(
-    private val cardsService: CardsService,
+class SwipeController(
+    private val swipeService: SwipeService,
     private val messageService: MessageService,
 ) {
 
-    @GetMapping // TODO Not idempotent, so perhaps we should use @PostMapping?
-    fun get(
+    @GetMapping("generate") // TODO Non-idempotent resource -> should be POST. Create DTO and catch Enum violations in a BindingResult.
+    fun generate(
         @RequestParam("kind", required = false) kindList: String?,
         @RequestParam("sex", required = false) sexList: String?,
         @RequestParam("minage", required = false) minimumAge: Int?,
@@ -65,7 +68,7 @@ class CardsController(
         if (minimumWeight != null && maximumWeight != null && minimumWeight > maximumWeight)
             return BadRequest(error = messageService["error.InvalidWeight.message"]).build()
 
-        return cardsService.getCards(
+        return swipeService.createCards(
             account = user,
             location = location,
             kinds = kinds,
@@ -77,5 +80,15 @@ class CardsController(
             vaccinated = vaccinated,
             sterilized = sterilized,
         ).toAnimalArrayDTO().build()
+    }
+
+    @PostMapping("reset")
+    fun reset(): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Account)
+            return Forbidden(error = messageService["error.CardsForbidden.message"]).build()
+
+        swipeService.reset(user)
+        return Response(httpStatus = HttpStatus.NO_CONTENT).build()
     }
 }
