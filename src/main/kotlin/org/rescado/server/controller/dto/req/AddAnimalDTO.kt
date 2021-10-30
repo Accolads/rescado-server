@@ -43,7 +43,7 @@ data class AddAnimalDTO(
 
     @JsonProperty("weight")
     @get:NotNull(message = "{NotNull.AddAnimalDTO.weight}")
-    @get:Min(value = 1, message = "{Min.AddAnimalDTO.weight}")
+    @get:Min(message = "{Min.AddAnimalDTO.weight}", value = 1)
     val weight: Int?,
 
     @JsonProperty("vaccinated")

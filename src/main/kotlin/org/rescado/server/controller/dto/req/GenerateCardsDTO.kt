@@ -17,15 +17,19 @@ data class GenerateCardsDTO(
     val sexes: Set<String>?,
 
     @JsonProperty("minimumAge")
+    @get:Min(message = "{Min.GenerateCardsDTO.minimumAge}", value = 1)
     val minimumAge: Int?,
 
     @JsonProperty("maximumAge")
+    @get:Min(message = "{Min.GenerateCardsDTO.maximumAge}", value = 1)
     val maximumAge: Int?,
 
     @JsonProperty("minimumWeight")
+    @get:Min(message = "{Min.GenerateCardsDTO.minimumWeight}", value = 1)
     val minimumWeight: Int?,
 
     @JsonProperty("maximumWeight")
+    @get:Min(message = "{Min.GenerateCardsDTO.maximumWeight}", value = 1)
     val maximumWeight: Int?,
 
     @JsonProperty("vaccinated")
