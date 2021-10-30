@@ -24,8 +24,8 @@ class CardsRepository(
         account: Account,
         limit: Int,
         location: AreaData,
-        kinds: List<Animal.Kind>,
-        sexes: List<Animal.Sex>,
+        kinds: Set<Animal.Kind>,
+        sexes: Set<Animal.Sex>,
         minimumAge: Int?,
         maximumAge: Int?,
         minimumWeight: Int?,
@@ -128,7 +128,7 @@ class CardsRepository(
 
     private fun anyFromEnum(
         builder: CriteriaBuilder,
-        enum: List<Enum<*>>,
+        enum: Set<Enum<*>>,
         animal: Root<Animal>,
         column: String,
     ) = builder.or(

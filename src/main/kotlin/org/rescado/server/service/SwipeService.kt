@@ -35,8 +35,8 @@ class SwipeService(
     fun createCards(
         account: Account,
         location: AreaData,
-        kinds: List<Animal.Kind>,
-        sexes: List<Animal.Sex>,
+        kinds: Set<Animal.Kind>,
+        sexes: Set<Animal.Sex>,
         minimumAge: Int?,
         maximumAge: Int?,
         minimumWeight: Int?,

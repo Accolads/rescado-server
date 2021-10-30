@@ -1,7 +1,7 @@
 package org.rescado.server.controller
 
 import org.rescado.server.controller.dto.build
-import org.rescado.server.controller.dto.req.ListOfIdsDTO
+import org.rescado.server.controller.dto.req.SetOfIdsDTO
 import org.rescado.server.controller.dto.res.LikeDTO
 import org.rescado.server.controller.dto.res.LikesActionDTO
 import org.rescado.server.controller.dto.res.Response
@@ -54,7 +54,7 @@ class LikesController(
 
     @PostMapping
     fun add(
-        @Valid @RequestBody dto: ListOfIdsDTO,
+        @Valid @RequestBody dto: SetOfIdsDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -90,7 +90,7 @@ class LikesController(
 
     @DeleteMapping
     fun delete(
-        @Valid @RequestBody dto: ListOfIdsDTO,
+        @Valid @RequestBody dto: SetOfIdsDTO,
         res: BindingResult,
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
