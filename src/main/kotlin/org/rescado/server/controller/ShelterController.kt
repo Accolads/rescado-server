@@ -43,9 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.lang.IllegalArgumentException
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -229,7 +226,7 @@ class ShelterController(
             name = dto.name!!,
             description = dto.description!!,
             sex = Animal.Sex.valueOf(dto.sex!!.uppercase()),
-            birthday = LocalDate.parse(dto.birthday, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            birthday = dto.birthday!!,
             weight = dto.weight!!,
             vaccinated = dto.vaccinated!!,
             sterilized = dto.sterilized!!,
@@ -265,7 +262,7 @@ class ShelterController(
             name = dto.name,
             description = dto.description,
             sex = dto.sex?.let { Animal.Sex.valueOf(it.uppercase()) },
-            birthday = dto.birthday?.let { LocalDate.parse(dto.birthday, DateTimeFormatter.ofPattern("yyyy-MM-dd")) },
+            birthday = dto.birthday,
             weight = dto.weight,
             vaccinated = dto.vaccinated,
             sterilized = dto.sterilized,

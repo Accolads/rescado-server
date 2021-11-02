@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.rescado.server.controller.dto.validation.AnimalAvailability
 import org.rescado.server.controller.dto.validation.AnimalKind
 import org.rescado.server.controller.dto.validation.AnimalSex
+import java.time.LocalDate
 import javax.validation.constraints.Min
-import javax.validation.constraints.Pattern
+import javax.validation.constraints.Past
 
 data class PatchAnimalDTO(
 
@@ -27,8 +28,8 @@ data class PatchAnimalDTO(
     val sex: String?,
 
     @JsonProperty("birthday")
-    @get:Pattern(message = "{Pattern.PatchAnimalDTO.birthday}", regexp = "^20\\d{2}-[0-1][1-9]-[0-3]\\d\$")
-    val birthday: String?,
+    @get:Past(message = "{Past.PatchAnimalDTO.birthday}")
+    val birthday: LocalDate?,
 
     @JsonProperty("weight")
     @get:Min(value = 1, message = "{Min.PatchAnimalDTO.weight")

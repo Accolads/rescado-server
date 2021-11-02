@@ -5,11 +5,12 @@ import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.validation.AnimalAvailability
 import org.rescado.server.controller.dto.validation.AnimalKind
 import org.rescado.server.controller.dto.validation.AnimalSex
+import java.time.LocalDate
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
+import javax.validation.constraints.Past
 import javax.validation.constraints.Size
 
 data class AddAnimalDTO(
@@ -37,9 +38,9 @@ data class AddAnimalDTO(
     val sex: String?,
 
     @JsonProperty("birthday")
-    @get:NotBlank(message = "{NotBlank.AddAnimalDTO.birthday}")
-    @get:Pattern(message = "{Pattern.AddAnimalDTO.birthday}", regexp = "^20\\d{2}-[0-1][1-9]-[0-3]\\d\$")
-    val birthday: String?,
+    @get:NotNull(message = "{NotNull.AddAnimalDTO.birthday}")
+    @get:Past(message = "{Past.AddAnimalDTO.birthday}")
+    val birthday: LocalDate?,
 
     @JsonProperty("weight")
     @get:NotNull(message = "{NotNull.AddAnimalDTO.weight}")
