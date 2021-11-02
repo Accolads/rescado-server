@@ -52,6 +52,12 @@ class CardsRepository(
             add(
                 builder.isNull(swipes.get<Animal>("animal"))
             )
+            add(
+                builder.equal(
+                    animal.get<Animal.Availability>("availability"),
+                    builder.literal(Animal.Availability.AVAILABLE)
+                )
+            )
 
             if (location.state == AreaData.State.COMPLETE)
                 add(
@@ -133,10 +139,10 @@ class CardsRepository(
         query.where(*where.toTypedArray())
         query.orderBy(builder.asc(builder.function<Unit>("RANDOM", null))) // TODO find something more performant than RANDOM()
 
-        val typedQuery = entityManager.createQuery(query).apply {
-            maxResults = limit
-        }
-        return typedQuery.resultList
+        return entityManager
+            .createQuery(query)
+            .setMaxResults(limit)
+            .resultList
     }
 
     private fun distance(
