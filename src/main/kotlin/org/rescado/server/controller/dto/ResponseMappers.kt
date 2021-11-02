@@ -23,9 +23,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.util.UriComponentsBuilder
-import java.time.Duration
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import javax.servlet.http.HttpServletRequest
 
 // region Response mappers
@@ -87,7 +84,7 @@ fun Account.toAccountDTO() = AccountDTO(
     email = email,
     name = name,
     avatar = avatar?.toImageDTO(),
-    shelter = shelter?.toShelterDTO(true),
+    shelter = shelter?.toShelterDTO(false),
 )
 
 fun List<Account>.toAccountArrayDTO() = this.map { it.toAccountDTO() }
@@ -115,17 +112,8 @@ fun List<Session>.toSessionArrayDTO() = this.map { it.toSessionDTO() }
 // endregion
 // region Shelter mappers
 
-fun Shelter.toShelterDTO(shortVersion: Boolean = false) =
-    if (shortVersion)
-        ShelterDTO(
-            id = id,
-            name = name,
-            city = city,
-            country = country,
-            coordinates = geometry.toCoordinatesDTO(),
-            logo = logo.toImageDTO(),
-        )
-    else
+fun Shelter.toShelterDTO(detailed: Boolean = false) =
+    if (detailed)
         ShelterDTO(
             id = id,
             name = name,
@@ -140,24 +128,22 @@ fun Shelter.toShelterDTO(shortVersion: Boolean = false) =
             logo = logo.toImageDTO(),
             banner = banner?.toImageDTO(),
         )
+    else
+        ShelterDTO(
+            id = id,
+            name = name,
+            city = city,
+            country = country,
+            coordinates = geometry.toCoordinatesDTO(),
+            logo = logo.toImageDTO(),
+        )
 
-fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO() }
+fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO(true) }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(now: ZonedDateTime? = null) =
-    if (now == null)
-        AnimalDTO(
-            id = id,
-            name = name,
-            kind = kind.name,
-            breed = breed,
-            sex = sex.name,
-            availability = availability.name,
-            photos = photos.toImageArrayDTO(),
-            shelter = shelter.toShelterDTO(true),
-        )
-    else
+fun Animal.toAnimalDTO(detailed: Boolean = false) =
+    if (detailed)
         AnimalDTO(
             id = id,
             name = name,
@@ -165,16 +151,27 @@ fun Animal.toAnimalDTO(now: ZonedDateTime? = null) =
             kind = kind.name,
             breed = breed,
             sex = sex.name,
-            age = (Duration.between(birthday.atStartOfDay(ZoneId.systemDefault()), now).toDays() / 365).toInt(),
+            birthday = birthday,
             weight = weight,
             vaccinated = vaccinated,
             sterilized = sterilized,
             availability = availability.name,
             photos = photos.toImageArrayDTO(),
-            shelter = shelter.toShelterDTO(true),
+            shelter = shelter.toShelterDTO(false),
+        )
+    else
+        AnimalDTO(
+            id = id,
+            name = name,
+            kind = kind.name,
+            breed = breed,
+            sex = sex.name,
+            availability = availability.name,
+            photos = photos.toImageArrayDTO(),
+            shelter = shelter.toShelterDTO(false),
         )
 
-fun List<Animal>.toAnimalArrayDTO(now: ZonedDateTime? = null) = this.map { it.toAnimalDTO(now) }
+fun List<Animal>.toAnimalArrayDTO(detailed: Boolean = false) = this.map { it.toAnimalDTO(detailed) }
 // endregion
 // region Image mappers
 

@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.lang.IllegalArgumentException
 import java.time.LocalDate
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -100,7 +99,7 @@ class ShelterController(
         val shelter = shelterService.getById(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
-        return shelter.toShelterDTO().build()
+        return shelter.toShelterDTO(true).build()
     }
 
     @PostMapping
@@ -127,7 +126,7 @@ class ShelterController(
             geometry = pointGenerator.make(dto.latitude, dto.longitude)!!,
             logo = imageService.create(Image.Type.LOGO, dto.logo!!),
             banner = dto.banner?.let { imageService.create(Image.Type.BANNER, dto.banner) },
-        ).toShelterDTO().build(HttpStatus.CREATED)
+        ).toShelterDTO(true).build(HttpStatus.CREATED)
     }
 
     @PatchMapping("/{shelterId}")
@@ -159,7 +158,7 @@ class ShelterController(
             geometry = pointGenerator.make(dto.latitude, dto.longitude)!!,
             logo = dto.logo?.let { imageService.create(Image.Type.LOGO, dto.logo) },
             banner = dto.banner?.let { imageService.create(Image.Type.BANNER, dto.banner) },
-        ).toShelterDTO().build()
+        ).toShelterDTO(true).build()
     }
 
     @DeleteMapping("/{shelterId}")
@@ -190,8 +189,7 @@ class ShelterController(
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
-        val now = ZonedDateTime.now()
-        return shelter.animals.map { it.toAnimalDTO(now) }.build()
+        return shelter.animals.map { it.toAnimalDTO(true) }.build()
     }
 
     @GetMapping("/{shelterId}/animal/{animalId}")
@@ -205,8 +203,7 @@ class ShelterController(
         val animal = shelter.animals.find { it.id == animalId }
             ?: return NotFound(error = messageService["error.NonExistentAnimal.message", animalId]).build()
 
-        val now = ZonedDateTime.now()
-        return animal.toAnimalDTO(now).build()
+        return animal.toAnimalDTO(true).build()
     }
 
     @PostMapping("/{shelterId}/animal")
@@ -225,7 +222,6 @@ class ShelterController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val now = ZonedDateTime.now()
         return animalService.create(
             shelter = shelter,
             kind = Animal.Kind.valueOf(dto.kind!!.uppercase()),
@@ -239,7 +235,7 @@ class ShelterController(
             sterilized = dto.sterilized!!,
             availability = Animal.Availability.valueOf(dto.availability!!.uppercase()),
             photos = dto.photos!!.map { imageService.create(Image.Type.PHOTO, it) }.toMutableSet()
-        ).toAnimalDTO(now).build(HttpStatus.CREATED)
+        ).toAnimalDTO(true).build(HttpStatus.CREATED)
     }
 
     @PatchMapping("/{shelterId}/animal/{animalId}")
@@ -262,7 +258,6 @@ class ShelterController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
-        val now = ZonedDateTime.now()
         return animalService.update(
             animal = animal,
             kind = dto.kind?.let { Animal.Kind.valueOf(it.uppercase()) },
@@ -275,7 +270,7 @@ class ShelterController(
             vaccinated = dto.vaccinated,
             sterilized = dto.sterilized,
             availability = dto.availability?.let { Animal.Availability.valueOf(it.uppercase()) },
-        ).toAnimalDTO(now).build()
+        ).toAnimalDTO(true).build()
     }
 
     @DeleteMapping("/{shelterId}/animal/{animalId}")
