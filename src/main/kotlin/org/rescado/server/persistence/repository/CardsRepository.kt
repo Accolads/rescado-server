@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Expression
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
 
 @Repository
 class CardsRepository(
@@ -64,12 +63,26 @@ class CardsRepository(
 
             if (kinds.isNotEmpty())
                 add(
-                    anyFromEnum(builder, kinds, animal, "kind")
+                    builder.or(
+                        *kinds.map {
+                            builder.equal(
+                                animal.get<Animal.Kind>("kind"),
+                                builder.literal(it)
+                            )
+                        }.toTypedArray()
+                    )
                 )
 
             if (sexes.isNotEmpty())
                 add(
-                    anyFromEnum(builder, sexes, animal, "sex")
+                    builder.or(
+                        *sexes.map {
+                            builder.equal(
+                                animal.get<Animal.Sex>("sex"),
+                                builder.literal(it)
+                            )
+                        }.toTypedArray()
+                    )
                 )
 
             if (minimumAge != null)
@@ -125,20 +138,6 @@ class CardsRepository(
         }
         return typedQuery.resultList
     }
-
-    private fun anyFromEnum(
-        builder: CriteriaBuilder,
-        enum: Set<Enum<*>>,
-        animal: Root<Animal>,
-        column: String,
-    ) = builder.or(
-        *enum.map {
-            builder.equal(
-                animal.get<String>(column),
-                builder.literal(it.name)
-            )
-        }.toTypedArray()
-    )
 
     private fun distance(
         builder: CriteriaBuilder,
