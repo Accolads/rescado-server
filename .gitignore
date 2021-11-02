@@ -1,5 +1,6 @@
 # Application data
 /db/data/
+/db/data*
 /log/
 /secret/
 .env
