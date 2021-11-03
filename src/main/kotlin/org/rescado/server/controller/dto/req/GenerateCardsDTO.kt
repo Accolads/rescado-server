@@ -1,12 +1,20 @@
 package org.rescado.server.controller.dto.req
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.controller.dto.validation.AnimalKindSet
 import org.rescado.server.controller.dto.validation.AnimalSexSet
 import org.rescado.server.controller.dto.validation.InRange
+import javax.validation.constraints.Max
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
 
 data class GenerateCardsDTO(
+
+    @JsonProperty("number")
+    @get:NotNull(message = "{NotNull.GenerateCardsDTO.number}")
+    @get:Max(message = "{Max.GenerateCardsDTO.number}", value = SecurityConstants.CARDS_LIMIT.toLong())
+    val number: Int?,
 
     @JsonProperty("kinds")
     @get:AnimalKindSet(message = "{AnimalKindSet.GenerateCardsDTO.kinds}")

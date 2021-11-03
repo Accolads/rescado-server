@@ -10,7 +10,7 @@ object SecurityConstants {
 
     const val DEFAULT_LIMIT = 25
     const val MAX_LIMIT = 150
-    const val CARDS_LIMIT = 25
+    const val CARDS_LIMIT = 50
 
     const val SALT = "\$2a\$12\$J5FICwPCWcyOH/5oUKq9qO" // will change once we go prod, sorry hackers
     const val SECRET = "n2r5u8x/A%D*G-KaPdSgVkYp3s6v9y?/B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf" // sorry hackers

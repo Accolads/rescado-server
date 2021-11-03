@@ -1,6 +1,5 @@
 package org.rescado.server.service
 
-import org.rescado.server.constant.SecurityConstants
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Swipe
@@ -34,6 +33,7 @@ class SwipeService(
 
     fun createCards(
         account: Account,
+        number: Int,
         location: AreaData,
         kinds: Set<Animal.Kind>,
         sexes: Set<Animal.Sex>,
@@ -48,7 +48,7 @@ class SwipeService(
             account,
             cardsRepository.findCards(
                 account = account,
-                limit = SecurityConstants.CARDS_LIMIT,
+                limit = number,
                 location = location,
                 kinds = kinds,
                 sexes = sexes,
