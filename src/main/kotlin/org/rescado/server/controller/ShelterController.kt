@@ -186,7 +186,7 @@ class ShelterController(
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
 
-        return shelter.animals.map { it.toAnimalDTO(true) }.build()
+        return shelter.animals.map { it.toAnimalDTO() }.build()
     }
 
     @GetMapping("/{shelterId}/animal/{animalId}")
@@ -200,7 +200,7 @@ class ShelterController(
         val animal = shelter.animals.find { it.id == animalId }
             ?: return NotFound(error = messageService["error.NonExistentAnimal.message", animalId]).build()
 
-        return animal.toAnimalDTO(true).build()
+        return animal.toAnimalDTO().build()
     }
 
     @PostMapping("/{shelterId}/animal")
@@ -232,7 +232,7 @@ class ShelterController(
             sterilized = dto.sterilized!!,
             availability = Animal.Availability.valueOf(dto.availability!!.uppercase()),
             photos = dto.photos!!.map { imageService.create(Image.Type.PHOTO, it) }.toMutableSet()
-        ).toAnimalDTO(true).build(HttpStatus.CREATED)
+        ).toAnimalDTO().build(HttpStatus.CREATED)
     }
 
     @PatchMapping("/{shelterId}/animal/{animalId}")
@@ -267,7 +267,7 @@ class ShelterController(
             vaccinated = dto.vaccinated,
             sterilized = dto.sterilized,
             availability = dto.availability?.let { Animal.Availability.valueOf(it.uppercase()) },
-        ).toAnimalDTO(true).build()
+        ).toAnimalDTO().build()
     }
 
     @DeleteMapping("/{shelterId}/animal/{animalId}")

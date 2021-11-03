@@ -45,12 +45,24 @@ fun List<Response>.withLinks(req: HttpServletRequest, result: Page<*>): List<Res
         val urlBuilder = UriComponentsBuilder.fromHttpUrl("${req.requestURL}?${req.queryString ?: ""}")
 
         if (result.number != 0)
-            linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.number - 1).toUriString()}>; rel=\"prev\", ")
+            linkBuilder.append(
+                "<${
+                urlBuilder.replaceQueryParam("page", result.number - 1).toUriString()
+                }>; rel=\"prev\", "
+            )
         if (result.number != result.totalPages - 1)
-            linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.number + 1).toUriString()}>; rel=\"next\", ")
+            linkBuilder.append(
+                "<${
+                urlBuilder.replaceQueryParam("page", result.number + 1).toUriString()
+                }>; rel=\"next\", "
+            )
 
         linkBuilder.append("<${urlBuilder.replaceQueryParam("page", 0).toUriString()}>; rel=\"first\", ")
-        linkBuilder.append("<${urlBuilder.replaceQueryParam("page", result.totalPages - 1).toUriString()}>; rel=\"last\"")
+        linkBuilder.append(
+            "<${
+            urlBuilder.replaceQueryParam("page", result.totalPages - 1).toUriString()
+            }>; rel=\"last\""
+        )
 
         first().httpHeaders.add(HttpHeaders.LINK, linkBuilder.toString())
     }
@@ -142,36 +154,23 @@ fun List<Shelter>.toShelterArrayDTO() = this.map { it.toShelterDTO(true) }
 // endregion
 // region Animal mappers
 
-fun Animal.toAnimalDTO(detailed: Boolean = false) =
-    if (detailed)
-        AnimalDTO(
-            id = id,
-            name = name,
-            description = description,
-            kind = kind.name,
-            breed = breed,
-            sex = sex.name,
-            birthday = birthday,
-            weight = weight,
-            vaccinated = vaccinated,
-            sterilized = sterilized,
-            availability = availability.name,
-            photos = photos.toImageArrayDTO(),
-            shelter = shelter.toShelterDTO(false),
-        )
-    else
-        AnimalDTO(
-            id = id,
-            name = name,
-            kind = kind.name,
-            breed = breed,
-            sex = sex.name,
-            availability = availability.name,
-            photos = photos.toImageArrayDTO(),
-            shelter = shelter.toShelterDTO(false),
-        )
+fun Animal.toAnimalDTO() = AnimalDTO(
+    id = id,
+    name = name,
+    description = description,
+    kind = kind.name,
+    breed = breed,
+    sex = sex.name,
+    birthday = birthday,
+    weight = weight,
+    vaccinated = vaccinated,
+    sterilized = sterilized,
+    availability = availability.name,
+    photos = photos.toImageArrayDTO(),
+    shelter = shelter.toShelterDTO(false),
+)
 
-fun List<Animal>.toAnimalArrayDTO(detailed: Boolean = false) = this.map { it.toAnimalDTO(detailed) }
+fun List<Animal>.toAnimalArrayDTO() = this.map { it.toAnimalDTO() }
 // endregion
 // region Image mappers
 
