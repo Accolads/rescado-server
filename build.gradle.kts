@@ -17,12 +17,12 @@ repositories {
 // Plugins
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    id("org.springframework.boot") version "2.5.5"
+    id("org.springframework.boot") version "2.5.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.google.cloud.tools.jib") version "3.1.4"
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.spring") version "1.5.31"
-    kotlin("plugin.jpa") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
+    kotlin("plugin.spring") version "1.6.0"
+    kotlin("plugin.jpa") version "1.6.0"
 }
 
 // Dependencies
@@ -31,29 +31,29 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     // Spring
-    implementation("org.springframework.boot:spring-boot-starter-web:2.5.5")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.5")
-    implementation("org.springframework.boot:spring-boot-starter-security:2.5.5")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.5.6")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.6")
+    implementation("org.springframework.boot:spring-boot-starter-security:2.5.6")
     // Hibernate Spatial and PostgreSQL+PostGIS driver
-    implementation("org.hibernate:hibernate-spatial:5.5.7.Final")
-    runtimeOnly("org.postgresql:postgresql:42.2.24.jre7")
+    implementation("org.hibernate:hibernate-spatial:5.5.8.Final")
+    runtimeOnly("org.postgresql:postgresql:42.3.1")
     runtimeOnly("net.postgis:postgis-jdbc:2.5.1")
     // Hibernate Validator
     implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
     implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")
     // Liquibase
-    implementation("org.liquibase:liquibase-core:4.5.0")
+    implementation("org.liquibase:liquibase-core:4.6.1")
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
     // YAUAA
-    implementation("nl.basjes.parse.useragent:yauaa:6.0")
+    implementation("nl.basjes.parse.useragent:yauaa:6.3")
     // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.6") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.springframework.security:spring-security-test:5.5.1")
+    testImplementation("org.springframework.security:spring-security-test:5.6.0")
 }
 
 // Spring Boot config
@@ -102,8 +102,8 @@ tasks.register("bootRunProd") {
 // Kotlin compiler arguments and chaining installGitHooks task
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        apiVersion = "1.5" // Kotlin version
-        languageVersion = "1.5" // Kotlin version
+        apiVersion = "1.6" // Kotlin version
+        languageVersion = "1.6" // Kotlin version
         jvmTarget = "11" // JVM version
         freeCompilerArgs = listOf("-Xjsr305=strict") // strict null-safety
     }
