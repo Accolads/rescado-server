@@ -15,11 +15,16 @@ annotation class AnimalKind(
     val payload: Array<KClass<out Any>> = [],
 )
 
-class AnimalKindValidator : ConstraintValidator<AnimalKind, String> {
+class AnimalKindValidator : ConstraintValidator<AnimalKind, Any> {
 
     override fun initialize(constraintAnnotation: AnimalKind) {}
 
-    override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
-        return if (value == null) true else enumValues<Animal.Kind>().any { it.name.equals(value, true) }
-    }
+    override fun isValid(value: Any?, context: ConstraintValidatorContext?): Boolean =
+        when (value) {
+            is Set<*> -> value.all { kind -> isValid(kind.toString()) }
+            is String -> isValid(value)
+            else -> true
+        }
+
+    private fun isValid(value: String): Boolean = enumValues<Animal.Kind>().any { it.name.equals(value, true) }
 }
