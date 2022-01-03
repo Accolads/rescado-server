@@ -95,6 +95,18 @@ databaseChangeLog:
                   name: name
                   type: VARCHAR(45)
               - column:
+                  name: apple_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: google_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: facebook_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: twitter_reference
+                  type: VARCHAR(45)
+              - column:
                   name: email
                   type: VARCHAR(45)
                   constraints:

@@ -10,6 +10,18 @@ data class PatchAccountDTO(
     @JsonProperty("name")
     val name: String?,
 
+    @JsonProperty("appleReference")
+    val appleReference: String?,
+
+    @JsonProperty("googleReference")
+    val googleReference: String?,
+
+    @JsonProperty("facebookReference")
+    val facebookReference: String?,
+
+    @JsonProperty("twitterReference")
+    val twitterReference: String?,
+
     @JsonProperty("email")
     @get:Email(message = "{Email.PatchAccountDTO.email}")
     val email: String?,

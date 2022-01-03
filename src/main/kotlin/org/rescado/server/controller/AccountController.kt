@@ -64,6 +64,10 @@ class AccountController(
         return accountService.update(
             account = user,
             name = dto.name,
+            appleReference = dto.appleReference,
+            googleReference = dto.googleReference,
+            facebookReference = dto.facebookReference,
+            twitterReference = dto.twitterReference,
             email = dto.email,
             password = dto.password,
             avatar = dto.avatar?.let { imageService.create(Image.Type.AVATAR, dto.avatar) },
