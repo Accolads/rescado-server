@@ -5,8 +5,11 @@ import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Image
 import org.rescado.server.persistence.entity.Shelter
 import org.rescado.server.persistence.repository.AccountRepository
+import org.rescado.server.service.exception.IllegalReferenceException
+import org.rescado.server.service.exception.LastReferenceException
 import org.rescado.server.util.checkPassword
 import org.springframework.stereotype.Service
+import java.util.Locale
 import java.util.UUID
 import javax.transaction.Transactional
 
@@ -84,6 +87,25 @@ class AccountService(
     fun setVolunteer(account: Account, shelter: Shelter?): Account {
         account.shelter = shelter
         account.status = if (shelter == null) Account.Status.ENROLLED else Account.Status.VOLUNTEER
+        return accountRepository.save(account)
+    }
+
+    fun removeReference(account: Account, referenceName: String): Account {
+        when (referenceName.uppercase(Locale.getDefault())) {
+            "APPLE" -> account.appleReference = null
+            "GOOGLE" -> account.googleReference = null
+            "FACEBOOK" -> account.facebookReference = null
+            "TWITTER" -> account.twitterReference = null
+            "EMAIL" -> {
+                account.email = null
+                account.password = null
+            }
+            else -> throw IllegalReferenceException(referenceName)
+        }
+
+        if (!account.hasAtLeastOneReference())
+            throw LastReferenceException(referenceName)
+
         return accountRepository.save(account)
     }
 }

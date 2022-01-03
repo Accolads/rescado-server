@@ -69,6 +69,8 @@ open class Account(
 
 ) : Identifiable() {
 
+    fun hasAtLeastOneReference() = appleReference != null || googleReference != null || facebookReference != null || twitterReference != null || email != null
+
     enum class Status {
         ANONYMOUS,
         ENROLLED,

@@ -13,11 +13,14 @@ import org.rescado.server.persistence.entity.Image
 import org.rescado.server.service.AccountService
 import org.rescado.server.service.ImageService
 import org.rescado.server.service.MessageService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -72,5 +75,20 @@ class AccountController(
             password = dto.password,
             avatar = dto.avatar?.let { imageService.create(Image.Type.AVATAR, dto.avatar) },
         ).toAccountDTO().build()
+    }
+
+    @DeleteMapping("/reference/{referenceName}")
+    fun removeAccountReference(
+        @PathVariable referenceName: String,
+    ): ResponseEntity<Response> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        if (user !is Account)
+            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+
+        accountService.removeReference(
+            account = user,
+            referenceName = referenceName,
+        )
+        return Response(httpStatus = HttpStatus.NO_CONTENT).build()
     }
 }
