@@ -29,7 +29,7 @@ class WebConfig : WebMvcConfigurer {
     fun messageSource(): MessageSource {
         val source = ReloadableResourceBundleMessageSource()
         source.setBasenames("classpath:messages")
-        source.setDefaultEncoding("UTF-8")
+        source.setDefaultEncoding(Charsets.UTF_8.name())
         source.setUseCodeAsDefaultMessage(true)
         return source
     }
