@@ -6,26 +6,30 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.validation.Validator
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
+import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver
 import java.util.Locale
 
 @Configuration
 class WebConfig : WebMvcConfigurer {
 
-    // TODO is the bean below even necessary with the current SecurityConfig?
-    // @Bean
-    // fun corsConfigurationSource(): CorsConfigurationSource? {
-    //     val source = UrlBasedCorsConfigurationSource()
-    //     source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
-    //     return source
-    // }
+    @Bean
+    fun localeResolver(): LocaleResolver {
+        val resolver = AcceptHeaderLocaleResolver()
+        resolver.supportedLocales = listOf(
+            Locale("en"),
+            Locale("nl"),
+        )
+        resolver.defaultLocale = resolver.supportedLocales.first()
+        return resolver
+    }
 
     @Bean
     fun messageSource(): MessageSource {
-        Locale.setDefault(Locale.ENGLISH)
         val source = ReloadableResourceBundleMessageSource()
         source.setBasenames("classpath:messages")
-        source.setDefaultEncoding("UTF-8")
+        source.setDefaultEncoding(Charsets.UTF_8.name())
         source.setUseCodeAsDefaultMessage(true)
         return source
     }
