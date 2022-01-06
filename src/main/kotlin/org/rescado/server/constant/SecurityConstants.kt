@@ -15,6 +15,8 @@ object SecurityConstants {
     const val SALT = "\$2a\$12\$J5FICwPCWcyOH/5oUKq9qO" // will change once we go prod, sorry hackers
     const val SECRET = "n2r5u8x/A%D*G-KaPdSgVkYp3s6v9y?/B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf" // sorry hackers
 
+    const val DEVICE_HEADER = "User-Device"
+
     const val BASIC_PREFIX = "Basic "
     const val TOKEN_PREFIX = "Bearer "
     const val TOKEN_TYPE = "JWT"
@@ -23,7 +25,7 @@ object SecurityConstants {
 
     val PASSWORD_BLACKLIST = listOf(
         "password", "pass1234", "12345678", "01234567", "baseball", "trustno1", "superman", "testtest", "computer",
-        "michelle", "123456789", "0123456789", "012345678", "1234567890", "corvette", "00000000", "test1234",
+        "michelle", "123456789", "0123456789", "012345678", "1234567890", "corvette", "00000000", "test1234", "rescado",
     )
 
     const val IMAGE_MAX_REFERENCES = 10

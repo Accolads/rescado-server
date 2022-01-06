@@ -41,7 +41,8 @@ class AuthenticationController(
 
     @PostMapping("/register")
     fun register(
-        @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
+        @RequestHeader(value = SecurityConstants.DEVICE_HEADER) device: String?,
+        @RequestHeader(value = HttpHeaders.USER_AGENT) agent: String,
         @Valid @RequestBody dto: RegisterAccountDTO?,
         res: BindingResult,
         req: HttpServletRequest,
@@ -51,10 +52,12 @@ class AuthenticationController(
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
 
+        val client = clientAnalyzer.analyze(device, agent)
         val account = accountService.create()
         val session = sessionService.create(
             account = account,
-            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            device = client.first,
+            agent = client.second,
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto?.latitude, dto?.longitude),
         )
@@ -63,7 +66,8 @@ class AuthenticationController(
 
     @PostMapping("/login")
     fun authWithPassword(
-        @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
+        @RequestHeader(value = SecurityConstants.DEVICE_HEADER) device: String?,
+        @RequestHeader(value = HttpHeaders.USER_AGENT) agent: String,
         @Valid @RequestBody dto: AuthWithPasswordDTO,
         res: BindingResult,
         req: HttpServletRequest,
@@ -74,9 +78,11 @@ class AuthenticationController(
         val account = accountService.getByEmailAndPassword(dto.email!!, dto.password!!)
             ?: return BadRequest(error = messageService["error.CredentialsMismatch.message"]).build()
 
+        val client = clientAnalyzer.analyze(device, agent)
         val session = sessionService.create(
             account = account,
-            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            device = client.first,
+            agent = client.second,
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
@@ -85,7 +91,8 @@ class AuthenticationController(
 
     @PostMapping("/recover")
     fun authAnonymously(
-        @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
+        @RequestHeader(value = SecurityConstants.DEVICE_HEADER) device: String?,
+        @RequestHeader(value = HttpHeaders.USER_AGENT) agent: String,
         @Valid @RequestBody dto: AuthAnonymouslyDTO,
         res: BindingResult,
         req: HttpServletRequest,
@@ -98,9 +105,11 @@ class AuthenticationController(
         if (account.status != Account.Status.ANONYMOUS)
             return BadRequest(error = messageService["error.NotAnonymous.message"]).build()
 
+        val client = clientAnalyzer.analyze(device, agent)
         val session = sessionService.create(
             account = account,
-            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            device = client.first,
+            agent = client.second,
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )
@@ -109,7 +118,8 @@ class AuthenticationController(
 
     @PostMapping("/refresh")
     fun authWithToken(
-        @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
+        @RequestHeader(value = SecurityConstants.DEVICE_HEADER) device: String?,
+        @RequestHeader(value = HttpHeaders.USER_AGENT) agent: String,
         @Valid @RequestBody dto: AuthWithTokenDTO,
         res: BindingResult,
         req: HttpServletRequest,
@@ -126,9 +136,11 @@ class AuthenticationController(
         if (session?.account != account) // token is null or token account does not match the requested account
             return BadRequest(error = messageService["error.TokenMismatch.message"]).build()
 
+        val client = clientAnalyzer.analyze(device, agent)
         session = sessionService.refresh(
             session = session,
-            agent = clientAnalyzer.getFromUserAgent(userAgent),
+            device = client.first,
+            agent = client.second,
             ipAddress = req.remoteAddr,
             geometry = pointGenerator.make(dto.latitude, dto.longitude),
         )

@@ -53,6 +53,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: device
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
                   name: agent
                   type: VARCHAR(45)
                   constraints:
