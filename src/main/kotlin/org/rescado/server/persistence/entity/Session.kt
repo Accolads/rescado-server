@@ -21,6 +21,9 @@ open class Session(
     @Column(name = "refresh_token")
     open var refreshToken: String,
 
+    @Column(name = "device")
+    open var device: String,
+
     @Column(name = "agent")
     open var agent: String,
 

@@ -17,7 +17,9 @@ import org.rescado.server.filter.exception.MalformedCredentialsException
 import org.rescado.server.filter.exception.MissingCredentialsException
 import org.rescado.server.filter.exception.UnsupportedCredentialsException
 import org.rescado.server.service.MessageService
+import org.rescado.server.service.exception.IllegalReferenceException
 import org.rescado.server.service.exception.ImageSourceException
+import org.rescado.server.service.exception.LastReferenceException
 import org.rescado.server.service.exception.PhotoMaximumLimitReachedException
 import org.rescado.server.service.exception.PhotoMinimumLimitReachedException
 import org.springframework.dao.DataIntegrityViolationException
@@ -40,6 +42,13 @@ class ExceptionResolver(
 ) {
 
     @ExceptionHandler
+    fun resolve(e: IllegalReferenceException) =
+        BadRequest(error = messageService["exception.IllegalReferenceException.message", e.referenceName]).build()
+
+    @ExceptionHandler
+    fun resolve(e: LastReferenceException) =
+        BadRequest(error = messageService["exception.LastReferenceException.message", e.referenceName]).build()
+
     fun resolve(e: ImageSourceException) =
         BadRequest(error = messageService["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
 

@@ -4,6 +4,6 @@ import java.time.ZonedDateTime
 
 data class LikeDTO(
     val timestamp: ZonedDateTime,
-    val reference: String?,
+    val reference: String? = null,
     val animal: AnimalDTO,
 ) : Response()

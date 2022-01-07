@@ -53,6 +53,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: device
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+              - column:
                   name: agent
                   type: VARCHAR(45)
                   constraints:
@@ -93,6 +98,18 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: name
+                  type: VARCHAR(45)
+              - column:
+                  name: apple_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: google_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: facebook_reference
+                  type: VARCHAR(45)
+              - column:
+                  name: twitter_reference
                   type: VARCHAR(45)
               - column:
                   name: email

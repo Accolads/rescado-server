@@ -23,6 +23,18 @@ open class Account(
     @Column(name = "name")
     open var name: String?,
 
+    @Column(name = "apple_reference")
+    open var appleReference: String?,
+
+    @Column(name = "google_reference")
+    open var googleReference: String?,
+
+    @Column(name = "facebook_reference")
+    open var facebookReference: String?,
+
+    @Column(name = "twitter_reference")
+    open var twitterReference: String?,
+
     @Column(name = "email")
     open var email: String?,
 
@@ -56,6 +68,8 @@ open class Account(
     open var swipes: MutableSet<Swipe>,
 
 ) : Identifiable() {
+
+    fun hasAtLeastOneReference() = appleReference != null || googleReference != null || facebookReference != null || twitterReference != null || email != null
 
     enum class Status {
         ANONYMOUS,

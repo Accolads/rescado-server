@@ -39,11 +39,12 @@ class SessionService(
         return sessionRepository.findAllByLastLoginAfter(oldestPossibleRefreshDate).size
     }
 
-    fun create(account: Account, agent: String, ipAddress: String, geometry: Point?): Session {
+    fun create(account: Account, device: String, agent: String, ipAddress: String, geometry: Point?): Session {
         val now = ZonedDateTime.now(ZoneId.systemDefault())
         val session = Session(
             account = account,
             refreshToken = UUID.randomUUID().toString(),
+            device = device,
             agent = agent,
             firstLogin = now,
             lastLogin = now,
@@ -53,7 +54,7 @@ class SessionService(
         return sessionRepository.save(session)
     }
 
-    fun refresh(session: Session, agent: String, ipAddress: String, geometry: Point?): Session? {
+    fun refresh(session: Session, device: String, agent: String, ipAddress: String, geometry: Point?): Session? {
         val now = ZonedDateTime.now(ZoneId.systemDefault())
         if (session.lastLogin.plus(SecurityConstants.REFRESH_TTL, ChronoUnit.HOURS).isBefore(now)) {
             // token too old -- not safe.
@@ -61,6 +62,7 @@ class SessionService(
             return null
         }
 
+        session.device = device
         session.agent = agent
         session.lastLogin = now
         session.ipAddress = ipAddress

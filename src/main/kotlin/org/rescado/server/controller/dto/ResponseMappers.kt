@@ -93,8 +93,12 @@ fun Account.toAccountDTO() = AccountDTO(
     id = id,
     status = status.name,
     uuid = uuid,
-    email = email,
     name = name,
+    appleLinked = !appleReference.isNullOrBlank(),
+    googleLinked = !googleReference.isNullOrBlank(),
+    facebookLinked = !facebookReference.isNullOrBlank(),
+    twitterLinked = !twitterReference.isNullOrBlank(),
+    email = email,
     avatar = avatar?.toImageDTO(),
     shelter = shelter?.toShelterDTO(false),
 )
