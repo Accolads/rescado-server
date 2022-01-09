@@ -1,0 +1,63 @@
+name: Quality control
+
+on:
+  pull_request:
+    branches: [ develop, main ]
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Perform analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Checkout codebase
+        id: checkout-codebase
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup environment
+        id: setup-environment
+        uses: actions/setup-java@v2.5.0
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Run analysis
+        id: run-analysis
+        run: ./gradlew ktlintCheck
+      - name: Send status to Slack
+        if: failure()
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Checkout codebase
+        id: checkout-codebase
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup environment
+        id: setup-environment
+        uses: actions/setup-java@v2.5.0
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Run tests
+        id: run-tests
+        run: ./gradlew build # includes ./gradlew test
+      - name: Send status to Slack
+        if: failure()
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
