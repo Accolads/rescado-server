@@ -63,7 +63,7 @@ springBoot {
 // Google Jib config
 jib {
     from {
-        image = "openjdk:11"
+        image = "openjdk:17"
     }
     to {
         image = "rescado/rescado-server"
@@ -102,7 +102,7 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         apiVersion = "1.6" // Kotlin version
         languageVersion = "1.6" // Kotlin version
-        jvmTarget = "11" // JVM version
+        jvmTarget = "17" // JVM version
         freeCompilerArgs = listOf("-Xjsr305=strict") // strict null-safety
     }
     dependsOn("ktlintFormat") // format before compiling
