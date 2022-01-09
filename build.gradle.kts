@@ -17,12 +17,12 @@ repositories {
 // Plugins
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    id("org.springframework.boot") version "2.5.6"
+    id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.google.cloud.tools.jib") version "3.1.4"
-    kotlin("jvm") version "1.6.0"
-    kotlin("plugin.spring") version "1.6.0"
-    kotlin("plugin.jpa") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
+    kotlin("plugin.jpa") version "1.6.10"
 }
 
 // Dependencies
@@ -31,29 +31,28 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     // Spring
-    implementation("org.springframework.boot:spring-boot-starter-web:2.5.6")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.6")
-    implementation("org.springframework.boot:spring-boot-starter-security:2.5.6")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.2")
+    implementation("org.springframework.boot:spring-boot-starter-security:2.6.2")
     // Hibernate Spatial and PostgreSQL+PostGIS driver
-    implementation("org.hibernate:hibernate-spatial:5.5.8.Final")
-    runtimeOnly("org.postgresql:postgresql:42.3.1")
-    runtimeOnly("net.postgis:postgis-jdbc:2.5.1")
+    implementation("org.hibernate:hibernate-spatial:5.6.3.Final")
+    runtimeOnly("net.postgis:postgis-jdbc:2021.1.0")
     // Hibernate Validator
     implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
     implementation("org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final")
     // Liquibase
-    implementation("org.liquibase:liquibase-core:4.6.1")
+    implementation("org.liquibase:liquibase-core:4.6.2")
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
     // YAUAA
-    implementation("nl.basjes.parse.useragent:yauaa:6.3")
+    implementation("nl.basjes.parse.useragent:yauaa:6.6")
     // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.6") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.2") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.springframework.security:spring-security-test:5.6.0")
+    testImplementation("org.springframework.security:spring-security-test:5.5.1")
 }
 
 // Spring Boot config
@@ -90,7 +89,6 @@ tasks.register("bootRunProd") {
     // Running this via IntelliJ is bugged:
     // - You cannot debug this: breakpoints are ignored (maybe related https://youtrack.jetbrains.com/issue/IDEA-119494)
     // - Stopping process outputs process stopped but that's a lie: process just keeps running and you'll need to kill it
-    // TODO find another way to define a "bootRunDev" task, so "bootRun" can be used for prod config.
     doFirst {
         tasks.bootRun.configure {
             systemProperty("spring.profiles.active", "prod")
