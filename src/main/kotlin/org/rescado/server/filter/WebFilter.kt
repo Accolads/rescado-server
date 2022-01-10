@@ -1,5 +1,7 @@
 package org.rescado.server.filter
 
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.LocaleResolver
@@ -7,12 +9,11 @@ import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
-import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-@WebFilter("/**")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 class WebFilter(
     private val localeResolver: LocaleResolver
 ) : Filter {
@@ -27,7 +28,7 @@ class WebFilter(
         )
 
         response.setHeader(
-            "X-Motto",
+            "Motto",
             "adopt-dont-shop"
         )
 
