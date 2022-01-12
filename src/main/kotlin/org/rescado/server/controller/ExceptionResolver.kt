@@ -49,6 +49,7 @@ class ExceptionResolver(
     fun resolve(e: LastReferenceException) =
         BadRequest(error = messageService["exception.LastReferenceException.message", e.referenceName]).build()
 
+    @ExceptionHandler
     fun resolve(e: ImageSourceException) =
         BadRequest(error = messageService["exception.ImageSourceException.message", e.type.name.lowercase()]).build()
 
