@@ -17,6 +17,7 @@ object SecurityConstants {
 
     const val DEVICE_HEADER = "User-Device"
     const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.9.8; rv:15.6) Gecko/20100101 Firefox/15.6.6"
+    const val TIMEOUT = 5000
 
     const val BASIC_PREFIX = "Basic "
     const val TOKEN_PREFIX = "Bearer "

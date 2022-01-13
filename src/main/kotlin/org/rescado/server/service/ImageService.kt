@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
 import java.io.IOException
-import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 import javax.transaction.Transactional
@@ -45,7 +44,8 @@ class ImageService(
         var contentType = ""
         return try {
             val url = URL(reference)
-            val con = (url.openConnection() as HttpURLConnection)
+            val con = url.openConnection()
+            con.readTimeout = SecurityConstants.TIMEOUT
             con.setRequestProperty(HttpHeaders.USER_AGENT, SecurityConstants.DEFAULT_USER_AGENT)
 
             contentType = con.contentType
