@@ -46,7 +46,7 @@ class ImageService(
             val url = URL(reference)
             val con = url.openConnection()
             con.readTimeout = SecurityConstants.TIMEOUT
-            con.setRequestProperty(HttpHeaders.USER_AGENT, SecurityConstants.DEFAULT_USER_AGENT)
+            con.setRequestProperty(HttpHeaders.USER_AGENT, SecurityConstants.USER_AGENT)
 
             contentType = con.contentType
             SecurityConstants.IMAGE_CONTENTTYPE_WHITELIST.first {
