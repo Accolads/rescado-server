@@ -6,6 +6,7 @@ import org.rescado.server.persistence.repository.ImageRepository
 import org.rescado.server.service.exception.ImageSourceException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
 import java.io.IOException
 import java.net.MalformedURLException
@@ -44,6 +45,8 @@ class ImageService(
         return try {
             val url = URL(reference)
             val con = url.openConnection()
+            con.readTimeout = SecurityConstants.TIMEOUT
+            con.setRequestProperty(HttpHeaders.USER_AGENT, SecurityConstants.USER_AGENT)
 
             contentType = con.contentType
             SecurityConstants.IMAGE_CONTENTTYPE_WHITELIST.first {

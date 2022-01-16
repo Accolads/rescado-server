@@ -16,6 +16,8 @@ object SecurityConstants {
     const val SECRET = "n2r5u8x/A%D*G-KaPdSgVkYp3s6v9y?/B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf" // sorry hackers
 
     const val DEVICE_HEADER = "User-Device"
+    const val USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
+    const val TIMEOUT = 5000
 
     const val BASIC_PREFIX = "Basic "
     const val TOKEN_PREFIX = "Bearer "
