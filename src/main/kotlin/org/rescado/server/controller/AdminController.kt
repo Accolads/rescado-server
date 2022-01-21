@@ -50,7 +50,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -68,7 +68,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -86,7 +86,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val admin = if (adminId == null) user else adminService.getById(adminId)
             ?: return NotFound(error = messageService["error.NonExistentAdmin.message", adminId]).build()
@@ -104,7 +104,7 @@ class AdminController(
     ): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (shelterId == null)
             return accountService.getAllVolunteers().toAccountArrayDTO().build()
@@ -122,7 +122,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -145,7 +145,7 @@ class AdminController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AdminForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val account = accountService.getById(accountId)
             ?: return BadRequest(error = messageService["error.NonExistentAccount.message", accountId]).build()
