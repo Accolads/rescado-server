@@ -84,7 +84,7 @@ class ShelterController(
     fun getAll(): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         return shelterService.getAll().toShelterArrayDTO().build()
     }
@@ -106,7 +106,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -134,7 +134,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = if (user is Account) user.shelter!! else shelterService.getById(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -164,7 +164,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = shelterService.getById(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -211,7 +211,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = (if (user is Account) user.shelter else shelterService.getById(shelterId))
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -244,7 +244,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -277,7 +277,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -332,7 +332,7 @@ class ShelterController(
     ): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()
@@ -352,7 +352,7 @@ class ShelterController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user is Account && user.shelter?.id != shelterId)
-            return Forbidden(error = messageService["error.ShelterForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         val shelter = shelterService.getByIdWithAnimals(shelterId)
             ?: return NotFound(error = messageService["error.NonExistentShelter.message", shelterId]).build()

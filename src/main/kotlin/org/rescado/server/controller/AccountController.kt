@@ -38,7 +38,7 @@ class AccountController(
     fun getAll(): ResponseEntity<*> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Admin)
-            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         return accountService.getAll().toAccountArrayDTO().build()
     }
@@ -47,7 +47,7 @@ class AccountController(
     fun get(): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         return user.toAccountDTO().build()
     }
@@ -59,7 +59,7 @@ class AccountController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         if (res.hasErrors())
             return BadRequest(errors = res.allErrors.map { it.defaultMessage as String }).build()
@@ -83,7 +83,7 @@ class AccountController(
     ): ResponseEntity<Response> {
         val user = SecurityContextHolder.getContext().authentication.principal
         if (user !is Account)
-            return Forbidden(error = messageService["error.AccountForbidden.message"]).build()
+            return Forbidden(error = messageService["error.ResourceForbidden.message"]).build()
 
         accountService.removeReference(
             account = user,
