@@ -229,6 +229,8 @@ databaseChangeLog:
               - column:
                   name: description
                   type: TEXT
+                  constraints:
+                    nullable: false
               - column:
                   name: sex
                   type: VARCHAR(25)
