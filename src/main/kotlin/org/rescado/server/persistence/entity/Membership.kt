@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "membership")
+@Table(name = "memberships")
 @IdClass(CompositeAccountGroupId::class)
 open class Membership(
 
