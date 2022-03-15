@@ -1,6 +1,6 @@
 package org.rescado.server.persistence.entity
 
-import org.rescado.server.persistence.CompositeAccountAnimalId
+import org.rescado.server.persistence.CompositeId
 import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -13,7 +13,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "swipes")
-@IdClass(CompositeAccountAnimalId::class)
+@IdClass(CompositeId::class)
 open class Swipe(
 
     @Id

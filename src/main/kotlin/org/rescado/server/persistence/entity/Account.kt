@@ -45,6 +45,9 @@ open class Account(
     @Enumerated(EnumType.STRING)
     open var status: Status,
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
+    open var memberships: MutableSet<Membership>,
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shelter_id", referencedColumnName = "id")
     open var shelter: Shelter?, // if not null, this is a volunteer

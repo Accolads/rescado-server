@@ -1,9 +1,10 @@
 package org.rescado.server.persistence.entity
 
 import org.rescado.server.persistence.CompositeId
-import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.IdClass
@@ -12,26 +13,28 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "likes")
+@Table(name = "membership")
 @IdClass(CompositeId::class)
-open class Like(
+open class Membership(
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     open var account: Account,
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_id", referencedColumnName = "id")
-    open var animal: Animal,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    open var group: Group,
 
-    @Column(name = "timestamp")
-    open var timestamp: ZonedDateTime,
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    open var status: Status,
 
-    @Column(name = "reference")
-    open var reference: String?,
+) {
 
-    @Column(name = "unread_count")
-    open var unreadCount: Int,
-)
+    enum class Status {
+        INVITED,
+        CONFIRMED,
+    }
+}

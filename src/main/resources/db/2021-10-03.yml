@@ -133,6 +133,21 @@ databaseChangeLog:
                   name: shelter_id
                   type: BIGINT
         - createTable:
+            tableName: group
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: group_pkey
+                    nullable: false
+              - column:
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+        - createTable:
             tableName: shelter
             columns:
               - column:
@@ -310,6 +325,28 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - createTable:
+            tableName: memberships
+            columns:
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: memberships_pkey
+                    nullable: false
+              - column:
+                  name: group_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: memberships_pkey
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+        - createTable:
             tableName: likes
             columns:
               - column:
@@ -460,7 +497,24 @@ databaseChangeLog:
             referencedColumnNames: id
             onUpdate: CASCADE
             onDelete: CASCADE
-            onDelete: CASCADE
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: memberships_account_id
+            baseTableName: memberships
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: memberships_group_id
+            baseTableName: memberships
+            baseColumnNames: group_id
+            referencedTableName: group
+            referencedColumnNames: id
+            onUpdate: NO ACTION
+            onDelete: NO ACTION
             validate: true
         - addForeignKeyConstraint:
             constraintName: likes_account_id

@@ -58,6 +58,7 @@ class AccountService(
             status = Account.Status.ANONYMOUS,
             shelter = null,
             avatar = null,
+            memberships = mutableSetOf(),
             following = mutableSetOf(),
             likes = mutableSetOf(),
             swipes = mutableSetOf(),
