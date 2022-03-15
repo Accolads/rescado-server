@@ -158,6 +158,9 @@ class GroupController(
 
         if (detailed)
             return membership.group.memberships
+                .filter {
+                    it.status == Membership.Status.CONFIRMED
+                }
                 .map {
                     cardService.getLikedByAccountWithAnimals(it.account).toMutableList()
                 }
@@ -173,6 +176,9 @@ class GroupController(
                 }.build()
         return ResponseEntity(
             membership.group.memberships
+                .filter {
+                    it.status == Membership.Status.CONFIRMED
+                }
                 .map {
                     cardService.getLikedByAccountWithAnimals(it.account).toMutableList()
                 }
