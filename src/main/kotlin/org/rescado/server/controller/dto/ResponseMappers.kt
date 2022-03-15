@@ -99,11 +99,6 @@ fun Account.toAuthenticationDTO(authorization: String) = AuthenticationDTO(
     status = status.name,
 )
 
-fun Account.toMembershipDTO() = MembershipDTO(
-    name = name!!,
-    avatar = avatar?.toImageDTO(),
-)
-
 fun Account.toAccountDTO() = AccountDTO(
     id = id,
     status = status.name,
@@ -119,17 +114,24 @@ fun Account.toAccountDTO() = AccountDTO(
     shelter = shelter?.toShelterDTO(false),
 )
 
-fun List<Account>.toMemberArrayDTO() = this.map { it.toMembershipDTO() }
-
 fun List<Account>.toAccountArrayDTO() = this.map { it.toAccountDTO() }
 // endregion
 // region Member mappers
 
+fun Membership.toMembershipDTO() = MembershipDTO(
+    uuid = account.uuid,
+    name = account.name!!,
+    status = status.name,
+    avatar = account.avatar?.toImageDTO(),
+)
+
 fun Membership.toGroupDTO() = GroupDTO(
     id = group.id,
     status = status.name,
-    members = group.memberships.map { it.account }.toMemberArrayDTO()
+    members = group.memberships.toMembershipArrayDTO()
 )
+
+fun Set<Membership>.toMembershipArrayDTO() = this.map { it.toMembershipDTO() }
 
 fun Set<Membership>.toGroupArrayDTO() = this.map { it.toGroupDTO() }
 // endregion
