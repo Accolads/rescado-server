@@ -1,6 +1,6 @@
 package org.rescado.server.persistence.entity
 
-import org.rescado.server.persistence.CompositeId
+import org.rescado.server.persistence.CompositeAccountGroupId
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -14,7 +14,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "membership")
-@IdClass(CompositeId::class)
+@IdClass(CompositeAccountGroupId::class)
 open class Membership(
 
     @Id
