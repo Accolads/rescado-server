@@ -1,5 +1,6 @@
 package org.rescado.server.service
 
+import liquibase.pro.packaged.it
 import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Group
 import org.rescado.server.persistence.entity.Membership
@@ -51,9 +52,21 @@ class GroupService(
     fun join(account: Account, group: Group): Membership {
         val confirmedMembership = account.memberships.firstOrNull { it.status == Membership.Status.CONFIRMED }
 
+        // If the account already has an active group
         if (confirmedMembership != null) {
+            val confirmedGroup = confirmedMembership.group
+
+            // Change the group of that membership, effectively changing the group the account belongs to
             confirmedMembership.group = group
-            return membershipRepository.save(confirmedMembership)
+            val membership = membershipRepository.save(confirmedMembership)
+
+            // If the old group does not contain any confirmed members
+            if (!confirmedGroup.memberships.any { it.account != account && it.status == Membership.Status.CONFIRMED }) {
+                // Remove the group
+                groupRepository.delete(confirmedGroup)
+            }
+
+            return membership
         }
 
         val membership = Membership(
@@ -64,11 +77,13 @@ class GroupService(
         return membershipRepository.save(membership)
     }
 
-    fun deleteMembership(membership: Membership) = membershipRepository.delete(membership)
+    fun deleteMembership(membership: Membership) {
+        membershipRepository.delete(membership)
 
-    // TODO implement
-// @Scheduled(cron = daily?)
-// fun cleanup(){
-//     remove groups that have no members and were created >1 month ago
-// }
+        // If after leaving, the group has no confirmed members anymore
+        if (membership.group.memberships.any { it.status == Membership.Status.CONFIRMED }) {
+            // Remove the group
+            groupRepository.delete(membership.group)
+        }
+    }
 }
