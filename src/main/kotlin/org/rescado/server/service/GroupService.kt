@@ -61,7 +61,7 @@ class GroupService(
             val membership = membershipRepository.save(confirmedMembership)
 
             // If the old group does not contain any confirmed members
-            if (!confirmedGroup.memberships.any { it.account != account && it.status == Membership.Status.CONFIRMED }) {
+            if (confirmedGroup.memberships.none { it.account != account && it.status == Membership.Status.CONFIRMED }) {
                 // Remove the group
                 groupRepository.delete(confirmedGroup)
             }
@@ -81,7 +81,7 @@ class GroupService(
         membershipRepository.delete(membership)
 
         // If after leaving, the group has no confirmed members anymore
-        if (membership.group.memberships.any { it.status == Membership.Status.CONFIRMED }) {
+        if (membership.group.memberships.none { it.status == Membership.Status.CONFIRMED }) {
             // Remove the group
             groupRepository.delete(membership.group)
         }
