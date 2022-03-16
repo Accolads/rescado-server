@@ -7,7 +7,7 @@ networks:
 services:
   rescado-store:
     container_name: 'rescado-store'
-    image: 'postgis/postgis:13-3.1'
+    image: 'postgis/postgis:14-3.2'
     environment:
       POSTGRES_DB: '${RESCADO_DATASOURCE_NAME:-rescado}'
       POSTGRES_USER: '${RESCADO_DATASOURCE_USERNAME:-rescado_user}'

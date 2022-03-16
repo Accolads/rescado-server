@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern
 data class AuthAnonymouslyDTO(
 
     @JsonProperty("uuid")
-    @get:NotBlank(message = "{NotBlank.AuthAnonymouslyDTO.password}")
+    @get:NotBlank(message = "{NotBlank.AuthAnonymouslyDTO.uuid}")
     @get:Pattern(message = "{Pattern.AuthAnonymouslyDTO.uuid}", regexp = "^[\\w]{8}-[\\w]{4}-[\\w]{4}-[\\w]{4}-[\\w]{12}$")
     val uuid: String?,
 

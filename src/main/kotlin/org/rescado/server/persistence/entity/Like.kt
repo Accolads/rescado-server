@@ -18,12 +18,12 @@ open class Like(
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     open var account: Account,
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_id")
+    @JoinColumn(name = "animal_id", referencedColumnName = "id")
     open var animal: Animal,
 
     @Column(name = "timestamp")

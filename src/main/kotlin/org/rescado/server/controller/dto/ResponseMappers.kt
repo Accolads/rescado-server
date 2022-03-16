@@ -6,7 +6,9 @@ import org.rescado.server.controller.dto.res.AdminDTO
 import org.rescado.server.controller.dto.res.AnimalDTO
 import org.rescado.server.controller.dto.res.AuthenticationDTO
 import org.rescado.server.controller.dto.res.CoordinatesDTO
+import org.rescado.server.controller.dto.res.GroupDTO
 import org.rescado.server.controller.dto.res.ImageDTO
+import org.rescado.server.controller.dto.res.MembershipDTO
 import org.rescado.server.controller.dto.res.NewsDTO
 import org.rescado.server.controller.dto.res.Response
 import org.rescado.server.controller.dto.res.SessionDTO
@@ -15,6 +17,7 @@ import org.rescado.server.persistence.entity.Account
 import org.rescado.server.persistence.entity.Admin
 import org.rescado.server.persistence.entity.Animal
 import org.rescado.server.persistence.entity.Image
+import org.rescado.server.persistence.entity.Membership
 import org.rescado.server.persistence.entity.News
 import org.rescado.server.persistence.entity.Session
 import org.rescado.server.persistence.entity.Shelter
@@ -69,6 +72,13 @@ fun List<Response>.withLinks(req: HttpServletRequest, result: Page<*>): List<Res
     return this
 }
 // endregion
+// region Admin mappers
+
+fun Admin.toAdminDTO() = AdminDTO(
+    id = id,
+    username = username,
+)
+// endregion
 // region Point mappers
 
 fun Point.toCoordinatesDTO() = CoordinatesDTO(
@@ -100,18 +110,30 @@ fun Account.toAccountDTO() = AccountDTO(
     twitterLinked = !twitterReference.isNullOrBlank(),
     email = email,
     avatar = avatar?.toImageDTO(),
+    groups = memberships.toGroupArrayDTO(),
     shelter = shelter?.toShelterDTO(false),
 )
 
 fun List<Account>.toAccountArrayDTO() = this.map { it.toAccountDTO() }
 // endregion
-// region Admin mappers
+// region Member mappers
 
-fun Admin.toAdminDTO() = AdminDTO(
-    id = id,
-    username = username,
+fun Membership.toMembershipDTO() = MembershipDTO(
+    uuid = account.uuid,
+    name = account.name!!,
+    status = status.name,
+    avatar = account.avatar?.toImageDTO(),
 )
 
+fun Membership.toGroupDTO() = GroupDTO(
+    id = group.id,
+    status = status.name,
+    members = group.memberships.toMembershipArrayDTO()
+)
+
+fun Set<Membership>.toMembershipArrayDTO() = this.map { it.toMembershipDTO() }
+
+fun Set<Membership>.toGroupArrayDTO() = this.map { it.toGroupDTO() }
 // endregion
 // region Session mappers
 

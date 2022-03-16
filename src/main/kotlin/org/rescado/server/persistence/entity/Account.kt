@@ -45,6 +45,12 @@ open class Account(
     @Enumerated(EnumType.STRING)
     open var status: Status,
 
+    // TODO This class should not have any FetchType set to EAGER because memberships and shelter and avatar EACH trigger a join every time JWT is checked aka basically every request.
+    // Just changing it to LAZY here will cause exceptions in classes that just assume every field is set when Account is fetched from the db, so some refactoring in the controllers/services is required.
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
+    open var memberships: MutableSet<Membership>,
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shelter_id", referencedColumnName = "id")
     open var shelter: Shelter?, // if not null, this is a volunteer
