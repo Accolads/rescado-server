@@ -83,10 +83,6 @@ class AccountService(
             account.status = Account.Status.ENROLLED
         }
 
-        if (account.status != Account.Status.ANONYMOUS && account.email == null && account.appleReference == null && account.googleReference == null && account.facebookReference == null && account.twitterReference == null) {
-            throw LastReferenceException()
-        }
-
         return accountRepository.save(account)
     }
 
