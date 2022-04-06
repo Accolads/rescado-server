@@ -38,7 +38,7 @@ class ImageService(
 
     fun delete(image: Image) = imageRepository.delete(image)
 
-    private fun isValidInternalReference(reference: String) = reference.startsWith("rescado/")
+    private fun isValidInternalReference(reference: String) = reference.contains("rescado-app.appspot.com", true)
 
     private fun isValidExternalReference(reference: String): Boolean {
         var contentType = ""
