@@ -125,7 +125,7 @@ fun Membership.toMembershipDTO() = MembershipDTO(
     avatar = account.avatar?.toImageDTO(),
 )
 
-fun Membership.toGroupDTO(exclude: String?) = GroupDTO(
+fun Membership.toGroupDTO(exclude: String? = null) = GroupDTO(
     id = group.id,
     status = status.name,
     members = group.memberships.filterNot { it.account.uuid == exclude }.toMembershipArrayDTO()
@@ -133,7 +133,7 @@ fun Membership.toGroupDTO(exclude: String?) = GroupDTO(
 
 fun List<Membership>.toMembershipArrayDTO() = this.map { it.toMembershipDTO() }
 
-fun Set<Membership>.toGroupArrayDTO(exclude: String?) = this.map { it.toGroupDTO(exclude = exclude) }
+fun Set<Membership>.toGroupArrayDTO(exclude: String? = null) = this.map { it.toGroupDTO(exclude = exclude) }
 // endregion
 // region Session mappers
 
