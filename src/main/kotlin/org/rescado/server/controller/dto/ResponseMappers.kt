@@ -110,7 +110,7 @@ fun Account.toAccountDTO() = AccountDTO(
     twitterLinked = !twitterReference.isNullOrBlank(),
     email = email,
     avatar = avatar?.toImageDTO(),
-    groups = memberships.toGroupArrayDTO(),
+    groups = memberships.toGroupArrayDTO(exclude = uuid),
     shelter = shelter?.toShelterDTO(false),
 )
 
@@ -125,15 +125,15 @@ fun Membership.toMembershipDTO() = MembershipDTO(
     avatar = account.avatar?.toImageDTO(),
 )
 
-fun Membership.toGroupDTO() = GroupDTO(
+fun Membership.toGroupDTO(exclude: String? = null) = GroupDTO(
     id = group.id,
     status = status.name,
-    members = group.memberships.toMembershipArrayDTO()
+    members = group.memberships.filterNot { it.account.uuid == exclude }.toMembershipArrayDTO()
 )
 
-fun Set<Membership>.toMembershipArrayDTO() = this.map { it.toMembershipDTO() }
+fun List<Membership>.toMembershipArrayDTO() = this.map { it.toMembershipDTO() }
 
-fun Set<Membership>.toGroupArrayDTO() = this.map { it.toGroupDTO() }
+fun Set<Membership>.toGroupArrayDTO(exclude: String? = null) = this.map { it.toGroupDTO(exclude = exclude) }
 // endregion
 // region Session mappers
 
