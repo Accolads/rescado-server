@@ -94,6 +94,7 @@ class CardController(
                     animal = it.animal.toAnimalDTO()
                 )
             }.build()
+
         return ResponseEntity(cardService.getLikedByAccountWithAnimals(user).map { it.animal.id }, HttpStatus.OK)
     }
 

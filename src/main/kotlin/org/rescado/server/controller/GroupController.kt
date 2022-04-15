@@ -156,38 +156,32 @@ class GroupController(
         val membership = user.memberships.firstOrNull { it.status == Membership.Status.CONFIRMED }
             ?: return BadRequest(error = messageService["error.NotInGroup.message"]).build()
 
+        val mutualLiked = membership.group.memberships
+            .filter {
+                it.account !== user && it.status == Membership.Status.CONFIRMED
+            }
+            .map {
+                cardService.getLikedByAccountWithAnimals(it.account)
+                    .map { like -> like.animal.id }.toMutableList()
+            }
+            .reduce { acc, it -> acc.apply { retainAll(it) } }
+
+        val matches = cardService.getLikedByAccountWithAnimals(user)
+            .filter { mutualLiked.contains(it.animal.id) }
+
         if (detailed)
-            return membership.group.memberships
-                .filter {
-                    it.status == Membership.Status.CONFIRMED
-                }
-                .map {
-                    cardService.getLikedByAccountWithAnimals(it.account).toMutableList()
-                }
-                .reduce { all, it ->
-                    all.apply { retainAll(it) }
-                }
-                .map {
-                    LikeDTO(
-                        timestamp = it.timestamp,
-                        reference = null, // TODO Figure out a way to implement group chat or skip this feature altogether
-                        animal = it.animal.toAnimalDTO()
-                    )
-                }.build()
+            return matches.map {
+                LikeDTO(
+                    timestamp = it.timestamp,
+                    reference = null, // TODO Figure out a way to implement group chat or skip this feature altogether
+                    animal = it.animal.toAnimalDTO()
+                )
+            }.build()
+
         return ResponseEntity(
-            membership.group.memberships
-                .filter {
-                    it.status == Membership.Status.CONFIRMED
-                }
-                .map {
-                    cardService.getLikedByAccountWithAnimals(it.account).toMutableList()
-                }
-                .reduce { all, it ->
-                    all.apply { retainAll(it) }
-                }
-                .map {
-                    it.animal.id
-                },
+            matches.map {
+                it.animal.id
+            },
             HttpStatus.OK
         )
     }
