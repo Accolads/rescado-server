@@ -8,6 +8,7 @@ import org.rescado.server.persistence.repository.AccountRepository
 import org.rescado.server.service.exception.IllegalReferenceException
 import org.rescado.server.service.exception.LastReferenceException
 import org.rescado.server.util.checkPassword
+import org.rescado.server.util.hashPassword
 import org.springframework.stereotype.Service
 import java.util.Locale
 import java.util.UUID
@@ -73,7 +74,7 @@ class AccountService(
         facebookReference?.let { account.facebookReference = it }
         twitterReference?.let { account.twitterReference = it }
         email?.let { account.email = it }
-        password?.let { account.password = it }
+        password?.let { account.password = hashPassword(it) }
         avatar?.let {
             account.avatar?.let { oldAvatar -> imageService.delete(oldAvatar) }
             account.avatar = it
